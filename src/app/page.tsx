@@ -11,7 +11,7 @@ export default function Home() {
       <AboutSerenity />
       <Activites />
       < Dining />
-      < Gallery />
+      {/* < Gallery /> */}
       <div className="w-full h-screen">
 
       </div>

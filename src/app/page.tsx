@@ -1,3 +1,4 @@
+import Fotter from "@/components/Fotter";
 import AboutSerenity from "@/components/home/AboutSerenity";  
 import Activites from "@/components/home/Activites";
 import Dining from "@/components/home/Dining";
@@ -16,6 +17,7 @@ export default function Home() {
       <Gallery />
       <Location />
       <Testimonials />
+      <Fotter />
       
       <div className="w-full h-screen">
 

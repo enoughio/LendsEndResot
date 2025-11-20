@@ -65,7 +65,7 @@ const reviews: Review[] = [
 const HotelReviews: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 40;
-  const reviewsPerPage = 5;
+
 
   const handlePrevious = () => {
     if (currentPage > 1) {

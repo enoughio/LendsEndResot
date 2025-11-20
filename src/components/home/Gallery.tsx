@@ -12,9 +12,11 @@ const SMALL_2 =
 const SMALL_3 =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=60"; // Bright room
 const LARGE_LEFT =
-  "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=1200&q=60"; // Garden room
+"https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=60"; // Warm bedroom
+
+  // "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=1200&q=60"; // Garden room
 const LARGE_RIGHT =
-  "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=60"; // Warm bedroom
+"https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=60"; // Warm bedroom
 
 const Gallery = () => {
   return (
@@ -71,17 +73,16 @@ const Gallery = () => {
         ))}
       </div>
 
-      {/* Bottom wide one images */}
-      <div className="grid grid-cols-1 gap-3 h-[250px] max-h-[250px] rounded-xl  bg-amber-300">
-        <div className="w-full rounded-xl overflow-hidden max-h-[200px]">
-          <Image
-            src={LARGE_LEFT}
-            alt="Room with garden view"
-            fill
-            sizes="(min-width:768px) 50vw, 100vw"
-            className="object-cover"
-          />
-        </div>
+      {/* Bottom wide image */}
+      <div className="relative w-full h-[250px] rounded-xl overflow-hidden">
+        <Image
+          src={LARGE_LEFT}
+          alt="Room with garden view"
+          fill
+          sizes="100vw"
+          className="object-fill "
+          
+        />
       </div>
 
       {/* CTA */}

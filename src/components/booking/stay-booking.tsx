@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react';
-import { ArrowLeft, Calendar, Users, CheckCircle2, TreePine, Facebook, Apple, Plus, Minus } from 'lucide-react';
+import { ArrowLeft, Calendar, Users, CheckCircle2, Facebook, Apple, Plus, Minus } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface StayBookingProps {}
 
 // Simple image component with error handling
@@ -106,27 +107,12 @@ export function StayBooking({ }: StayBookingProps) {
     const newValue = Math.max(0, current + change);
     
     if (newValue === 0) {
-      const { [activityId]: _, ...rest } = additionalActivities;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [activityId]: _removed, ...rest } = additionalActivities;
       setAdditionalActivities(rest);
     } else {
       setAdditionalActivities({ ...additionalActivities, [activityId]: newValue });
     }
-  };
-
-  const calculateTotal = () => {
-    if (!selectedRoomData || !checkInDate || !checkOutDate) return 0;
-    
-    const checkIn = new Date(checkInDate);
-    const checkOut = new Date(checkOutDate);
-    const nights = Math.max(1, Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)));
-    
-    const roomTotal = selectedRoomData.price * nights;
-    const additionalActivitiesTotal = Object.entries(additionalActivities).reduce((sum, [activityId, count]) => {
-      const activity = activities.find(a => a.id === activityId);
-      return sum + (activity?.price || 0) * count;
-    }, 0);
-    
-    return roomTotal + additionalActivitiesTotal;
   };
 
   const nights = checkInDate && checkOutDate ? Math.max(1, Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24))) : 0;
@@ -295,7 +281,7 @@ export function StayBooking({ }: StayBookingProps) {
                           <div className="flex items-start justify-between mb-1">
                             <p className="text-gray-900 text-sm">{activity.name}</p>
                             {isSelected && (
-                              <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                              <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
                             )}
                           </div>
                           <p className="text-gray-500 text-xs">{activity.duration}</p>
@@ -369,7 +355,7 @@ export function StayBooking({ }: StayBookingProps) {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                       <p className="text-sm text-gray-500 mt-2">
-                        We'll call or text you to confirm your number. Standard message and data rates apply.
+                        We&apos;ll call or text you to confirm your number. Standard message and data rates apply.
                       </p>
                     </div>
 

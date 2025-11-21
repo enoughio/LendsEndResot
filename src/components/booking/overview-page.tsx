@@ -1,6 +1,6 @@
 'use client'
 
-import { Star, TreePine, MapPin, Clock, CheckCircle2 } from 'lucide-react';
+import { Star, MapPin, Clock, CheckCircle2 } from 'lucide-react';
 import { BookingType } from '@/lib/types'; 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -65,7 +65,7 @@ export function OverviewPage() {
           <p className="text-gray-700 leading-relaxed mb-8">
             Welcome to Sumiran Jungle Resort, where nature meets luxury. Nestled in the heart of pristine forest reserve, 
             Sumiran offers an unparalleled escape into the wilderness. Our resort features luxurious accommodations, curated 
-            jungle experiences, and world-class amenities. Whether you're seeking a thrilling day adventure or a peaceful 
+            jungle experiences, and world-class amenities. Whether you&apos;re seeking a thrilling day adventure or a peaceful 
             multi-day retreat, we offer the perfect blend of excitement and relaxation. Experience wildlife safaris, forest 
             treks, water activities, and more - all guided by our expert naturalists who ensure your safety while maximizing 
             your connection with nature. Our commitment to sustainable tourism means you can enjoy the beauty of the jungle 
@@ -310,7 +310,7 @@ export function OverviewPage() {
             <div className="w-12 h-1 bg-green-600 mt-1"></div>
           </div>
           <div className="flex items-start gap-3 text-gray-700">
-            <MapPin className="w-5 h-5 mt-1 flex-shrink-0 text-green-600" />
+            <MapPin className="w-5 h-5 mt-1 shrink-0 text-green-600" />
             <div>
               <p className="text-gray-900 mb-1">Sumiran Forest Reserve</p>
               <p className="text-gray-600">Deep in the heart of pristine wilderness, surrounded by diverse flora and fauna. Easily accessible from major cities while maintaining complete seclusion.</p>
@@ -344,7 +344,7 @@ export function OverviewPage() {
             {reviews.map((review) => (
               <div key={review.id} className="border-b border-gray-200 pb-6 last:border-b-0">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"></div>
+                  <div className="w-10 h-10 bg-gray-300 rounded-full shrink-0"></div>
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h4 className="text-gray-900">{review.name}</h4>

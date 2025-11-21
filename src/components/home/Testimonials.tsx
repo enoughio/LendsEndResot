@@ -243,7 +243,7 @@ const Testimonials = () => {
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="bg-green-500/90 backdrop-blur-sm rounded-2xl p-4 md:p-6 flex flex-col justify-between min-h-[180px] md:min-h-[200px] hover:bg-green-500 transition-colors flex-shrink-0"
+                className="bg-green-500/90 backdrop-blur-sm rounded-2xl p-4 md:p-6 flex flex-col justify-between min-h-[180px] md:min-h-[200px] hover:bg-green-500 transition-colors shrink-0"
                 style={{
                   width: `calc((100% - ${(cardsPerView - 1) * (typeof window !== 'undefined' && window.innerWidth < 768 ? 16 : 24)}px) / ${cardsPerView})`
                 }}
@@ -252,8 +252,8 @@ const Testimonials = () => {
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
 
-                <div className="flex items-center gap-3">
-                  <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden flex-shrink-0">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden shrink-0">
                     <Image
                       src={testimonial.image}
                       alt={testimonial.name}
@@ -273,7 +273,7 @@ const Testimonials = () => {
         </div>
 
         {/* Progress Bar */}
-        <div className="relative h-[2px] bg-white/20 rounded-full overflow-hidden">
+        <div className="relative h-0.5 bg-white/20 rounded-full overflow-hidden">
           <div
             className="absolute top-0 left-0 h-full bg-white transition-all duration-100 ease-linear"
             style={{ width: `${progress}%` }}

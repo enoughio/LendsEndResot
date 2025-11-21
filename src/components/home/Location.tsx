@@ -48,7 +48,7 @@ const Location = () => {
         {/* Address */}
         <div className="flex items-start gap-2 mt-6 text-gray-700">
           <svg 
-            className="w-5 h-5 mt-1 flex-shrink-0" 
+            className="w-5 h-5 mt-1 shrink-0" 
             fill="currentColor" 
             viewBox="0 0 20 20"
           >

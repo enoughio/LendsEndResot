@@ -63,7 +63,7 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/70 to-transparent">
+        <div className="absolute inset-0 bg-linear-to-r from-slate-900/70 to-transparent">
           <div className="max-w-7xl mx-auto px-6 h-full flex items-center">
             <div>
               <button onClick={handleBack} className="flex items-center gap-2 text-white mb-2 hover:text-green-400 transition-colors">
@@ -117,7 +117,7 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
 
               {/* What's Included */}
               <div className="bg-green-50 rounded-lg p-4">
-                <h3 className="text-gray-900 mb-3">What's Included</h3>
+                <h3 className="text-gray-900 mb-3">What&apos;s Included</h3>
                 <div className="grid md:grid-cols-2 gap-2">
                   {type === 'full' ? (
                     <>
@@ -188,7 +188,7 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="text-gray-900">{activity.name}</h4>
                         {isSelected && (
-                          <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                          <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
                         )}
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
@@ -246,7 +246,7 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                   />
                   <p className="text-sm text-gray-500 mt-2">
-                    We'll call or text you to confirm your number. Standard message and data rates apply.
+                    We&apos;ll call or text you to confirm your number. Standard message and data rates apply.
                   </p>
                 </div>
 

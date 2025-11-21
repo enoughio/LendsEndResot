@@ -1,0 +1,1 @@
+export type BookingType = 'overview' | 'full-day' | 'half-day' | 'stay';

@@ -18,10 +18,10 @@ export default function Home() {
       <Location />
       <Testimonials />
       <Fotter />
-      
+{/*       
       <div className="w-full h-screen">
 
-      </div>
+      </div> */}
 
 
     </div>

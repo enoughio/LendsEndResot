@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import aboutPageRoomImg from "../../../public/aboutPageRoomImg.png";
-import StayDetailsCard from "@/components/StayDetailsCard";
+// import StayDetailsCard from "@/components/StayDetailsCard";
 
 const AboutHero = () => {
   return (
@@ -11,7 +10,7 @@ const AboutHero = () => {
         <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-[#00234D] opacity-60 z-10"></div>
         <div className="w-full h-full">
           <Image
-            src={aboutPageRoomImg}
+            src='/aboutPageRoomImg.png'
             alt="room image"
             className="object-cover object-[70%_center] sm:object-center"
             fill
@@ -19,7 +18,7 @@ const AboutHero = () => {
           ></Image>
         </div>
       </div>
-      <StayDetailsCard imageHidden={true} />
+      {/* <StayDetailsCard imageHidden={true} /> */}
     </div>
   );
 };

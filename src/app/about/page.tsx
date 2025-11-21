@@ -1,4 +1,4 @@
-import AboutHero from "@/components/aboutPage/AboutHero";
+import AboutHero from "@/components/booking/AboutHero";
 import AboutOverview from "@/components/aboutPage/AboutOverview";
 import Amenities from "@/components/aboutPage/Amenities";
 import AvailableRooms from "@/components/aboutPage/AvailableRooms";

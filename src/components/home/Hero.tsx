@@ -26,7 +26,7 @@ const Hero = () => {
           />
         </div>
 
-        <p className="hidden sm:flex absolute inset-0 bottom-[31%] items-center justify-center text-center text-white tracking-wide sm:text-[6.5vw]  z-20 font-bold">
+        <p className="hidden sm:flex absolute inset-0 bottom-[51%] items-center justify-center text-center text-white tracking-wide sm:text-[6.5vw]  z-20 font-bold">
           Nature is Our Finest Luxury.
         </p>
         {/* <div className="hidden sm:flex absolute inset-0 -bottom-[17%] items-center justify-center flex-col text-center text-white sm:text-4xl md:text-5xl lg:text-7xl xl:text-[5rem] 2xl:text-[6rem] z-20 font-bold">

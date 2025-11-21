@@ -11,7 +11,7 @@ const StayDetailsCard = ({ imageHidden = false }: { imageHidden?: boolean }) => 
         } absolute top-0 left-0 right-0 bottom-0 -translate-y-[59%] z-100 font-semibold h-[19vw]`}
       >
         <Image
-          src={"/lends end.svg"}
+          src={"/landsend.svg"}
           alt=""
           fill
           priority

@@ -5,7 +5,8 @@ const Hero = () => {
   return (
     <section className="relative w-full sm:h-screen">
       <div className="relative w-full aspect-[21/20] sm:aspect-[21/11]">
-        <div className="hidden xl:block absolute w-full  h-[25%] z-10">
+       
+        {/* <div className="hidden xl:block absolute w-full  h-[25%] z-10">
           <Image
             src={"/top pseudo.svg"}
             alt=""
@@ -14,7 +15,8 @@ const Hero = () => {
             style={{ objectFit: "cover", objectPosition: "bottom" }}
             priority
           />
-        </div>
+        </div> */}
+
         <div className="h-[122%] sm:h-auto">
           <Image
             src="/night sky.svg"
@@ -51,6 +53,7 @@ const Hero = () => {
         </p>
       </div>
       <div className="hidden sm:block w-full h-[5vh] bg-black sm:h-[10vh] -mt-1" />
+      
       <StayDetailsCard />
     </section>
   );

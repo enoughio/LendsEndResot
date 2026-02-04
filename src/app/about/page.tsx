@@ -119,7 +119,7 @@ export default function AboutPage() {
         <section className="mb-20">
           <div className="bg-gray-50 rounded-lg p-12">
             <div className="flex items-start gap-6 mb-6">
-              <Quote className="w-12 h-12 text-green-600 flex-shrink-0" />
+              <Quote className="w-12 h-12 text-green-600 shrink-0" />
               <div>
                 <h2 className="text-gray-900 mb-6">A Message from Our Founder</h2>
                 <div className="prose prose-lg max-w-none">

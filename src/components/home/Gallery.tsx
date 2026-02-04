@@ -2,24 +2,13 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// Stock images from Unsplash (whitelisted in next.config.ts)
-const HERO =
-  "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1600&q=60"; // Resort pool
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SMALL_1 =
-  "https://images.unsplash.com/photo-1505691723518-36a5ac3b2a59?auto=format&fit=crop&w=800&q=60"; // Bedroom cozy
-const SMALL_2 =
-  "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=60"; // Pool evening
-const SMALL_3 =
-  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=60"; // Bright room
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const LARGE_LEFT =
-"https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=60"; // Warm bedroom
-
-  // "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=1200&q=60"; // Garden room
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const LARGE_RIGHT =
-"https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=60"; // Warm bedroom
+// Gallery images from public/gallery folder
+const HERO = "/gallery/WhatsApp Image 2026-02-04 at 8.32.01 PM.jpeg";
+const SMALL_1 = "/gallery/room1.jpeg";
+const SMALL_2 = "/gallery/room2.jpeg";
+const SMALL_3 = "/gallery/room3.jpeg";
+// const SMALL_3 = "/gallery/con1.jpeg";
+// const SMALL_4 = "/gallery/con2.jpeg";
 
 const Gallery = () => {
   return (
@@ -35,7 +24,7 @@ const Gallery = () => {
         <div className="relative w-full aspect-[15/9] md:aspect-[21/7]">
           <Image
             src={HERO}
-            alt="Resort pool at dusk"
+            alt="Sumiran Forest Resort"
             fill
             sizes="100vw"
             className="object-cover"
@@ -60,7 +49,7 @@ const Gallery = () => {
             />
           </div>
         ))}
-        {[SMALL_3, SMALL_2].map((src, idx) => (
+        {[SMALL_3, SMALL_1].map((src, idx) => (
           <div
             key={`extra-${idx}`}
             className="hidden lg:block relative w-full aspect-[6/2] md:aspect-[6/4] rounded-xl overflow-hidden"

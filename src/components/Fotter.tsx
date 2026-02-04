@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 
 const Fotter = () => {
@@ -18,14 +17,14 @@ const Fotter = () => {
   return (
     <footer className="relative bg-[#0a1f1a] text-white overflow-hidden ">
       {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
+      {/* <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1545915468-25e34e93c66c?w=1920&h=600&fit=crop"
+          src=""
           alt="Tropical leaves background"
           fill
           className="object-cover opacity-40"
         />
-      </div>
+      </div> */}
 
       {/* Content */}
       <div className="relative z-10">

@@ -3,7 +3,6 @@
 import { Star, MapPin, Clock, CheckCircle2 } from 'lucide-react';
 // import { BookingType } from '@/lib/types'; 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import AboutHero from './AboutHero';
 
 

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 
-const Activites = () => {
+const Activities = () => {
   return (
     <section className="w-full relative py-6">
       <div className="mx-auto max-w-7xl   ">
@@ -31,8 +31,8 @@ const Activites = () => {
           <div className="order-1 md:order-1 md:col-span-2">
             <div className="relative h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700 ">
               <Image
-                src="/home/home-activities-leves.svg"
-                alt="Leaf background"
+                src="/gallery/rafting.jpeg"
+                alt="Lake and water activities"
                 fill
                 sizes="(max-width: 768px) 100vw, 66vw"
                 className="object-cover"
@@ -52,12 +52,16 @@ const Activites = () => {
           <div className="order-5 md:order-2">
             <div className="relative h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
               <Image
-                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1974&auto=format&fit=crop"
-                alt="Sunset by the lake"
+                src="/gallery/stargazing.jpeg"
+                alt="Bird watching in nature"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover"
               />
+              <div className="absolute inset-0 bg-black/30" />
+              <div className="absolute inset-0 p-5 sm:p-6 flex items-end">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white">Stargazing</h3>
+              </div>
             </div>
           </div>
 
@@ -74,12 +78,16 @@ const Activites = () => {
           <div className="order-3 md:order-4">
             <div className="relative  h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
               <Image
-                src="https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=2069&auto=format&fit=crop"
-                alt="Inflatable boat on lake"
+                src="/gallery/bird.jpeg"
+                alt="Night sky and stargazing"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover"
+                className="object-center"
               />
+              <div className="absolute inset-0 bg-black/30" />
+              <div className="absolute inset-0 p-5 sm:p-6 flex items-end">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white">Bird Watching</h3>
+              </div>
             </div>
           </div>
 
@@ -87,15 +95,15 @@ const Activites = () => {
           <div className="order-6 md:order-5">
             <div className="relative  h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
               <Image
-                src="/home/home-activities-leves.svg"
-                alt="Leaf background"
+                src="/gallery/WhatsApp Image 2026-02-04 at 8.32.06 PM.jpeg"
+                alt="Forest walks and nature trails"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-emerald-900/40" />
               <div className="absolute inset-0 p-5 sm:p-6 md:p-8 flex flex-col justify-center text-white">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-2">Nature Walks</h3>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-2">Forest Walks</h3>
                 <p className="max-w-md text-sm sm:text-base opacity-95">
                   Explore the rich biodiversity around the lake with guided nature walks.
                 </p>
@@ -103,13 +111,23 @@ const Activites = () => {
             </div>
           </div>
 
-          {/* 6. Spa & Wellness (wide text card) */}
+          {/* 6. Wellness (wide text card) */}
           <div className="order-4 md:order-6 md:col-span-2">
-            <div className="rounded-2xl border border-neutral-200 bg-white p-6 sm:p-7 md:p-10  h-32 md:h-36 flex flex-col justify-center">
-              <h3 className="text-2xl sm:text-3xl md:text-4xl text-neutral-900 mb-2">Spa &amp; Wellness</h3>
-              <p className="text-neutral-700 max-w-2xl">
-                Rejuvenate with traditional Ayurvedic treatments and modern wellness therapies.
-              </p>
+            <div className="relative h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
+              <Image
+                src="/gallery/mediation.jpeg"
+                alt="Yoga and wellness activities"
+                fill
+                sizes="(max-width: 768px) 100vw, 66vw"
+                className="object-center"
+              />
+              <div className="absolute inset-0 bg-black/40" />
+              <div className="absolute inset-0 p-6 sm:p-7 md:p-10 flex flex-col justify-center text-white">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-2">Yoga & Wellness</h3>
+                <p className="max-w-2xl text-sm sm:text-base opacity-90">
+                  Rejuvenate with traditional Ayurvedic treatments and modern wellness therapies.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -117,12 +135,16 @@ const Activites = () => {
           <div className="order-7 md:order-7">
             <div className="relative  h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
               <Image
-                src="https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?q=80&w=1974&auto=format&fit=crop"
-                alt="Birds by the water"
+                src="/gallery/climbing.jpeg"
+                alt="Adventure activities"
                 fill
                 sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover"
+                className="object-center"
               />
+              <div className="absolute inset-0 bg-black/30" />
+              <div className="absolute inset-0 p-5 sm:p-6 flex items-end">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white">Zipline & Climbing</h3>
+              </div>
             </div>
           </div>
         </div>
@@ -131,4 +153,4 @@ const Activites = () => {
   )
 }
 
-export default Activites
+export default Activities

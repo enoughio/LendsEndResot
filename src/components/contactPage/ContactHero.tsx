@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import contactPageGardenImg from "../../../public/contactPageGardenImg.png";
+
 
 const ContactHero = () => {
   return (
@@ -9,7 +9,7 @@ const ContactHero = () => {
       <div className="absolute top-0 left-0 h-full w-[80%] bg-gradient-to-r from-[#00234D] opacity-60 z-10"></div>
       <div className="w-full h-full">
         <Image
-          src={contactPageGardenImg}
+          src='/gallery/con2.jpeg'
           alt="Hotel garden image"
           className="object-cover object-[70%_center] sm:object-center"
           fill

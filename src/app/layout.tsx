@@ -5,16 +5,6 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next"
 import NavBaR from "@/components/NavBaR";
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
-
 const urbanist = Urbanist({
   subsets: ["latin"],
   weight: ["300","400","600","700"], // whenever tailwind class "font-semibold" or "font-bold" is used they will pick the nearest downloaded font weight text from this provided options array. By default tailwind uses font weights normal -> "400", semibold -> "600", bold -> "700". And that is why i provided the exact matching font weight texts.
@@ -37,7 +27,7 @@ export default function RootLayout({
         <Analytics />
         <NavBaR />
         {children}
-        
+        {/* <Fotter /> */}
       </body>
     </html>
   );

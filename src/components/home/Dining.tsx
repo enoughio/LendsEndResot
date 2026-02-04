@@ -4,8 +4,8 @@ import Image from "next/image";
 // Stock image URLs (Unsplash) – allowed via next.config.ts remotePatterns
 const LAKESIDE_BG =
   "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1400&q=60"; // Night restaurant outdoor
-const LAKESIDE_INLINE =
-  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=60"; // Dining table
+// const LAKESIDE_INLINE =
+  // "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=60"; // Dining table
 
 const Dining = () => {
   return (
@@ -122,7 +122,7 @@ const Dining = () => {
             </div>
             {/* Inline Image */}
             <div className="col-span-12 lg:col-span-5 flex items-center">
-              <div className="relative w-full max-h-[500px] aspect-[4/5] rounded-xl overflow-hidden bg-black/20">
+              {/* <div className="relative w-full max-h-[500px] aspect-[4/5] rounded-xl overflow-hidden bg-black/20">
                 <Image
                   src={LAKESIDE_INLINE}
                   alt="Restaurant dining table"
@@ -130,7 +130,7 @@ const Dining = () => {
                   sizes="50vw"
                   className="object-cover"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

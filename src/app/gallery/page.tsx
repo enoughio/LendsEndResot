@@ -1,36 +1,103 @@
 import React from "react";
 import Image from "next/image";
+import Fotter from "@/components/Fotter";
 
-// >30 stock Unsplash image URLs (mixed orientations for collage)
+// Gallery images from public/gallery folder
 const COLLAGE_IMAGES: string[] = [
-  "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1505691723518-36a5ac3b2a59?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=60",
-  
-  "https://images.unsplash.com/photo-1503264116251-35a26947989a?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1503174971373-b1f69850bded?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1495954484750-af469f2f9be5?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1510674485131-dc2153d4a36c?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1501999635878-71cb9f0d48cc?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1551776235-dde6d4829808?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1519817650390-64a93db511aa?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1543333997-08f01dd3d6b9?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1470115636492-6d2b56f9146e?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1502786129293-79981df4e689?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1485182708500-e8f1f318ba72?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1540206395-68808572332f?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=60",
-  "https://images.unsplash.com/photo-1465101162946-4377e57745c3?auto=format&fit=crop&w=800&q=60",
+  "/gallery/riverrafting.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.01 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.03 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.03 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.04 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.04 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.05 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.06 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.11 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.12 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.13 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.14 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.15 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.15 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.17 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.20 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.21 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.23 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.23 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.26 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.26 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.27 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.27 PM (2).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.27 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.28 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.28 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.29 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.29 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.30 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.32 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.33 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.33 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.34 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.36 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.37 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.37 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.38 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.38 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.39 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.40 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.41 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.41 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.42 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.42 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.43 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.44 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.44 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.45 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.45 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.46 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.47 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.48 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.48 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.49 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.49 PM (2).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.49 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.50 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.51 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.52 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.53 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.53 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.54 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.54 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.55 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.56 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.56 PM (2).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.56 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.57 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.58 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.58 PM (2).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.58 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.32.59 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.01 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.02 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.02 PM (2).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.02 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.03 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.05 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.06 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.08 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.11 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.12 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.12 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.13 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.14 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.15 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.16 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.16 PM (2).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.16 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.17 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.18 PM (1).jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.18 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.19 PM.jpeg",
+  "/gallery/WhatsApp Image 2026-02-04 at 8.33.20 PM.jpeg",
 ];
 
 // Collage layout using CSS columns for a simple masonry effect.
@@ -47,7 +114,7 @@ const CollagePage = () => {
       </header>
       {/* Masonry / collage container */}
       <div
-        className="[column-fill:_balance] columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-3 md:gap-4"
+        className="[column-fill:balance] columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-3 md:gap-4"
       >
         {COLLAGE_IMAGES.map((src, i) => (
           <figure
@@ -69,6 +136,8 @@ const CollagePage = () => {
           </figure>
         ))}
       </div>
+
+      <Fotter />
     </section>
   );
 };

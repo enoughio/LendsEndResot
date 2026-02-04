@@ -5,7 +5,7 @@ import Dining from "@/components/home/Dining";
 import Gallery from "@/components/home/Gallery";
 import Hero from "@/components/home/Hero"; 
 import Location from "@/components/home/Location";
-// import Testimonials from "@/components/home/Testimonials";
+
 
 export default function Home() {
   return (
@@ -18,12 +18,6 @@ export default function Home() {
       <Location />
       {/* <Testimonials /> */}
       <Fotter />
-{/*       
-      <div className="w-full h-screen">
-
-      </div> */}
-
-
     </div>
   );
 }

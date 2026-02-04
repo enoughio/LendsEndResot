@@ -12,6 +12,7 @@ const SMALL_2 =
   "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=60"; // Pool evening
 const SMALL_3 =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=60"; // Bright room
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LARGE_LEFT =
 "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=60"; // Warm bedroom
 
@@ -76,7 +77,7 @@ const Gallery = () => {
       </div>
 
       {/* Bottom wide image */}
-      <div className="relative w-full h-[250px] rounded-xl overflow-hidden">
+      {/* <div className="relative w-full h-[250px] rounded-xl overflow-hidden">
         <Image
           src={LARGE_LEFT}
           alt="Room with garden view"
@@ -85,7 +86,7 @@ const Gallery = () => {
           className="object-fill "
           
         />
-      </div>
+      </div> */}
 
       {/* CTA */}
       <div className="mt-4  flex items-center gap-3">

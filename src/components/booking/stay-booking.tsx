@@ -87,10 +87,11 @@ export function StayBooking({ }: StayBookingProps) {
     router.push('/booking');
   };
 
-  const handleConfirmBooking = () => {
-    // Dummy payment - in real app, integrate payment gateway
-    router.push('/booking/booked?type=stay&room=' + selectedRoom);
-  };
+  // TODO: Re-enable when booking functionality is restored
+  // const handleConfirmBooking = () => {
+  //   // Dummy payment - in real app, integrate payment gateway
+  //   router.push('/booking/booked?type=stay&room=' + selectedRoom);
+  // };
 
   const selectedRoomData = roomTypes.find(r => r.id === selectedRoom);
 
@@ -464,13 +465,14 @@ export function StayBooking({ }: StayBookingProps) {
                   </>
                 )}
 
-                <button 
+                {/* TODO: Re-enable booking functionality */}
+                {/* <button 
                   disabled={!selectedRoom || freeActivities.length !== 2 || !checkInDate || !checkOutDate}
                   onClick={handleConfirmBooking}
                   className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Confirm Booking
-                </button>
+                </button> */}
               </div>
             </div>
           )}

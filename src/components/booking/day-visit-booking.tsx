@@ -33,10 +33,11 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
     router.push('/booking');
   };
 
-  const handleConfirmBooking = () => {
-    // Dummy payment - in real app, integrate payment gateway
-    router.push('/booking/booked?type=' + type);
-  };
+  // TODO: Re-enable when booking functionality is restored
+  // const handleConfirmBooking = () => {
+  //   // Dummy payment - in real app, integrate payment gateway
+  //   router.push('/booking/booked?type=' + type);
+  // };
 
   const toggleActivity = (activityId: string) => {
     if (selectedActivities.includes(activityId)) {
@@ -339,13 +340,14 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
                 <span>₹{grandTotal.toLocaleString()}</span>
               </div>
 
-              <button 
+              {/* TODO: Re-enable booking functionality */}
+              {/* <button 
                 disabled={selectedActivities.length !== maxActivities || !visitDate}
                 onClick={handleConfirmBooking}
                 className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Confirm Booking
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

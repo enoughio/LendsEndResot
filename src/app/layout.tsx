@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next"
+import NavBaR from "@/components/NavBaR";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -32,8 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${urbanist.className}`}>
+      <body className={`${urbanist.className} relative`}>
         <Analytics />
+        <NavBaR />
         {children}
         
       </body>

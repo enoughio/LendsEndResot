@@ -1,22 +1,23 @@
 'use client'
 
 import { Star, MapPin, Clock, CheckCircle2 } from 'lucide-react';
-import { BookingType } from '@/lib/types'; 
+// import { BookingType } from '@/lib/types'; 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import AboutHero from './AboutHero';
 
 
 export function OverviewPage() {
-  const router = useRouter();
+  // const router = useRouter();
   
-  const onSelectBooking = (type: BookingType) => {
-    if (type === 'full-day' || type === 'half-day') {
-      router.push('/booking/visit?type=' + (type === 'full-day' ? 'full' : 'half'));
-    } else if (type === 'stay') {
-      router.push('/booking/stay');
-    }
-  };
+  // TODO: Re-enable when booking functionality is restored
+  // const onSelectBooking = (type: BookingType) => {
+  //   if (type === 'full-day' || type === 'half-day') {
+  //     router.push('/booking/visit?type=' + (type === 'full-day' ? 'full' : 'half'));
+  //   } else if (type === 'stay') {
+  //     router.push('/booking/stay');
+  //   }
+  // };
 
   const activities = [
   'Bird Watching',
@@ -156,12 +157,13 @@ export function OverviewPage() {
                     <span className="text-2xl text-gray-900">₹2,999</span>
                     <span className="text-gray-600">/person</span>
                   </div>
-                  <button 
+                  {/* TODO: Re-enable booking functionality */}
+                  {/* <button 
                     onClick={() => onSelectBooking('full-day')}
                     className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Book now
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
@@ -206,12 +208,13 @@ export function OverviewPage() {
                     <span className="text-2xl text-gray-900">₹1,499</span>
                     <span className="text-gray-600">/person</span>
                   </div>
-                  <button 
+                  {/* TODO: Re-enable booking functionality */}
+                  {/* <button 
                     onClick={() => onSelectBooking('half-day')}
                     className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Book now
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -278,12 +281,13 @@ export function OverviewPage() {
                 </div>
               </div>
 
-              <button 
+              {/* TODO: Re-enable booking functionality */}
+              {/* <button 
                 onClick={() => onSelectBooking('stay')}
                 className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
                 Book Your Stay
-              </button>
+              </button> */}
             </div>
           </div>
         </section>

@@ -34,9 +34,10 @@ const RoomCard: React.FC<{ room: Room }> = ({ room }) => {
           </div>
 
           {/* Book Button */}
-          <button className="bg-[#067C0B] hover:bg-green-800 text-white text-sm font-semibold px-8 py-3 rounded-md transition-colors whitespace-nowrap">
+          {/* TODO: Re-enable booking functionality */}
+          {/* <button className="bg-[#067C0B] hover:bg-green-800 text-white text-sm font-semibold px-8 py-3 rounded-md transition-colors whitespace-nowrap">
             Book now
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

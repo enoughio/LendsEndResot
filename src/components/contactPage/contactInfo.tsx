@@ -28,9 +28,9 @@ const ContactInfo = () => {
               </div>
               <div className="space-y-3 text-gray-700">
                 <p className="text-base">
-                  We are available 24/7, 7 days a week.
+                  We are available to assist you with your journey to nature 24/7.
                 </p>
-                <p className="text-base font-medium">Phone: +880161112222</p>
+                <p className="text-base font-medium">Phone: +91 8871317382</p>
               </div>
             </div>
 
@@ -58,8 +58,8 @@ const ContactInfo = () => {
                 <p className="text-base">
                   Fill out our form and we will contact you within 24 hours.
                 </p>
-                <p className="text-base">Emails: customer@exclusive.com</p>
-                <p className="text-base">Emails: support@exclusive.com</p>
+                <p className="text-base">Email: landsend.sumiran@gmail.com</p>
+                <p className="text-base">Website: www.sumiran.org</p>
               </div>
             </div>
           </div>

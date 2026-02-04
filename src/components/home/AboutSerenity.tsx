@@ -10,7 +10,7 @@ const AboutSerenity = () => {
         <h2 className="text-3xl leading-none ">
           About{" "}
           <span className="font-light">
-             Land's End<br />  Resort
+             Land&apos;s End<br />  Resort
           </span>
         </h2>
         <div className="w-12 h-2 bg-[#067C0B]"></div>
@@ -25,7 +25,7 @@ const AboutSerenity = () => {
             <h2 className="md:text-5xl xl:text-7xl md:mb-2 xl:mb-4">
               About{" "}
               <span className="font-light">
-                Land's End<br />  Resort
+                Land&apos;s End<br />  Resort
               </span>
             </h2>
             <div className="w-16 h-3 md:h-2 bg-[#067C0B]"></div>

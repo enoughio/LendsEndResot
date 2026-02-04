@@ -83,7 +83,7 @@ const ContactForm: React.FC = () => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      console.log("Form submitted:", formData);
+      // TODO: Integrate with contact form service/API
       setSubmitSuccess(true);
 
       // Reset form
@@ -99,7 +99,10 @@ const ContactForm: React.FC = () => {
         setSubmitSuccess(false);
       }, 3000);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      // TODO: Add proper error handling and user notification
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error submitting form:", error);
+      }
     } finally {
       setIsSubmitting(false);
     }

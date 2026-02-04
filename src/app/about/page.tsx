@@ -1,6 +1,17 @@
+import { Metadata } from 'next';
 import Fotter from '@/components/Fotter';
 import { Heart, Target, Eye, Award, Users, Leaf, Shield, MapPin, Quote } from 'lucide-react';
 import Image  from 'next/image';
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description: "Learn about Land's End Resort at Sumiran Forest - our story, mission, and commitment to conservation. 600 acres of protected forest, 300 acres of woodland, 90 acres of water bodies, and 100 acres of organic farms.",
+  openGraph: {
+    title: "About Land's End Resort | Sumiran Forest Conservation",
+    description: "Discover our story, mission, and commitment to protecting 600 acres of pristine forest near Bhopal with community-led conservation.",
+    images: ['/about/aboutHero.png'],
+  },
+};
 
 
 export default function AboutPage() {

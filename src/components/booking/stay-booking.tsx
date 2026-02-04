@@ -10,16 +10,17 @@ interface StayBookingProps {}
 
 // Simple image component with error handling
 function ImageWithFallback({ src, alt, className, width, height }: { src: string; alt: string; className?: string; width?: number; height?: number }) {
+  const [imgSrc, setImgSrc] = useState(src);
+  
   return (
     <Image 
-      src={src} 
+      src={imgSrc} 
       alt={alt} 
       width={width || 400}
       height={height || 300}
       className={className}
-      onError={(e) => {
-        const target = e.target as HTMLImageElement;
-        target.src = '/placeholder.png';
+      onError={() => {
+        setImgSrc('/placeholder.png');
       }}
     />
   );

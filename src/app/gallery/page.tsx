@@ -1,6 +1,17 @@
 import React from "react";
+import { Metadata } from 'next';
 import Image from "next/image";
 import Fotter from "@/components/Fotter";
+
+export const metadata: Metadata = {
+  title: "Gallery",
+  description: "Explore stunning photos of Land's End Resort at Sumiran Forest - pristine nature, wildlife, activities, accommodations, and the beautiful landscape of our 600-acre eco resort near Bhopal.",
+  openGraph: {
+    title: "Gallery | Land's End Resort - Sumiran Forest",
+    description: "Browse through stunning images of our pristine forest, wildlife, activities, and eco-friendly accommodations.",
+    images: ['/gallery/riverrafting.jpeg'],
+  },
+};
 
 // Gallery images from public/gallery folder
 const COLLAGE_IMAGES: string[] = [

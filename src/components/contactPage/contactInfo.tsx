@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import ContactForm from "./ContactForm";
 import Image from "next/image";

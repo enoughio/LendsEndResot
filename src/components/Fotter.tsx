@@ -6,11 +6,10 @@ import Link from 'next/link'
 const Fotter = () => {
   const [email, setEmail] = useState('')
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
     // Handle newsletter subscription
-    console.log('Subscribing email:', email)
+    // TODO: Integrate with newsletter service
     setEmail('')
   }
 

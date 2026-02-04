@@ -1,18 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 
 const Fotter = () => {
-  const [email, setEmail] = useState('')
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle newsletter subscription
-    // TODO: Integrate with newsletter service
-    setEmail('')
-  }
-
   return (
     <footer className="relative bg-[#0a1f1a] text-white overflow-hidden ">
       {/* Background Image with Overlay */}

@@ -61,9 +61,9 @@ const NavBaR = () => {
             <Link href="/gallery" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
               Gallery
             </Link>
-            <Link href="/events" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
+            {/* <Link href="/events" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
               Events
-            </Link>
+            </Link> */}
             {/* <Link href="/contact" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
               Contact
             </Link> */}

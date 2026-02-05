@@ -3,15 +3,15 @@ import React from "react";
 // import StayDetailsCard from '../StayDetailsCard'
 const Hero = () => {
   return (
-    <section className="relative w-full h-screen max-h-screen sm:h-screen ">
+    <section className="relative w-full h-screen max-h-screen sm:h-screen  ">
       <div className="relative w-full h-full ">
        
-        <div className="block sm:hidden absolute -top-23 w-full  h-full ">
+        <div className="block sm:hidden absolute -top-23  w-full  h-full ">
           <Image
             src={"/mobileHero.jpeg"}
             alt="hero"
             fill
-            className="object-cover "
+            className="object-fill"
             priority
           />
         </div>
@@ -27,7 +27,7 @@ const Hero = () => {
           />
         </div>
 
-
+        {/* desktop */}
         <p className="hidden sm:flex absolute left-35 sm:bottom-[71%] items-center justify-center text-center text-white tracking-wide sm:text-[6vw]  z-20 font-bold">
           Nature is Our Finest Luxury
         </p>
@@ -44,8 +44,10 @@ const Hero = () => {
               />
             </div>
           </div> */}
-        <p className="sm:hidden text-white tracking-tight leading-9  text-4xl z-20 absolute inset-0 bottom-[65%] flex items-center font-semibold pl-6">
-          Nature is  Our Finest Luxury
+
+          {/* mobile */}
+        <p className="sm:hidden text-white tracking-tight  text-5xl z-20 absolute inset-0 bottom-[65%] flex items-center font-semibold pl-6">
+          Nature is Our <br /> Finest Luxury
         </p>
         <p className="hidden sm:flex items-center font-semibold text-white sm:text-sm lg:text-lg 2xl:text-2xl z-20 absolute left-[10%] top-[36%] max-w-[20%] ">
           &quot;We are a natural forest resort located in the lap of nature, offering luxury stays, calm surroundings, and unforgettable experiences.&quot;

@@ -77,7 +77,7 @@ const AboutSerenity = () => {
 
         {/* Right Side (Image) */}
         <div className="flex justify-center self-start mt-[1vw] order-1 md:order-2 ">
-          <div className="relative w-full max-w-[95%] sm:aspect-square h-72 sm:h-auto  max-h-[60vh]">
+          <div className="relative w-full max-w-[99%] sm:aspect-square h-72 sm:h-auto  max-h-[60vh]">
             <Image
               src="/about section image.svg"
               alt="Serenity Lake Resort"

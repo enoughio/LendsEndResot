@@ -14,24 +14,24 @@ const Location = () => {
             <div className="h-1 w-32 bg-green-600"></div>
           </div>
 
-          <button className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-colors">
-            
-            <Link href={'https://maps.app.goo.gl/BNvC131L8wwmBHbi8'}></Link>
-            <span className="text-sm font-medium">maps</span>
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 17L17 7M17 7H7M17 7V17"
-              />
-            </svg>
-          </button>
+          <Link href={"https://maps.app.goo.gl/BNvC131L8wwmBHbi8"}>
+            <button className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-colors">
+              <span className="text-sm font-medium">maps</span>
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M7 17L17 7M17 7H7M17 7V17"
+                />
+              </svg>
+            </button>
+          </Link>
         </div>
 
         {/* Map Container */}
@@ -43,7 +43,7 @@ const Location = () => {
             style={{ border: 0 }}
             allowFullScreen
             loading="lazy"
-             referrerPolicy="no-referrer-when-downgrade"
+            referrerPolicy="no-referrer-when-downgrade"
             className="w-full"
           ></iframe>
         </div>
@@ -62,7 +62,8 @@ const Location = () => {
             />
           </svg>
           <p className="text-base">
-            Land&apos;s End Resort, 8C93+JP9, Bhopal Rd, Bhopal, Madhya Pradesh 462038
+            Land&apos;s End Resort, 8C93+JP9, Bhopal Rd, Bhopal, Madhya Pradesh
+            462038
           </p>
         </div>
       </div>

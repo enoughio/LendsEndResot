@@ -15,7 +15,41 @@ export const metadata: Metadata = {
 
 // Gallery images from public/gallery folder
 const COLLAGE_IMAGES: string[] = [
+  "/gallery/bird.jpeg",
+  "/gallery/climbing.jpeg",
+  "/gallery/con1.jpeg",
+  "/gallery/con2.jpeg",
+  "/gallery/con3.jpeg",
+  "/gallery/farmin_sumiran.jpeg",
+  "/gallery/flowers_sumiran.jpeg",
+  "/gallery/food_sumiran.jpeg",
+  "/gallery/forestView.jpeg",
+  "/gallery/forestwalk.jpeg",
+  "/gallery/lake.jpeg",
+  "/gallery/lake_sumiran.jpeg",
+  "/gallery/lake_sumiran2.jpeg",
+  "/gallery/lake_View.jpeg",
+  "/gallery/mediation.jpeg",
+  "/gallery/orgaminc_Farming.jpeg",
+  "/gallery/organic_farmin2.jpeg",
+  "/gallery/pray_sumiran.jpeg",
+  "/gallery/prayer_sumiran.jpeg",
+  "/gallery/rafting.jpeg",
+  "/gallery/rafting2.jpeg",
   "/gallery/riverrafting.jpeg",
+  "/gallery/room1.jpeg",
+  "/gallery/room2.jpeg",
+  "/gallery/room3.jpeg",
+  "/gallery/shooting.jpeg",
+  "/gallery/sooting.jpeg",
+  "/gallery/stairs_sumiran.jpeg",
+  "/gallery/stargazing.jpeg",
+  "/gallery/storytelling.jpeg",
+  "/gallery/storytelling_sumiran.jpeg",
+  "/gallery/storytelling_sumiran2.jpeg",
+  "/gallery/storytelling_sumiran3.jpeg",
+  "/gallery/target_shooting.jpeg",
+  "/gallery/target_shooting2.jpeg",
   "/gallery/WhatsApp Image 2026-02-04 at 8.32.01 PM.jpeg",
   "/gallery/WhatsApp Image 2026-02-04 at 8.32.03 PM (1).jpeg",
   "/gallery/WhatsApp Image 2026-02-04 at 8.32.03 PM.jpeg",
@@ -93,14 +127,16 @@ const COLLAGE_IMAGES: string[] = [
   "/gallery/WhatsApp Image 2026-02-04 at 8.33.18 PM (1).jpeg",
   "/gallery/WhatsApp Image 2026-02-04 at 8.33.18 PM.jpeg",
   "/gallery/WhatsApp Image 2026-02-04 at 8.33.19 PM.jpeg",
+  "/gallery/yoga.jpeg",
+
 ];
 
 // Collage layout using CSS columns for a simple masonry effect.
 // Tailwind classes rely on global config already in project.
 const CollagePage = () => {
   return (
-    <section className="px-[3vw] py-8 md:py-12">
-      <header className="mb-8">
+    <section className=" py-8 md:py-12 md:pb-0">
+      <header className="mb-8 px-[3vw]">
         <h1 className="text-5xl md:text-6xl leading-tight">Gallery Collage</h1>
         <div className="mt-3 w-14 h-2 bg-[#067C0B]" />
         <p className="mt-4 max-w-2xl text-sm md:text-base text-neutral-600">
@@ -109,11 +145,11 @@ const CollagePage = () => {
       </header>
       {/* Masonry / collage container */}
       <div
-        className="[column-fill:balance] columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-3 md:gap-4"
+        className="[column-fill:balance] columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-3 md:gap-4 px-[3vw]"
       >
         {COLLAGE_IMAGES.map((src, i) => (
           <figure
-            key={src + i}
+            key={src}
             className="mb-3 md:mb-4 break-inside-avoid rounded-xl overflow-hidden relative group"
           >
             <Image

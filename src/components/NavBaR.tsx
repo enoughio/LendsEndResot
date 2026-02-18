@@ -8,9 +8,11 @@ const NavBaR = () => {
   return (
     <nav className="max-w-[99vw] h-12 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 justify-between ml-auto sm:justify-end items-center text-white bg-black/10  shadow-md">
       {/* Logo */}
+        <Link href="/" className="cursor-pointer h-full p-2 rounded-md hover:bg-gray-600/40">
       <div className="font-bold text-md sm:text-2xl text-start w-full pl-5 absolute top-5 left-2">
         LAND&apos;S END
       </div>
+        </Link>
 
       <div className="flex justify-end items-center w-full sm:w-auto">
         {/* checkbox controller */}

@@ -14,6 +14,7 @@ const Hero = () => {
             className="object-fill"
             priority
           />
+          {/* <div className="hidden sm:block w-full h-[15vh] bg-black -mt-1" /> */}
         </div>
 
         <div className="h-[122%]  hidden sm:block sm:h-auto">
@@ -25,12 +26,16 @@ const Hero = () => {
             className="object-bottom object-cover"
             priority
           />
+
         </div>
 
         {/* desktop */}
         <p className="hidden sm:flex absolute left-35 sm:bottom-[71%] items-center justify-center text-center text-white tracking-wide sm:text-[6vw]  z-20 font-bold">
           Nature is Our Finest Luxury
         </p>
+
+
+
         {/* <div className="hidden sm:flex absolute inset-0 -bottom-[17%] items-center justify-center flex-col text-center text-white sm:text-4xl md:text-5xl lg:text-7xl xl:text-[5rem] 2xl:text-[6rem] z-20 font-bold">
             <p>Nature is Our Finest Luxury.</p>
             <div className="ml-28">
@@ -49,8 +54,14 @@ const Hero = () => {
         <p className="sm:hidden text-white tracking-tight  text-5xl z-20 absolute inset-0 bottom-[65%] flex items-center font-semibold pl-6">
           Nature is Our <br /> Finest Luxury
         </p>
-        <p className="hidden sm:flex items-center font-semibold text-white sm:text-sm lg:text-lg 2xl:text-2xl z-20 absolute left-[10%] top-[36%] max-w-[20%] ">
-          &quot;We are a natural forest resort located in the lap of nature, offering luxury stays, calm surroundings, and unforgettable experiences.&quot;
+
+        <p className="flex sm:hidden items-center font-semibold text-white sm:text-sm lg:text-xl 2xl:text-2xl z-200 absolute top-[25%]  max-w-[90%] px-6">
+          &quot;Land’s End is a nature-rooted retreat where forests, silence, and stories bring people back to themselves.&quot;
+        </p>
+
+
+        <p className="hidden sm:flex items-center font-semibold text-white sm:text-sm lg:text-xl 2xl:text-2xl z-20 absolute left-[10%] top-[36%] max-w-[20%] ">
+          &quot;Land’s End is a nature-rooted retreat where forests, silence, and stories bring people back to themselves.&quot;
         </p>
       </div>
         

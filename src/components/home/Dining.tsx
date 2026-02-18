@@ -5,11 +5,11 @@ import Image from "next/image";
 const LAKESIDE_BG =
   "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1400&q=60"; // Night restaurant outdoor
 // const LAKESIDE_INLINE =
-  // "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=60"; // Dining table
+// "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=60"; // Dining table
 
 const Dining = () => {
   return (
-    <section className="px-[3vw] py-8 md:py-10 mx-auto">
+    <section className="overflow-hidden px-[3vw] py-8 md:py-10 mx-auto">
       {/* Heading */}
       <div className="relative mb-8">
         <h2 className="text-5xl md:text-7xl leading-tight">
@@ -17,7 +17,7 @@ const Dining = () => {
         </h2>
         <div className="w-12 md:w-16 h-2 bg-[#067C0B]" />
         {/* Decorative leaf for mobile */}
-        <div className="md:hidden absolute -right-4 md:right-0  top-8 md:top-0 translate-y-[-40%] w-[38vw] max-w-[220px]">
+        <div className="md:hidden absolute -right-4 md:right-0  top-8 md:top-0 translate-y-[-40%] w-[20vw] md:w-[38vw] max-w-[220px] ">
           <Image
             src="/home/dining-leaf.svg"
             alt="Decorative leaves"
@@ -44,31 +44,28 @@ const Dining = () => {
         <div className="relative flex flex-col justify-start px-3 md:px-6 pt-12 pb-14 text-white">
           <h3 className="text-4xl font-semibold mb-6 leading-tight">Lakeside Restaurant</h3>
           <p className="text-sm leading-relaxed mb-4">
-            Experience fine dining with panoramic lake views at our signature
-            restaurant. Our chefs create culinary masterpieces using fresh,
-            organic ingredients sourced locally from Madhya Pradesh.
+            At Land’s End – The Last Resort, dining is rooted in simplicity and respect for the land. Our kitchen serves simple, organic, home-style food, drawing from local cuisines and forest-inspired delicacies. Ingredients are sourced from nearby farms and grown organically, keeping meals fresh, seasonal, and deeply nourishing.
           </p>
           <div className="space-y-2 text-base">
             <div>
-              <p className="font-semibold mb-1">Local Delicacies</p>
+              {/* <p className="font-semibold mb-1">Local Delicacies</p> */}
               <p className="text-sm">
-                Authentic Madhya Pradesh cuisine including Poha, Dal Bafla, and
-                Bhutte ka Kees
+                Every dish here carries a story, of the soil it grew in, the hands that nurtured it, and the traditions it comes from. Meals are unhurried, shared, and mindful, inviting guests to slow down, listen, and reconnect; through food, nature, and conversation.
               </p>
             </div>
-            <div>
+            {/* <div>
               <p className="font-semibold mb-1">Organic Ingredients</p>
               <p className="text-sm">
                 Farm-to-table dining with organic produce from local farmers
               </p>
-            </div>
-            <div className="hidden  sm:inline-block md:hidden">
+            </div> */}
+            {/* <div className="hidden  sm:inline-block md:hidden">
               <p className="font-semibold">Fine Dining</p>
               <p>
                 International cuisine and curated wine selection for discerning
                 palates
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -77,14 +74,14 @@ const Dining = () => {
       <div className="hidden md:block">
         <div className="relative rounded-xl overflow-hidden shadow-[0_10px_35px_-5px_rgba(0,0,0,0.35)]">
           {/* Background image */}
-            <Image
-              src={LAKESIDE_BG}
-              alt="Lakeside restaurant backdrop"
-              fill
-              sizes="100vw"
-              className="object-cover"
-              priority
-            />
+          <Image
+            src={LAKESIDE_BG}
+            alt="Lakeside restaurant backdrop"
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority
+          />
           <div className="absolute inset-0 bg-[#0A2816]/70" />
           <div className="relative grid grid-cols-12 gap-4 md:gap-8 px-10 py-14 xl:py-20">
             {/* Text Column */}

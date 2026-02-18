@@ -1,14 +1,13 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 // Gallery images from public/gallery folder
 const HERO = "/gallery/WhatsApp Image 2026-02-04 at 8.32.01 PM.jpeg";
 const SMALL_1 = "/gallery/room1.jpeg";
-const SMALL_2 = "/gallery/room2.jpeg";
 const SMALL_3 = "/gallery/room3.jpeg";
-// const SMALL_3 = "/gallery/con1.jpeg";
-// const SMALL_4 = "/gallery/con2.jpeg";
+const SMALL_2 = "/gallery/storytelling_sumiran2.jpeg";
+// const SMALL_3 = "/gallery/con2.jpeg";
+const SMALL_4 = "/gallery/room2.jpeg";
 
 const Gallery = () => {
   return (
@@ -35,7 +34,7 @@ const Gallery = () => {
 
       {/* Middle thumbnails: 2 images on mobile/tablet, 4 images on large screens */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-5">
-        {[SMALL_3, SMALL_2].map((src, idx) => (
+        {[SMALL_4, SMALL_3].map((src, idx) => (
           <div
             key={idx}
             className="relative w-full aspect-[6/3] md:aspect-[6/4] rounded-xl overflow-hidden"
@@ -49,7 +48,7 @@ const Gallery = () => {
             />
           </div>
         ))}
-        {[SMALL_3, SMALL_1].map((src, idx) => (
+        {[SMALL_2, SMALL_1].map((src, idx) => (
           <div
             key={`extra-${idx}`}
             className="hidden lg:block relative w-full aspect-[6/2] md:aspect-[6/4] rounded-xl overflow-hidden"

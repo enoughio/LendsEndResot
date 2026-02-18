@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 const Fotter = () => {
   return (
-    <footer className="relative bg-[#0a1f1a] text-white overflow-hidden ">
+    <footer className="relative bg-[#0a1f1a] text-white overflow-hidden  mt-10 w-full">
       {/* Background Image with Overlay */}
       {/* <div className="absolute inset-0 z-0">
         <Image

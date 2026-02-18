@@ -37,14 +37,13 @@ const Location = () => {
         {/* Map Container */}
         <div className="relative w-full rounded-2xl overflow-hidden shadow-lg">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d16388.391782316477!2d77.38794686921553!3d23.332402271901287!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397c69000e51596b%3A0xa63b46a654b6b1d4!2sLands%20and%20resort!5e0!3m2!1sen!2sin!4v1770232521121!5m2!1sen!2sin"
-            width="600"
-            height="450"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d745294.7185938999!2d77.15679512346685!3d23.169556993612698!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397cf754efbce7a9%3A0x37f2f681632943bc!2sSumiran%20ecological%20foundation(sumiran%20krishi%20farm)!5e0!3m2!1sen!2sin!4v1771420893560!5m2!1sen!2sin"
+            width="100%"
+            height="600"
             style={{ border: 0 }}
-            allowFullScreen
+            // allowfullscreen=""
             loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="w-full"
+            referrerpolicy="no-referrer-when-downgrade"
           ></iframe>
         </div>
 
@@ -62,8 +61,8 @@ const Location = () => {
             />
           </svg>
           <p className="text-base">
-            Land&apos;s End Resort, 8C93+JP9, Bhopal Rd, Bhopal, Madhya Pradesh
-            462038
+            Land&apos;s End Resort at Sumiran ecological foundation, Sagoni,
+            Bilkisganj, Madhya Pradesh 466115
           </p>
         </div>
       </div>

@@ -3,8 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useSession, signOut } from "next-auth/react";
 
 const NavBaR = () => {
+  const { data: session } = useSession();
+
   return (
     <nav className="max-w-[99vw] h-12 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 justify-between ml-auto sm:justify-end items-center text-white bg-black/10  shadow-md">
       {/* Logo */}
@@ -57,6 +60,9 @@ const NavBaR = () => {
             <Link href="/" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
               Home
             </Link>
+            <Link href="/booking" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
+              Booking
+            </Link>
             <Link href="/about" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
               About
             </Link>
@@ -82,6 +88,22 @@ const NavBaR = () => {
               Contact Us
             </Link>
             </div>
+            {session ? (
+              <div className="flex items-center gap-2 text-sm">
+                {session.user?.role === "ADMIN" && (
+                  <Link href="/admin" className="px-3 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition text-center">
+                    Admin
+                  </Link>
+                )}
+                <button onClick={() => signOut({ callbackUrl: "/" })} className="px-3 py-2 rounded-full border border-gray-200 hover:bg-gray-100 transition">
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              <Link href="/auth/login" className="px-3 py-2 rounded-full border-2 border-gray-200 hover:bg-white/10 transition w-full sm:w-auto text-center">
+                Sign in
+              </Link>
+            )}
           </div>
         </div>
       </div>

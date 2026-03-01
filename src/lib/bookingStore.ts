@@ -1,0 +1,47 @@
+import { RoomStatus } from '@prisma/client';
+
+// Fallback rooms used when database is empty so the UI still shows offerings.
+export const sampleRooms = [
+	{
+		name: 'Deluxe Forest Room',
+		slug: 'deluxe-forest-room',
+		type: 'Deluxe',
+		description: 'Cozy forest-facing room with balcony seating and modern comforts.',
+		price: 4999,
+		currency: 'INR',
+		capacity: 2,
+		beds: 1,
+		status: RoomStatus.AVAILABLE,
+		amenities: ['Queen Bed', 'Ensuite Bath', 'Air Conditioning', 'Balcony', 'Forest View'],
+		images: ['/gallery/room1.jpeg'],
+		totalInventory: 5,
+	},
+	{
+		name: 'Executive Suite',
+		slug: 'executive-suite',
+		type: 'Suite',
+		description: 'Spacious suite with lounge, desk, and panoramic reserve views.',
+		price: 7999,
+		currency: 'INR',
+		capacity: 3,
+		beds: 1,
+		status: RoomStatus.AVAILABLE,
+		amenities: ['King Bed', 'Work Desk', 'Mini Bar', 'Private Lounge', 'Smart TV'],
+		images: ['/gallery/room2.jpeg'],
+		totalInventory: 3,
+	},
+	{
+		name: 'Tower Villa',
+		slug: 'tower-villa',
+		type: 'Villa',
+		description: 'Two-bedroom villa nestled in the canopy with private deck.',
+		price: 12999,
+		currency: 'INR',
+		capacity: 4,
+		beds: 2,
+		status: RoomStatus.AVAILABLE,
+		amenities: ['2 Bedrooms', 'Private Deck', 'Kitchenette', 'Butler on call', 'Forest Concierge'],
+		images: ['/gallery/room3.jpeg'],
+		totalInventory: 2,
+	},
+];

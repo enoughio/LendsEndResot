@@ -5,6 +5,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next"
 import NavBaR from "@/components/NavBaR";
 import StructuredData from "@/components/StructuredData";
+import { Providers } from "@/components/Providers";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -80,10 +81,12 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body className={`${urbanist.className} relative`}>
-        <Analytics />
-        <NavBaR />
-        {children}
-        {/* <Fotter /> */}
+        <Providers>
+          <Analytics />
+          <NavBaR />
+          {children}
+          {/* <Fotter /> */}
+        </Providers>
       </body>
     </html>
   );

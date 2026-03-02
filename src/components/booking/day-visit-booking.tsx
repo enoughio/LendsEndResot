@@ -34,10 +34,10 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
   };
 
   // TODO: Re-enable when booking functionality is restored
-  // const handleConfirmBooking = () => {
-  //   // Dummy payment - in real app, integrate payment gateway
-  //   router.push('/booking/booked?type=' + type);
-  // };
+  const handleConfirmBooking = () => {
+    // Dummy payment - in real app, integrate payment gateway
+    router.push('/booking/booked?type=' + type);
+  };
 
   const toggleActivity = (activityId: string) => {
     if (selectedActivities.includes(activityId)) {
@@ -232,9 +232,10 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
                 />
               </div>
             </div>
-
+              
             {/* Login Section */}
-            <div className="border-t pt-6">
+            <div className="border-t pt-6 pb-5" />
+            {/* 
               <h2 className="text-gray-900 mb-4">Login or Sign up to book</h2>
               <div className="space-y-4">
                 <div>
@@ -289,7 +290,7 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
                   Continue with email
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Right Column - Price Summary */}
@@ -341,13 +342,13 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
               </div>
 
               {/* TODO: Re-enable booking functionality */}
-              {/* <button 
+              <button 
                 disabled={selectedActivities.length !== maxActivities || !visitDate}
                 onClick={handleConfirmBooking}
                 className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Confirm Booking
-              </button> */}
+              </button>
             </div>
           </div>
         </div>

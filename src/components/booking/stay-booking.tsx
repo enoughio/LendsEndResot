@@ -89,10 +89,10 @@ export function StayBooking({ }: StayBookingProps) {
   };
 
   // TODO: Re-enable when booking functionality is restored
-  // const handleConfirmBooking = () => {
-  //   // Dummy payment - in real app, integrate payment gateway
-  //   router.push('/booking/booked?type=stay&room=' + selectedRoom);
-  // };
+  const handleConfirmBooking = () => {
+    // Dummy payment - in real app, integrate payment gateway
+    router.push('/booking/booked?type=stay&room=' + selectedRoom);
+  };
 
   const selectedRoomData = roomTypes.find(r => r.id === selectedRoom);
 
@@ -343,8 +343,10 @@ export function StayBooking({ }: StayBookingProps) {
                   </div>
                 </div>
 
+
+
                 {/* Login Section */}
-                <div className="border-t pt-6">
+                {/* <div className="border-t pt-6">
                   <h2 className="text-gray-900 mb-4">Login or Sign up to book</h2>
                   <div className="space-y-4">
                     <div>
@@ -357,7 +359,7 @@ export function StayBooking({ }: StayBookingProps) {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                       <p className="text-sm text-gray-500 mt-2">
-                        We&apos;ll call or text you to confirm your number. Standard message and data rates apply.
+                        We&apos;ll call or text you to confirm your number.
                       </p>
                     </div>
 
@@ -399,13 +401,16 @@ export function StayBooking({ }: StayBookingProps) {
                       Continue with email
                     </button>
                   </div>
-                </div>
+                </div> */}
+
+
+
               </>
             )}
           </div>
 
           {/* Right Column - Price Summary */}
-          {selectedRoom && (
+          {selectedRoom && (  
             <div className="lg:col-span-1">
               <div className="bg-blue-50 rounded-lg p-6 border border-blue-200 sticky top-4">
                 <div className="mb-4">
@@ -467,13 +472,20 @@ export function StayBooking({ }: StayBookingProps) {
                 )}
 
                 {/* TODO: Re-enable booking functionality */}
-                {/* <button 
+                <button 
                   disabled={!selectedRoom || freeActivities.length !== 2 || !checkInDate || !checkOutDate}
                   onClick={handleConfirmBooking}
-                  className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-200 hover:border-green-400 hover:border-2 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Confirm Booking
-                </button> */}
+                  Confirm Booking (pay at property)
+                </button>
+                <button 
+                  disabled={!selectedRoom || freeActivities.length !== 2 || !checkInDate || !checkOutDate}
+                  onClick={handleConfirmBooking}
+                  className="w-full py-3 mt-3  border-green-500 border-2 rounded-lg hover:bg-green-200 transition-colors hover:scale-104 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Confirm Booking (pay now)
+                </button>
               </div>
             </div>
           )}

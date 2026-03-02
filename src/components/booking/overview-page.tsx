@@ -1,22 +1,24 @@
 'use client'
 
 import { Star, MapPin, Clock, CheckCircle2 } from 'lucide-react';
-// import { BookingType } from '@/lib/types'; 
+import { BookingType } from '@/lib/types';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import AboutHero from './AboutHero';
 
 
+
 export function OverviewPage() {
-  // const router = useRouter();
+  const router = useRouter();
   
   // TODO: Re-enable when booking functionality is restored
-  // const onSelectBooking = (type: BookingType) => {
-  //   if (type === 'full-day' || type === 'half-day') {
-  //     router.push('/booking/visit?type=' + (type === 'full-day' ? 'full' : 'half'));
-  //   } else if (type === 'stay') {
-  //     router.push('/booking/stay');
-  //   }
-  // };
+  const onSelectBooking = (type: BookingType) => {
+    if (type === 'full-day' || type === 'half-day') {
+      router.push('/booking/visit?type=' + (type === 'full-day' ? 'full' : 'half'));
+    } else if (type === 'stay') {
+      router.push('/booking/stay');
+    }
+  };
 
   const activities = [
   'Bird Watching',
@@ -103,13 +105,13 @@ export function OverviewPage() {
         {/* Offerings Section */}
         <section className="mb-12">
           <div className="mb-6">
-            <h2 className="text-gray-900">Our Offerings</h2>
+            <h2 className="text-gray-900 font-bold text-5xl pb-5">Our Offerings</h2>
             <div className="w-12 h-1 bg-green-600 mt-1"></div>
           </div>
 
           {/* Day Visits */}
           <div className="mb-8">
-            <h3 className="text-gray-900 mb-4">Day Visit at Sumiran</h3>
+            <h3 className="text-gray-900 mb-4 font-semibold text-4xl">Day Visit at Sumiran</h3>
             <div className="space-y-4">
               {/* Full Day Visit */}
               <div className="flex items-start gap-4 p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
@@ -157,12 +159,12 @@ export function OverviewPage() {
                     <span className="text-gray-600">/person</span>
                   </div>
                   {/* TODO: Re-enable booking functionality */}
-                  {/* <button 
+                   <button 
                     onClick={() => onSelectBooking('full-day')}
                     className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Book now
-                  </button> */}
+                  </button> 
                 </div>
               </div>
 
@@ -208,12 +210,12 @@ export function OverviewPage() {
                     <span className="text-gray-600">/person</span>
                   </div>
                   {/* TODO: Re-enable booking functionality */}
-                  {/* <button 
+                   <button 
                     onClick={() => onSelectBooking('half-day')}
                     className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Book now
-                  </button> */}
+                  </button> 
                 </div>
               </div>
             </div>
@@ -221,7 +223,7 @@ export function OverviewPage() {
 
           {/* Stay at Sumiran */}
           <div>
-            <h3 className="text-gray-900 mb-4">Stay at Sumiran</h3>
+            <h3 className="text-gray-900 font-bold text-4xl mb-4">Stay at Sumiran</h3>
             <div className="p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
               <div className="flex items-start gap-4 mb-6">
                 <Image
@@ -281,12 +283,12 @@ export function OverviewPage() {
               </div>
 
               {/* TODO: Re-enable booking functionality */}
-              {/* <button 
+               <button 
                 onClick={() => onSelectBooking('stay')}
                 className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
                 Book Your Stay
-              </button> */}
+              </button> 
             </div>
           </div>
         </section>
@@ -328,9 +330,9 @@ export function OverviewPage() {
               <h2 className="text-gray-900">Reviews</h2>
               <div className="w-12 h-1 bg-green-600 mt-1"></div>
             </div>
-            <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+            {/* <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
               Give your review
-            </button>
+            </button> */}
           </div>
 
           {/* Overall Rating */}
@@ -365,9 +367,9 @@ export function OverviewPage() {
 
           {/* Pagination */}
           <div className="flex items-center justify-center gap-4 mt-8">
-            <button className="px-3 py-1 text-gray-600 hover:text-gray-900">{"<"}</button>
+            {/* <button className="px-3 py-1 text-gray-600 hover:text-gray-900">{"<"}</button> */}
             <span className="text-gray-700">1 of 96</span>
-            <button className="px-3 py-1 text-gray-600 hover:text-gray-900">{">"}</button>
+            {/* <button className="px-3 py-1 text-gray-600 hover:text-gray-900">{">"}</button> */}
           </div>
         </section>
       </div>

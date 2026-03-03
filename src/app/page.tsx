@@ -7,6 +7,9 @@ import Gallery from "@/components/home/Gallery";
 import Hero from "@/components/home/Hero"; 
 import Location from "@/components/home/Location";
 
+import "reflect-metadata";
+
+
 export const metadata: Metadata = {
   title: "Home",
   description: "Discover Land's End Resort at Sumiran Forest - A 600-acre eco resort near Bhopal with pristine nature, clean air (AQI <10), and sustainable living. Experience forest walks, bird watching, organic dining, and more.",

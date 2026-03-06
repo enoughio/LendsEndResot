@@ -4,12 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-function signOut() {
-  return true;
-}
+// function signOut() {
+//   return true;
+// }
 
 const NavBaR = () => {
-  const session = { user: { role: "ADMIN" } };
+  // const session = { user: { role: "ADMIN" } };
 
   return (
     <nav className="max-w-[99vw] h-12 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 justify-between ml-auto sm:justify-end items-center text-white bg-black/10  shadow-md">
@@ -94,9 +94,9 @@ const NavBaR = () => {
             >
               Gallery
             </Link>
-            {/* <Link href="/events" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
+            <Link href="/events" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
               Events
-            </Link> */}
+            </Link>
             {/* <Link href="/contact" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
               Contact
             </Link> */}
@@ -116,7 +116,7 @@ const NavBaR = () => {
                 Contact Us
               </Link>
             </div>
-            {session ? (
+            {/* {session ? (
               <div className="flex items-center gap-2 text-sm">
                 {session.user?.role === "ADMIN" && (
                   <Link
@@ -140,7 +140,7 @@ const NavBaR = () => {
               >
                 Sign in
               </Link>
-            )}
+            )} */}
           </div>
         </div>
       </div>

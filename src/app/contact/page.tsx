@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 const Contact = () => {
+
   return (
     <div>
       <ContactHero />
@@ -24,3 +25,5 @@ const Contact = () => {
 };
 
 export default Contact;
+
+

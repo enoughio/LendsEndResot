@@ -27,6 +27,7 @@ const ContactForm: React.FC = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -78,12 +79,21 @@ const ContactForm: React.FC = () => {
     }
 
     setIsSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-      // TODO: Integrate with contact form service/API
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error || "Failed to send your message.");
+      }
+
       setSubmitSuccess(true);
 
       // Reset form
@@ -93,14 +103,13 @@ const ContactForm: React.FC = () => {
         phone: "",
         message: "",
       });
-
-      // Reset success message after 3 seconds
-      setTimeout(() => {
-        setSubmitSuccess(false);
-      }, 3000);
     } catch (error) {
-      // TODO: Add proper error handling and user notification
-      if (process.env.NODE_ENV === 'development') {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unable to send your message right now.";
+      setSubmitError(message);
+      if (process.env.NODE_ENV === "development") {
         console.error("Error submitting form:", error);
       }
     } finally {
@@ -109,6 +118,26 @@ const ContactForm: React.FC = () => {
   };
 
   /* Right Column - Contact Form */
+  if (submitSuccess) {
+    return (
+      <div className="space-y-4 rounded-md border border-green-200 bg-green-50 p-6">
+        <h3 className="text-xl font-semibold text-green-800">
+          Message sent successfully
+        </h3>
+        <p className="text-green-700">
+          Thanks for reaching out. We received your message and will contact you within 24 hours.
+        </p>
+        <button
+          type="button"
+          onClick={() => setSubmitSuccess(false)}
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-md transition-colors"
+        >
+          Send another message
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -189,10 +218,9 @@ const ContactForm: React.FC = () => {
           </button>
         </div>
 
-        {/* Success Message */}
-        {submitSuccess && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-            Message sent successfully! We&apos;ll get back to you soon.
+        {submitError && (
+          <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded">
+            {submitError}
           </div>
         )}
       </form>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import { ArrowLeft, Calendar, Users, CheckCircle2, Clock, TreePine, Facebook, Apple } from 'lucide-react';
+import { ArrowLeft, Calendar, Users, CheckCircle2, Clock, TreePine } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -27,7 +27,6 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [visitDate, setVisitDate] = useState('');
   const [numGuests, setNumGuests] = useState(2);
-  const [phoneNumber, setPhoneNumber] = useState('');
 
   const handleBack = () => {
     router.push('/booking');

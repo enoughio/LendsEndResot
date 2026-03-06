@@ -1,4 +1,4 @@
-import { BedDouble, Building2, CalendarCheck, IndianRupee, Sun } from 'lucide-react';
+import { BedDouble, Building2, CalendarCheck, IndianRupee } from 'lucide-react';
 import { StatusBadge } from '../badges';
 import { statusConfig, visitPackageCategoryConfig } from '../config';
 import { type Booking, type BookingStatus, type Room, type RoomType, type Section, type VisitPackage, type VisitPackageCategory } from '../types';

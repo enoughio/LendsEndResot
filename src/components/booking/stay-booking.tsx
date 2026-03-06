@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import { ArrowLeft, Calendar, Users, CheckCircle2, Facebook, Apple, Plus, Minus } from 'lucide-react';
+import { ArrowLeft, Calendar, Users, CheckCircle2, Plus, Minus } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -82,7 +82,6 @@ export function StayBooking({ }: StayBookingProps) {
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
   const [numGuests, setNumGuests] = useState(2);
-  const [phoneNumber, setPhoneNumber] = useState('');
 
   const handleBack = () => {
     router.push('/booking');

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import { IoMdStar } from "react-icons/io";
 
 const AboutSerenity = () => {
   return (

@@ -177,7 +177,7 @@ export function VisitPackageModal({
           </div>
 
           <div>
-            <label className="text-stone-400 text-xs uppercase tracking-widest block mb-2">What's Included</label>
+            <label className="text-stone-400 text-xs uppercase tracking-widest block mb-2">What&apos;s Included</label>
             <div className="flex gap-2 mb-2">
               <input
                 className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]"

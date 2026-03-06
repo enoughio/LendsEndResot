@@ -4,21 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const data = {
-  data: {
-    user: {
-      role: "admin",
-    },
-  },
-  value: 44,
-};
-
-function signOut(data: { callbackUrl: string }) {
+function signOut() {
   return true;
 }
 
 const NavBaR = () => {
-  const { data: session } = data;
+  const session = { user: { role: "ADMIN" } };
 
   return (
     <nav className="max-w-[99vw] h-12 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 justify-between ml-auto sm:justify-end items-center text-white bg-black/10  shadow-md">
@@ -136,7 +127,7 @@ const NavBaR = () => {
                   </Link>
                 )}
                 <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
+                  onClick={() => signOut()}
                   className="px-3 py-2 rounded-full border border-gray-200 hover:bg-gray-100 transition"
                 >
                   Sign out

@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     siteName: "Land's End Resort",
     images: [
       {
-        url: '/gallery/room1.jpeg',
+        url: '/night sky.svg',
         width: 1200,
         height: 630,
         alt: "Land's End Resort - Sumiran Forest",

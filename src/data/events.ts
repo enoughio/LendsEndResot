@@ -13,6 +13,9 @@ export type Event = {
   earlyPrice?: string;
   regularPrice?: string;
   earlyBirdDeadline?: string;
+  seats?: number;
+  registrationLink?: string;
+  contact?: string[];
   includes?: string[];
   excludes?: string[];
   whoFor?: string[];
@@ -51,69 +54,57 @@ export const events: Event[] = [
   {
     id: "3",
     slug: "antarman-2026",
-    title: "Antarman — A Sufi Singing & Personal Storytelling Retreat",
+    title: "ANTARMAN — A Storytelling and Sufi Singing Retreat",
     shortDescription:
-      "A three-day retreat combining Sufi singing and personal storytelling for inner healing, held inside Sumiran’s 300-acre community conserved forest.",
+      "Three-day immersion into personal storytelling for healing and Sufi singing as inner medicine — 20–22 March 2026, Sumiran Forest (near Bhopal).",
     description:
-      `Antarman means the inner self. This retreat is an invitation to meet it — gently, honestly, courageously.
+      `Three-day immersion into Personal Storytelling for Healing and Sufi Singing as Inner Medicine.
 
-For three days, inside a 300-acre community conserved forest, you will enter a space where music becomes medicine and stories become healing. This is not about performance. This is about truth.
+Learn Sufi songs for inner healing.
+Discover how to tell your personal stories.
 
-The Heart of Antarman — Personal Storytelling for Healing
-With renowned storyteller Jyoti Pande, this retreat will focus deeply on identifying and shaping your personal stories, understanding how stories hold memory and emotion, reframing life experiences through narrative, speaking your truth in a safe, held space, and using storytelling as a path to self-acceptance and healing.
-
-Sufi Singing for Inner Healing
-Led by Anahita, a Sufi singer from Goa, the musical journey will centre around learning Sufi songs rooted in devotion and surrender, using breath and voice as tools for emotional release, understanding the healing power of collective singing, and experiencing music as meditation. No prior musical training required.
-
-Held inside Sumiran’s forest, participants will also experience guided forest walks, kayaking in the 60-acre lake, a natural mud bath, archery sessions, silent reflection time, and evenings under open skies. Accommodation (double sharing) and all meals are included.
+Held at Land's End – The Last Resort, Sumiran Forest, this retreat offers forest walks, reflection and soulful circles alongside guided sessions in storytelling and Sufi singing.
 `,
-    images: [
-      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80",
-    ],
+    images: ["/events/antarman.jpeg"],
     startDate: "2026-03-20",
     endDate: "2026-03-22",
-    time: "See daily schedule (mornings: walks & sessions; afternoons: workshops; evenings: group singing)",
-    location: "Land's End – The Last Resort, Sumiran Forest (near Bhopal)",
-    price: "Early Bird ₹14,999 | Regular ₹15,999 (per person, double sharing)",
+    time: "Full-day retreat program across three days; mornings: nature & sessions, afternoons: workshops, evenings: singing circles",
+    location: "Land's End – The Last Resort, Sumiran Forest, Near Bhopal",
+    price: "Early Bird: ₹14,999 (valid till 10 March 2026) • Regular: ₹15,999",
     earlyPrice: "₹14,999",
     regularPrice: "₹15,999",
+    earlyBirdDeadline: "2026-03-10",
+    seats: 16,
+    registrationLink: "https://rzp.io/rzp/fDNN9HW",
+    contact: ["+91 6268244196", "+91 8871317382"],
     includes: [
-      "All storytelling and Sufi singing sessions",
-      "All nature and adventure activities",
+      "Storytelling and Sufi singing sessions",
       "All meals during the retreat",
       "Accommodation (double sharing)",
+      "Guided forest walks and reflection time",
     ],
     excludes: ["Travel to and from Sumiran Forest"],
     whoFor: [
-      "Those carrying untold stories",
-      "Those seeking emotional clarity and healing",
-      "Lovers of music and meaning",
-      "Anyone ready to meet themselves a little more deeply",
+      "Those seeking healing through story and song",
+      "People curious about Sufi singing",
+      "Those ready to explore personal narratives in a held environment",
     ],
     sections: [
       {
-        title: "The Heart of Antarman",
+        title: "Facilitators",
         paragraphs: [
-          "Personal Storytelling for Healing — With renowned storyteller Jyoti Pande, this retreat will focus deeply on identifying and shaping your personal stories, understanding how stories hold memory and emotion, reframing life experiences through narrative, speaking your truth in a safe, held space, and using storytelling as a path to self-acceptance and healing.",
+          "Anahita Batra — Vocalist | Sufi Singer",
+          "Jyoti Pande — Storyteller | Psychologist",
         ],
       },
       {
-        title: "Sufi Singing for Inner Healing",
-        paragraphs: [
-          "Led by Anahita, a Sufi singer from Goa, the musical journey will centre around learning Sufi songs rooted in devotion and surrender, using breath and voice as tools for emotional release, understanding the healing power of collective singing, and experiencing music as meditation. No prior musical training required.",
-        ],
-      },
-      {
-        title: "Healing in the Lap of the Forest",
+        title: "Booking & Important Info",
         bullets: [
-          "Guided forest walks",
-          "Kayaking in the 60-acre lake",
-          "Mud bath in a natural mud pool",
-          "Archery sessions",
-          "Silent reflection time",
-          "Evenings under open skies",
+          "Limited to 16 seats only",
+          "Early Bird Offer: ₹14,999 (Valid till 10 March 2026)",
+          "Regular: ₹15,999",
+          "To register: https://rzp.io/rzp/fDNN9HW",
+          "Contact: +91 6268244196, +91 8871317382",
         ],
       },
     ],

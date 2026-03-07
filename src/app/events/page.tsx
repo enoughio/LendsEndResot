@@ -68,6 +68,9 @@ export default function EventsPage() {
               price={e.price}
               earlyPrice={e.earlyPrice}
               regularPrice={e.regularPrice}
+              registrationLink={e.registrationLink}
+              seats={e.seats}
+              earlyBirdDeadline={e.earlyBirdDeadline}
               href={`/events/${e.slug}`}
             />
           ))}

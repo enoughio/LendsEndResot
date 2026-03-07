@@ -38,7 +38,15 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
         <article className="lg:col-span-2 space-y-6 order-last lg:order-first">
           <div className="text-gray-700">
             <h2 className="text-gray-900 text-2xl">About this event</h2>
-            <p className="mt-2">{event.shortDescription}</p>
+            {event.description ? (
+              <div className="mt-2 space-y-3 text-gray-700">
+                {event.description.split(/\n\n+/).map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-2">{event.shortDescription}</p>
+            )}
           </div>
 
           {/* Structured sections from event data (matches PDF layout) */}
@@ -105,8 +113,31 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
               )}
             </div>
 
-            <div className="mt-4">
-              <a id="book" href="#" className="block w-full text-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">Book tickets</a>
+            <div className="mt-4 space-y-3">
+              <a
+                id="book"
+                href={event.registrationLink ?? '#'}
+                target={event.registrationLink ? "_blank" : undefined}
+                rel={event.registrationLink ? "noopener noreferrer" : undefined}
+                className="block w-full text-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+              >
+                {event.registrationLink ? 'Book tickets' : 'Book tickets'}
+              </a>
+
+              {event.seats ? (
+                <div className="text-sm text-gray-700">Seats: <strong className="text-gray-900">{event.seats}</strong> (limited)</div>
+              ) : null}
+
+              {event.contact && event.contact.length > 0 ? (
+                <div className="text-sm text-gray-700">
+                  <div className="text-gray-900 font-medium">Contact Us:</div>
+                  <div className="mt-1 space-y-1">
+                    {event.contact.map((c) => (
+                      <div key={c}><a href={`tel:${c.replace(/\s+/g, '')}`} className="text-green-700">{c}</a></div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
 

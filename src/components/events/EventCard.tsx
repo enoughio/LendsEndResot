@@ -13,6 +13,9 @@ type EventCardProps = {
   earlyPrice?: string;
   regularPrice?: string;
   href?: string;
+  registrationLink?: string;
+  seats?: number;
+  earlyBirdDeadline?: string;
 };
 
 const formatDate = (iso: string) => {
@@ -30,18 +33,20 @@ export default function EventCard({
   shortDescription,
   startDate,
   endDate,
-  time,
   location,
   price,
   earlyPrice,
   regularPrice,
   href = "#",
+  registrationLink,
+  seats,
+  earlyBirdDeadline,
 }: EventCardProps) {
   const isMulti = !!endDate && endDate !== startDate;
 
   return (
     <article className="flex flex-col md:flex-row bg-white border border-green-300 rounded-2xl hover:shadow-gray-600 overflow-hidden shadow-sm hover:shadow-lg">
-      <div className="relative w-full md:w-[40%] h-48 md:h-auto flex-shrink-0 rounded-2xl">
+      <div className="relative w-full md:w-[40%] h-96 md:h-auto flex-shrink-0 rounded-2xl">
         <Image
           src={image}
           alt={title}
@@ -61,9 +66,9 @@ export default function EventCard({
               <strong className="text-gray-800">Date:</strong>{" "}
               {formatDate(startDate)}{isMulti ? ` — ${formatDate(endDate as string)}` : ""}
             </div>
-            <div>
+            {/* <div>
               <strong className="text-gray-800">Timing:</strong>{" "}{time}{isMulti ? " (Daily)" : ""}
-            </div>
+            </div> */}
             <div>
               <strong className="text-gray-800">Location:</strong>{" "}{location}
             </div>
@@ -80,13 +85,35 @@ export default function EventCard({
                 )}
               </div>
             ) : null}
+            {seats ? (
+              <div>
+                <strong className="text-gray-800">Seats:</strong> {seats} (limited)
+              </div>
+            ) : null}
+            {earlyBirdDeadline ? (
+              <div>
+                <span className="inline-block bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full text-xs">Early-bird valid till {earlyBirdDeadline}</span>
+              </div>
+            ) : null}
           </div>
         </div>
 
         <div className="mt-4 md:mt-6 flex items-center justify-between">
-          <Link href={href} className="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-2xl text-sm">
-            View details
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href={href} className="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-2xl text-sm">
+              View details
+            </Link>
+            {registrationLink ? (
+              <a
+                href={registrationLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-white border border-green-600 text-green-600 px-4 py-2 rounded-2xl text-sm hover:bg-green-50"
+              >
+                Register
+              </a>
+            ) : null}
+          </div>
           <div className="text-xs text-gray-500">Free cancellation</div>
         </div>
       </div>

@@ -10,6 +10,7 @@ import {
   MapPin,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -556,14 +557,16 @@ export default function AboutPage() {
             Join us in our mission to protect nature while creating
             unforgettable memories. Your visit directly supports conservation
             efforts and local communities.
-          </p>
+          </p>  
           <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4">
-            <button className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 bg-white text-green-600 rounded-lg hover:bg-gray-100 transition-colors text-md md:text-base">
+            {/* <button className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 bg-white text-green-600 rounded-lg hover:bg-gray-100 transition-colors text-md md:text-base">
               Plan Your Visit
-            </button>
-            <button className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors text-md md:text-base">
+            </button> */}
+            <Link href={'/contact'}>
+            <button  className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors text-md md:text-base">
               Contact Us
             </button>
+            </Link>
           </div>
         </section>
       </div>

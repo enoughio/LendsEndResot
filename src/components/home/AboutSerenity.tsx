@@ -24,7 +24,7 @@ const AboutSerenity = () => {
             <h2 className="md:text-5xl xl:text-7xl md:mb-2 xl:mb-4">
               About{" "}
               <span className="font-light">
-                Land&apos;s End<br />  Resortz
+                Land&apos;s End<br />  Resort
               </span>
             </h2>
             <div className="w-16 h-3 md:h-2 bg-[#067C0B]"></div>

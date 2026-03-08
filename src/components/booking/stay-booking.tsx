@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Calendar, Users, CheckCircle2, Plus, Minus } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -25,57 +25,37 @@ function ImageWithFallback({ src, alt, className, width, height }: { src: string
     />
   );
 }
+type RoomTypeApi = {
+  id: string;
+  name: string;
+  description: string;
+  basePrice: number;
+  maxOccupancy: number;
+  amenities: string[];
+};
 
+type ActivityApi = {
+  id: string;
+  name: string;
+  duration: number;
+  price: number;
+  status: string;
+};
 
-
-const roomTypes = [
-  {
-    id: 'deluxe',
-    name: 'Deluxe Room',
-    price: 4999,
-    description: 'Cozy room with forest views and modern amenities',
-    amenities: ['Queen Bed', 'Private Bathroom', 'AC', 'Balcony'],
-    maxOccupancy: 2,
-  },
-  {
-    id: 'Executive',
-    name: 'Executive Rooms',
-    price: 7999,
-    description: 'Spacious suite with living area and premium furnishings',
-    amenities: ['King Bed', 'Living Area', 'Jacuzzi', 'Mini Bar', 'Terrace'],
-    maxOccupancy: 3,
-  },
-  {
-    id: 'Tower',
-    name: 'Tower Room',
-    price: 12999,
-    description: 'Private villa nestled in the forest with exclusive amenities',
-    amenities: ['2 Bedrooms', 'Private Pool', 'Kitchen', 'Dining Area', 'Garden'],
-    maxOccupancy: 4,
-  },
-  {
-    id: 'Dorm',
-    name: 'Dorm Bed',
-    price: 18999,
-    description: 'Luxurious cottage with premium services and butler',
-    amenities: ['3 Bedrooms', 'Private Pool', 'Butler Service', 'Home Theater', 'BBQ Area'],
-    maxOccupancy: 6,
-  },
-];
-
-const activities = [
-  { id: 'kayaking', name: 'Kayaking', duration: '1.5 hours', price: 800 },
-  { id: 'target-shooting', name: 'Target Shooting', duration: '2.5 hours', price: 1200 },
-  { id: 'bird-watching', name: 'Bird Watching', duration: '2 hours', price: 500 },
-  { id: 'jungle-trek', name: 'Jungle Trek', duration: '3 hours', price: 800 },
-  { id: 'river-rafting', name: 'River Rafting', duration: '2 hours', price: 1500 },
-  { id: 'star-gazing', name: 'Star Gazing', duration: '2 hours', price: 1000 },
-  { id: 'nature-photography', name: 'Nature Photography', duration: '3 hours', price: 700 },
-  { id: 'campfire', name: 'Campfire Experience', duration: '1.5 hours', price: 300 },
-];
+type BookingCatalogResponse = {
+  data: {
+    rooms: RoomTypeApi[];
+    activities: ActivityApi[];
+  };
+};
 
 export function StayBooking({ }: StayBookingProps) {
   const router = useRouter();
+  const [roomTypes, setRoomTypes] = useState<RoomTypeApi[]>([]);
+  const [activities, setActivities] = useState<ActivityApi[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [freeActivities, setFreeActivities] = useState<string[]>([]);
   const [additionalActivities, setAdditionalActivities] = useState<Record<string, number>>({});
@@ -87,10 +67,85 @@ export function StayBooking({ }: StayBookingProps) {
     router.push('/booking');
   };
 
-  // TODO: Re-enable when booking functionality is restored
-  const handleConfirmBooking = () => {
-    // Dummy payment - in real app, integrate payment gateway
-    router.push('/booking/booked?type=stay&room=' + selectedRoom);
+  useEffect(() => {
+    const loadCatalog = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await fetch('/api/booking');
+        if (!res.ok) throw new Error('Failed to load booking data');
+        const json = (await res.json()) as BookingCatalogResponse;
+        setRoomTypes(json.data.rooms || []);
+        setActivities((json.data.activities || []).filter((activity) => activity.status.toUpperCase() !== 'INACTIVE'));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load booking data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    void loadCatalog();
+  }, []);
+
+  const selectedActivityIds = useMemo(() => {
+    const extras = Object.entries(additionalActivities)
+      .filter(([, count]) => count > 0)
+      .map(([id]) => id)
+      .filter((id) => !freeActivities.includes(id));
+    return [...freeActivities, ...extras];
+  }, [additionalActivities, freeActivities]);
+
+  const handleConfirmBooking = async () => {
+    if (!selectedRoom || !checkInDate || !checkOutDate || selectedActivityIds.length < 1) return;
+
+    try {
+      setSubmitting(true);
+      setError(null);
+
+      const availabilityRes = await fetch('/api/availability/stay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomTypeId: selectedRoom,
+          checkIn: new Date(checkInDate).toISOString(),
+          checkOut: new Date(checkOutDate).toISOString(),
+          guests: numGuests,
+          activityIds: selectedActivityIds,
+        }),
+      });
+
+      const availabilityJson = await availabilityRes.json();
+      if (!availabilityRes.ok) {
+        throw new Error(availabilityJson?.error?.message || 'Availability check failed');
+      }
+
+      if (!availabilityJson?.data?.available) {
+        throw new Error('Selected room is not available for the selected dates.');
+      }
+
+      const createRes = await fetch('/api/bookings/stay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomTypeId: selectedRoom,
+          checkIn: new Date(checkInDate).toISOString(),
+          checkOut: new Date(checkOutDate).toISOString(),
+          guests: numGuests,
+          activityIds: selectedActivityIds,
+        }),
+      });
+      const createJson = await createRes.json();
+
+      if (!createRes.ok) {
+        throw new Error(createJson?.error?.message || 'Failed to create booking');
+      }
+
+      const bookingId = createJson?.data?.bookingId;
+      router.push(`/booking/booked?id=${bookingId}&type=stay`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to confirm booking');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const selectedRoomData = roomTypes.find(r => r.id === selectedRoom);
@@ -117,7 +172,7 @@ export function StayBooking({ }: StayBookingProps) {
   };
 
   const nights = checkInDate && checkOutDate ? Math.max(1, Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24))) : 0;
-  const basePrice = selectedRoomData && nights ? selectedRoomData.price * nights : 0;
+  const basePrice = selectedRoomData && nights ? selectedRoomData.basePrice * nights : 0;
   const additionalActivitiesTotal = Object.entries(additionalActivities).reduce((sum, [activityId, count]) => {
     const activity = activities.find(a => a.id === activityId);
     return sum + (activity?.price || 0) * count;
@@ -158,6 +213,9 @@ export function StayBooking({ }: StayBookingProps) {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Booking Details */}
           <div className="lg:col-span-2 space-y-6">
+            {loading && <p className="text-gray-600">Loading booking options...</p>}
+            {error && <p className="text-red-600">{error}</p>}
+
             {/* Room Selection */}
             <div>
               <h2 className="text-gray-900 mb-4">Choose Your Room</h2>
@@ -200,7 +258,7 @@ export function StayBooking({ }: StayBookingProps) {
                           </div>
                           <div className="flex items-center justify-between">
                             <span className="text-gray-600">Up to {room.maxOccupancy} guests</span>
-                            <span className="text-gray-900">₹{room.price.toLocaleString()}/night</span>
+                            <span className="text-gray-900">₹{room.basePrice.toLocaleString()}/night</span>
                           </div>
                         </div>
                       </div>
@@ -285,7 +343,7 @@ export function StayBooking({ }: StayBookingProps) {
                               <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
                             )}
                           </div>
-                          <p className="text-gray-500 text-xs">{activity.duration}</p>
+                          <p className="text-gray-500 text-xs">{activity.duration}h</p>
                           <p className="text-green-700 text-sm mt-1">Free</p>
                         </div>
                       );
@@ -312,7 +370,7 @@ export function StayBooking({ }: StayBookingProps) {
                           }`}
                         >
                           <p className="text-gray-900 text-sm mb-1">{activity.name}</p>
-                          <p className="text-gray-500 text-xs mb-1">{activity.duration}</p>
+                          <p className="text-gray-500 text-xs mb-1">{activity.duration}h</p>
                           <p className="text-gray-900 text-sm mb-2">₹{activity.price}</p>
                           
                           {!isFree && (
@@ -472,18 +530,18 @@ export function StayBooking({ }: StayBookingProps) {
 
                 {/* TODO: Re-enable booking functionality */}
                 <button 
-                  disabled={!selectedRoom || freeActivities.length !== 2 || !checkInDate || !checkOutDate}
+                  disabled={submitting || !selectedRoom || freeActivities.length !== 2 || !checkInDate || !checkOutDate}
                   onClick={handleConfirmBooking}
                   className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-200 hover:border-green-400 hover:border-2 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Confirm Booking (pay at property)
+                  {submitting ? 'Confirming...' : 'Confirm Booking (pay at property)'}
                 </button>
                 <button 
-                  disabled={!selectedRoom || freeActivities.length !== 2 || !checkInDate || !checkOutDate}
+                  disabled={submitting || !selectedRoom || freeActivities.length !== 2 || !checkInDate || !checkOutDate}
                   onClick={handleConfirmBooking}
                   className="w-full py-3 mt-3  border-green-500 border-2 rounded-lg hover:bg-green-200 transition-colors hover:scale-104 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Confirm Booking (pay now)
+                  {submitting ? 'Confirming...' : 'Confirm Booking (pay now)'}
                 </button>
               </div>
             </div>

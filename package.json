@@ -8,11 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.2",
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "^7.4.2",
     "@vercel/analytics": "^1.5.0",
     "lucide-react": "^0.554.0",
     "next": "^15.5.12",

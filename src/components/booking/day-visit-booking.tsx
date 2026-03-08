@@ -1,29 +1,61 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Calendar, Users, CheckCircle2, Clock, TreePine } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 interface DayVisitBookingProps {
   type?: 'full' | 'half';
+  packageId?: string | null;
 }
 
-const activities = [
-  { id: 'bird-watching', name: 'Bird Watching', duration: '2 hours', price: 500 },
-  { id: 'jungle-trek', name: 'Jungle Trek', duration: '3 hours', price: 800 },
-  { id: 'wildlife-safari', name: 'Wildlife Safari', duration: '2.5 hours', price: 1200 },
-  { id: 'river-rafting', name: 'River Rafting', duration: '2 hours', price: 1500 },
-  { id: 'kayaking', name: 'Kayaking', duration: '1.5 hours', price: 800 },
-  { id: 'rock-climbing', name: 'Rock Climbing', duration: '2 hours', price: 1000 },
-  { id: 'nature-photography', name: 'Nature Photography', duration: '3 hours', price: 700 },
-  { id: 'campfire', name: 'Campfire Experience', duration: '1.5 hours', price: 600 },
-];
+type VisitPackageApi = {
+  id: string;
+  name: string;
+  description: string;
+  packageType: 'FULL_DAY' | 'HALF_DAY' | 'SHORT_VISIT';
+  duration: number;
+  maxActivity: number;
+  basePrice: number;
+  maxGroupSize: number;
+  timing?: string | null;
+};
 
-export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
+type ActivityApi = {
+  id: string;
+  name: string;
+  duration: number;
+  price: number;
+  status: string;
+};
+
+type BookingCatalogResponse = {
+  data: {
+    visitPackages: VisitPackageApi[];
+    activities: ActivityApi[];
+  };
+};
+
+export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBookingProps) {
   const router = useRouter();
-  const maxActivities = type === 'full' ? 2 : 1;
-  const basePrice = type === 'full' ? 2999 : 1499;
+  const [visitPackages, setVisitPackages] = useState<VisitPackageApi[]>([]);
+  const [activities, setActivities] = useState<ActivityApi[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const selectedPackage = useMemo(() => {
+    if (packageId) {
+      const exact = visitPackages.find((pkg) => pkg.id === packageId);
+      if (exact) return exact;
+    }
+    const desiredType = type === 'full' ? 'FULL_DAY' : 'HALF_DAY';
+    return visitPackages.find((pkg) => pkg.packageType === desiredType) ?? visitPackages[0] ?? null;
+  }, [packageId, type, visitPackages]);
+
+  const maxActivities = Math.max(1, Number(selectedPackage?.maxActivity || (type === 'full' ? 2 : 1)));
+  const basePrice = Number(selectedPackage?.basePrice || (type === 'full' ? 2999 : 1499));
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [visitDate, setVisitDate] = useState('');
   const [numGuests, setNumGuests] = useState(2);
@@ -32,10 +64,52 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
     router.push('/booking');
   };
 
-  // TODO: Re-enable when booking functionality is restored
-  const handleConfirmBooking = () => {
-    // Dummy payment - in real app, integrate payment gateway
-    router.push('/booking/booked?type=' + type);
+  useEffect(() => {
+    const loadCatalog = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await fetch('/api/booking');
+        if (!res.ok) throw new Error('Failed to load booking data');
+        const json = (await res.json()) as BookingCatalogResponse;
+        setVisitPackages(json.data.visitPackages || []);
+        setActivities((json.data.activities || []).filter((activity) => activity.status.toUpperCase() !== 'INACTIVE'));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load booking data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    void loadCatalog();
+  }, []);
+
+  const handleConfirmBooking = async () => {
+    if (!selectedPackage || !visitDate || selectedActivities.length < 1) return;
+
+    try {
+      setSubmitting(true);
+      setError(null);
+      const res = await fetch('/api/bookings/visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          visitPackageId: selectedPackage.id,
+          visitDate: new Date(visitDate).toISOString(),
+          guests: numGuests,
+          activityIds: selectedActivities,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json?.error?.message || 'Failed to create visit booking');
+      }
+
+      router.push(`/booking/booked?id=${json?.data?.bookingId}&type=visit`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to confirm booking');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const toggleActivity = (activityId: string) => {
@@ -304,7 +378,7 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
                     className="object-cover rounded-lg"
                   />
                 </div>
-                <h3 className="text-gray-900 mb-1">{type === 'full' ? 'Full Day Visit' : 'Half Day Visit'}</h3>
+                <h3 className="text-gray-900 mb-1">{selectedPackage?.name || (type === 'full' ? 'Full Day Visit' : 'Half Day Visit')}</h3>
                 <p className="text-gray-600">Sumiran Jungle Resort</p>
                 <div className="flex items-center gap-1 mt-2">
                   <span className="text-gray-900">4.8</span>
@@ -341,12 +415,14 @@ export function DayVisitBooking({ type = 'full' }: DayVisitBookingProps) {
               </div>
 
               {/* TODO: Re-enable booking functionality */}
+              {loading && <p className="mb-3 text-gray-600 text-sm">Loading booking options...</p>}
+              {error && <p className="mb-3 text-red-600 text-sm">{error}</p>}
               <button 
-                disabled={selectedActivities.length !== maxActivities || !visitDate}
+                disabled={submitting || selectedActivities.length !== maxActivities || !visitDate || !selectedPackage}
                 onClick={handleConfirmBooking}
                 className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Confirm Booking
+                {submitting ? 'Confirming...' : 'Confirm Booking'}
               </button>
             </div>
           </div>

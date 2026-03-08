@@ -89,7 +89,7 @@ const WorkWithUsForm: React.FC = () => {
     return (
       <div className="space-y-4 rounded-md border border-green-200 bg-green-50 p-6">
         <h3 className="text-xl font-semibold text-green-800">Application sent</h3>
-        <p className="text-green-700">Thanks for your interest. We'll review and contact you soon.</p>
+        <p className="text-green-700">Thanks for your interest. We&apos;ll review and contact you soon.</p>
         <button onClick={() => setSubmitSuccess(false)} className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-md">
           Send another
         </button>
@@ -115,7 +115,7 @@ const WorkWithUsForm: React.FC = () => {
       </div>
 
       <div>
-        <input name="position" value={formData.position} onChange={handleChange} placeholder="Position you're interested in (optional)" className="w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors border-gray-300" />
+        <input name="position" value={formData.position} onChange={handleChange} placeholder="Position you&apos;re interested in (optional)" className="w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors border-gray-300" />
       </div>
 
       <div>

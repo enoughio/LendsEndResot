@@ -1,35 +1,85 @@
 'use client'
 
+import { useEffect, useMemo, useState } from 'react';
 import { Star, MapPin, Clock, CheckCircle2 } from 'lucide-react';
 import { BookingType } from '@/lib/types';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import AboutHero from './AboutHero';
 
+type VisitPackageApi = {
+  id: string;
+  name: string;
+  description: string;
+  packageType: 'FULL_DAY' | 'HALF_DAY' | 'SHORT_VISIT';
+  duration: number;
+  maxActivity: number;
+  basePrice: number;
+};
+
+type RoomTypeApi = {
+  id: string;
+  name: string;
+  description: string;
+  basePrice: number;
+};
+
+type ActivityApi = {
+  id: string;
+  name: string;
+  status: string;
+};
+
+type BookingCatalogResponse = {
+  data: {
+    visitPackages: VisitPackageApi[];
+    rooms: RoomTypeApi[];
+    activities: ActivityApi[];
+  };
+};
+
 
 
 export function OverviewPage() {
   const router = useRouter();
+  const [visitPackages, setVisitPackages] = useState<VisitPackageApi[]>([]);
+  const [rooms, setRooms] = useState<RoomTypeApi[]>([]);
+  const [activitiesData, setActivitiesData] = useState<ActivityApi[]>([]);
   
-  // TODO: Re-enable when booking functionality is restored
-  const onSelectBooking = (type: BookingType) => {
+  useEffect(() => {
+    const loadCatalog = async () => {
+      const res = await fetch('/api/booking');
+      if (!res.ok) return;
+      const json = (await res.json()) as BookingCatalogResponse;
+      setVisitPackages(json.data.visitPackages || []);
+      setRooms(json.data.rooms || []);
+      setActivitiesData((json.data.activities || []).filter((activity) => activity.status.toUpperCase() !== 'INACTIVE'));
+    };
+
+    void loadCatalog();
+  }, []);
+
+  const fullDayPackage = useMemo(
+    () => visitPackages.find((pkg) => pkg.packageType === 'FULL_DAY'),
+    [visitPackages]
+  );
+
+  const halfDayPackage = useMemo(
+    () => visitPackages.find((pkg) => pkg.packageType === 'HALF_DAY'),
+    [visitPackages]
+  );
+
+  const onSelectBooking = (type: BookingType, packageId?: string) => {
     if (type === 'full-day' || type === 'half-day') {
-      router.push('/booking/visit?type=' + (type === 'full-day' ? 'full' : 'half'));
+      const visitType = type === 'full-day' ? 'full' : 'half';
+      const packageParam = packageId ? `&packageId=${packageId}` : '';
+      router.push(`/booking/visit?type=${visitType}${packageParam}`);
     } else if (type === 'stay') {
       router.push('/booking/stay');
     }
   };
 
-  const activities = [
-  'Bird Watching',
-  'Jungle Trek',
-  'Wildlife Safari',
-  'River Rafting',
-  'Kayaking',
-  'Rock Climbing',
-  'Nature Photography',
-  'Campfire Experience'
-  ];
+  const activities = activitiesData.map((activity) => activity.name);
 
   const reviews = [
   {
@@ -123,15 +173,15 @@ export function OverviewPage() {
                   className="rounded object-cover"
                 />
                 <div className="flex-1">
-                  <h4 className="text-gray-900 mb-2">Full Day Visit at Sumiran</h4>
+                  <h4 className="text-gray-900 mb-2">{fullDayPackage?.name || 'Full Day Visit at Sumiran'}</h4>
                   <div className="flex items-center gap-6 text-gray-600 mb-3">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>8-10 hours</span>
+                      <span>{fullDayPackage ? `${fullDayPackage.duration} hours` : '8-10 hours'}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>2 Activities</span>
+                      <span>{fullDayPackage?.maxActivity || 2} Activities</span>
                     </div>
                   </div>
                   <ul className="space-y-1 text-gray-600">
@@ -155,12 +205,11 @@ export function OverviewPage() {
                 </div>
                 <div className="text-right">
                   <div className="mb-3">
-                    <span className="text-2xl text-gray-900">₹2,999</span>
+                    <span className="text-2xl text-gray-900">₹{(fullDayPackage?.basePrice || 2999).toLocaleString()}</span>
                     <span className="text-gray-600">/person</span>
                   </div>
-                  {/* TODO: Re-enable booking functionality */}
                    <button 
-                    onClick={() => onSelectBooking('full-day')}
+                    onClick={() => onSelectBooking('full-day', fullDayPackage?.id)}
                     className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Book now
@@ -178,15 +227,15 @@ export function OverviewPage() {
                   className="rounded object-cover"
                 />
                 <div className="flex-1">
-                  <h4 className="text-gray-900 mb-2">Half Day Visit at Sumiran</h4>
+                  <h4 className="text-gray-900 mb-2">{halfDayPackage?.name || 'Half Day Visit at Sumiran'}</h4>
                   <div className="flex items-center gap-6 text-gray-600 mb-3">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      <span>4-5 hours</span>
+                      <span>{halfDayPackage ? `${halfDayPackage.duration} hours` : '4-5 hours'}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>1 Activity</span>
+                      <span>{halfDayPackage?.maxActivity || 1} Activity</span>
                     </div>
                   </div>
                   <ul className="space-y-1 text-gray-600">
@@ -206,12 +255,11 @@ export function OverviewPage() {
                 </div>
                 <div className="text-right">
                   <div className="mb-3">
-                    <span className="text-2xl text-gray-900">₹1,499</span>
+                    <span className="text-2xl text-gray-900">₹{(halfDayPackage?.basePrice || 1499).toLocaleString()}</span>
                     <span className="text-gray-600">/person</span>
                   </div>
-                  {/* TODO: Re-enable booking functionality */}
                    <button 
-                    onClick={() => onSelectBooking('half-day')}
+                    onClick={() => onSelectBooking('half-day', halfDayPackage?.id)}
                     className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Book now
@@ -260,26 +308,16 @@ export function OverviewPage() {
               </div>
               
               <div className="grid md:grid-cols-2 gap-4 mb-6">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h5 className="text-gray-900 mb-1">Deluxe Room</h5>
-                  <p className="text-gray-600 mb-2">Cozy room with forest views</p>
-                  <span className="text-gray-900">₹4,999/night</span>
-                </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h5 className="text-gray-900 mb-1">Premium Suite</h5>
-                  <p className="text-gray-600 mb-2">Spacious suite with premium amenities</p>
-                  <span className="text-gray-900">₹7,999/night</span>
-                </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h5 className="text-gray-900 mb-1">Forest Villa</h5>
-                  <p className="text-gray-600 mb-2">Private villa in the forest</p>
-                  <span className="text-gray-900">₹12,999/night</span>
-                </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h5 className="text-gray-900 mb-1">Royal Cottage</h5>
-                  <p className="text-gray-600 mb-2">Luxurious cottage with butler service</p>
-                  <span className="text-gray-900">₹18,999/night</span>
-                </div>
+                {(rooms.length ? rooms : [
+                  { id: 'fallback-1', name: 'Deluxe Room', description: 'Cozy room with forest views', basePrice: 4999 },
+                  { id: 'fallback-2', name: 'Premium Suite', description: 'Spacious suite with premium amenities', basePrice: 7999 },
+                ]).map((room) => (
+                  <div key={room.id} className="p-4 bg-gray-50 rounded-lg">
+                    <h5 className="text-gray-900 mb-1">{room.name}</h5>
+                    <p className="text-gray-600 mb-2">{room.description}</p>
+                    <span className="text-gray-900">₹{room.basePrice.toLocaleString()}/night</span>
+                  </div>
+                ))}
               </div>
 
               {/* TODO: Re-enable booking functionality */}
@@ -300,8 +338,8 @@ export function OverviewPage() {
             <div className="w-12 h-1 bg-green-600 mt-1"></div>
           </div>
           <div className="grid grid-cols-4 gap-4">
-            {activities.map((activity, index) => (
-              <div key={index} className="p-4 border border-gray-200 rounded-lg text-center hover:border-green-500 transition-colors">
+            {(activities.length ? activities : ['Bird Watching', 'Jungle Trek', 'Wildlife Safari']).map((activity) => (
+              <div key={activity} className="p-4 border border-gray-200 rounded-lg text-center hover:border-green-500 transition-colors">
                 <span className="text-gray-700">{activity}</span>
               </div>
             ))}

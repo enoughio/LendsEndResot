@@ -1,9 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// Prisma schema (normalized)
+// Generator and datasource
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -13,15 +9,17 @@ datasource db {
   provider = "postgresql"
 }
 
+// Enums
 enum Role {
   USER
   ADMIN
 }
 
-// enum RoomStatus {
-//   AVAILABLE
-//   UNAVAILABLE
-// }
+enum RoomStatus {
+  AVAILABLE
+  INACTIVE
+  MAINTENANCE
+}
 
 enum BookingStatus {
   PENDING
@@ -43,20 +41,12 @@ enum BookingType {
   VISIT
 }
 
-enum VisitPackage {
-  FULL_DAY
-  HALF_DAY
-  SHORT_VISIT
-}
+// Models
 
-
-
-
-model Users {
-
+model User {
   id String @id @default(cuid())
   name String
-  email String  
+  email String @unique
   password String
   role Role @default(USER)
   phone String
@@ -66,16 +56,11 @@ model Users {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // opposite relation fields
-  bookings Bookings[]
-  events Events[]
-
+  bookings Booking[]
+  events Event[]
 }
 
-
-
-model RoomTypes {
-
+model RoomType {
   id String @id @default(cuid())
   name String
   capacity Int
@@ -84,59 +69,39 @@ model RoomTypes {
   basePrice Float
   size_sqft String
   amenities String[]
-
-  // opposite relation field
-  rooms Rooms[]   // one to many
+    //opposite relation
+  rooms Room[]
 }
 
-
-enum RoomStatus {
-  AVAILABLE
-  INACTIVE
-  MAINTENANCE
-}
-
-
-model Rooms { 
-
+model Room {
   id String @id @default(cuid())
-  roomNo String
-  
-  // foreign key
-  roomTypeId String 
+  roomNo String @unique
+ 
+ // foreign key
+  roomTypeId String
   // relation definition
-  roomType RoomTypes @relation( fields: [roomTypeId], references: [id] )
+  roomType RoomType @relation(fields: [roomTypeId], references: [id])
   roomStatus RoomStatus @default(AVAILABLE)
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  bookings Bookings[]
 
+  bookings Booking[]
 }
 
-
-model Activities {
-
+model Activity {
   id String @id @default(cuid())
   name String
   duration Float
-  Price Float
+  price Float
   status String
 
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // bookings Bookings[]
-
-  // this is a many to many relationship 
-  bookingActivities BookingActivities[]
-
-
+  bookingActivities BookingActivity[]
 }
 
-
-model VisitPackages {
-
+model VisitPackage {
   id String @id @default(cuid())
   name String
   duration Float
@@ -145,88 +110,108 @@ model VisitPackages {
   description String?
 
   createdAt DateTime @default(now())
-  updated DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
-  bookings Bookings[] 
-  
+  bookings Booking[]
 }
 
-
-model Bookings {
-
+model Booking {
   id String @id @default(cuid())
-  
-  //foreign key
+
   userId String
-  // relation definition
-  users Users @relation( fields: [userId], references: [id] ) 
-  
-  // foreign key
-  roomId String ?
-  // relation definition
-  rooms Rooms ? @relation( fields: [roomId], references: [id] )
+  user User @relation(fields: [userId], references: [id])
 
-  visitPackageId String ?
-  visitPackage VisitPackages ? @relation( fields: [visitPackageId], references: [id] )
+  roomId String?
+  room Room? @relation(fields: [roomId], references: [id])
 
-  // activitiesId String ? 
-  // activities Activities ?  @relation( fields: [activitiesId], references: [id] )
+  visitPackageId String?
+  visitPackage VisitPackage? @relation(fields: [visitPackageId], references: [id])
 
-  bookingActivities BookingActivities[]
+  bookingActivities BookingActivity[]
+
+  // stay fields
+  checkIn DateTime?
+  checkOut DateTime?
 
   guests Int @default(1)
-  bookingTypes BookingType @default(STAY)
-  status String
-  visitDate DateTime ?
-  totalAmount String
+  bookingType BookingType @default(STAY)
+  status BookingStatus @default(PENDING)
+  visitDate DateTime?
+
+  // amounts in smallest currency unit (paise)
+  totalAmount Float
   currency String @default("INR")
-  
-  razorPayOrderId String ?
-  razorPayPaymentId String ?
-  razorPaySignature String ? 
+
+  razorPayOrderId String?
+  razorPayPaymentId String?
+  razorPaySignature String?
 
   paymentStatus PaymentStatus @default(PENDING)
 
   createdAt DateTime @default(now())
-  updated DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
+  // soft delete
+  deletedAt DateTime?
+
+  @@index([userId])
+  @@index([roomId])
+  @@index([status])
+  @@index([visitPackageId])
 }
 
-model BookingActivities {
+model BookingActivity {
   id String @id @default(cuid())
 
-  // foreign key
   bookingId String
   activityId String
 
-  // relation definitions 
-  booking  Bookings   @relation(fields: [bookingId], references: [id])
-  activity Activities @relation(fields: [activityId], references: [id])
+  booking Booking @relation(fields: [bookingId], references: [id])
+  activity Activity @relation(fields: [activityId], references: [id])
 
   createdAt DateTime @default(now())
 
   @@unique([bookingId, activityId])
+  @@index([bookingId])
+  @@index([activityId])
 }
 
-
-model Events { 
-
+model Event {
   id String @id @default(cuid())
   name String
   fromDate DateTime
   tillDate DateTime
   description String
-  images String[] 
-  Links String[]
+  images String[]
+  links String[]
   price Float
 
-  attendId String 
-  attendee Users @relation(fields: [attendId], references: [id]) 
+  attendeeId String
+  attendee User @relation(fields: [attendeeId], references: [id])
 
   createdAt DateTime @default(now())
-  updated DateTime @updatedAt
-
+  updatedAt DateTime @updatedAt
 }
+
+
+// model Log {
+//   id         String   @id @default(cuid())
+//   level      String   // e.g., "INFO", "WARN", "ERROR"
+//   message    String
+//   source     String?  // service/module name
+//   requestId  String?  // trace or correlation ID
+//   userId     String?  // optional user reference
+//   context    Json?    // structured context/meta
+//   createdAt  DateTime @default(now())
+
+//   // user       User?    @relation(fields: [userId], references: [id])?
+
+//   @@index([level])
+//   @@index([createdAt])
+//   @@index([userId])
+//   @@index([requestId])
+// }
+
 
 
 

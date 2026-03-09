@@ -11,7 +11,7 @@ import "reflect-metadata";
 
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: "Lend's End | Home",
   description: "Discover Land's End Resort at Sumiran Forest - A 600-acre eco resort near Bhopal with pristine nature, clean air (AQI <10), and sustainable living. Experience forest walks, bird watching, organic dining, and more.",
   openGraph: {
     title: "Land's End Resort | Sumiran Forest - Eco Resort Near Bhopal",

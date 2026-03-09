@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { OverviewPage } from '@/components/booking/overview-page'
 
 export const metadata: Metadata = {
-  title: "Book Your Stay",
+  title: "Lend's End | Book Your Stay",
   description: "Book your stay at Land's End Resort, Sumiran Forest. Choose from overnight stays or day visits. Experience nature, activities, organic dining, and sustainable living near Bhopal.",
   openGraph: {
     title: "Book Your Stay | Land's End Resort",

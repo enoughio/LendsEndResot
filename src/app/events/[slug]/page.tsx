@@ -7,9 +7,9 @@ import { events } from "@/data/events";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const p = (await params) as { slug: string };
   const event = events.find((e) => e.slug === p.slug);
-  if (!event) return { title: "Event" };
+  if (!event) return { title: "Lend's End | Event" };
   return {
-    title: event.title,
+    title: `Lend's End | ${event.title}`,
     description: event.shortDescription,
     openGraph: { images: event.images?.[0] ? [event.images[0]] : undefined },
   } as Metadata;

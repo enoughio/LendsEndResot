@@ -21,7 +21,7 @@ export default function EventsPage() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center">
           <div className="text-white">
-            <h1 className="text-2xl md:text-4xl lg:text-5xl font-semibold">Events & Gatherings</h1>
+            <h1 className="text-2xl md:text-4xl lg:text-5xl font-semibold">Retreats & Gatherings</h1>
             <p className="mt-2 text-gray-200 max-w-2xl">Join our workshops, retreats and seasonal festivals aligned with nature and conservation.</p>
           </div>
         </div>
@@ -36,18 +36,18 @@ export default function EventsPage() {
         {/* Intro / description about events */}
         <section className="mb-8 ">
           <p className="text-md md:text-base max-w-7xl">
-            At Land&apos;s End, our events bring together nature, learning and
+            At Land&apos;s End, our retreats bring together nature, learning and
             community. From sunrise birding walks and hands-on eco-workshops to
-            seasonal festivals and retreats, each event is designed to help
+            seasonal festivals and events, each retreat is designed to help
             visitors connect more deeply with the forest, local traditions,
             and sustainable living practices. Expect small-group experiences,
             knowledgeable local guides and practical activities you can take
             home — whether it&apos;s birding, organic farming, low-impact building,
-            or quiet retreats that slow down the mind.
+            or peace that slow down the mind.
           </p>
           <p className="mt-3 text-sm md:text-base  max-w-7xl">
-            Events may be single-day or multi-day. Each listing shows dates,
-            timing, location and ticketing information. If an event runs over
+            Retreat may be single-day or multi-day. Each listing shows dates,
+            timing, location and ticketing information. If an retreat runs over
             multiple days, we note daily timings where applicable.
           </p>
 

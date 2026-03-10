@@ -7,8 +7,9 @@ import { Suspense } from 'react'
 function VisitContent() {
   const searchParams = useSearchParams()
   const type = searchParams.get('type') as 'full' | 'half' || 'full'
+  const packageId = searchParams.get('packageId')
 
-  return <DayVisitBooking type={type} />
+  return <DayVisitBooking type={type} packageId={packageId} />
 }
 
 const Page = () => {

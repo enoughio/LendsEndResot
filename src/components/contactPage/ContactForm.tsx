@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { notifyError, notifySuccess } from "@/lib/client-notify";
 
 interface FormData {
   name: string;
@@ -95,6 +96,7 @@ const ContactForm: React.FC = () => {
       }
 
       setSubmitSuccess(true);
+      notifySuccess("Message sent successfully", "We will contact you within 24 hours.");
 
       // Reset form
       setFormData({
@@ -104,14 +106,8 @@ const ContactForm: React.FC = () => {
         message: "",
       });
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Unable to send your message right now.";
+      const message = notifyError(error, "Unable to send your message right now.");
       setSubmitError(message);
-      if (process.env.NODE_ENV === "development") {
-        console.error("Error submitting form:", error);
-      }
     } finally {
       setIsSubmitting(false);
     }

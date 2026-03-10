@@ -1,21 +1,87 @@
 'use client'
 
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import { CheckCircle2, Calendar, MapPin, Phone, Mail, TreePine } from 'lucide-react'
 import Link from 'next/link'
 
+type BookingDetailsResponse = {
+  data: {
+    bookingId: string;
+    type: 'STAY' | 'VISIT';
+    status: string;
+    guestDetails: {
+      name?: string | null;
+      email?: string | null;
+      phone?: string | null;
+    };
+    stayDetails: {
+      roomType?: string | null;
+      checkIn?: string | null;
+      checkOut?: string | null;
+    } | null;
+    visitDetails: {
+      packageName?: string | null;
+      visitDate?: string | null;
+    } | null;
+  };
+}
+
 function BookedContent() {
   const searchParams = useSearchParams()
   const type = searchParams.get('type')
   const room = searchParams.get('room')
+  const bookingId = searchParams.get('id')
+  const [booking, setBooking] = useState<BookingDetailsResponse['data'] | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const getBookingDetails = () => {
+  useEffect(() => {
+    if (!bookingId) return
+
+    const loadBooking = async () => {
+      try {
+        setLoading(true)
+        const res = await fetch(`/api/bookings/${bookingId}`)
+        if (!res.ok) return
+        const json = (await res.json()) as BookingDetailsResponse
+        setBooking(json.data)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    void loadBooking()
+  }, [bookingId])
+
+  const details = useMemo(() => {
+    if (booking) {
+      if (booking.type === 'STAY') {
+        return {
+          title: booking.stayDetails?.roomType || 'Resort Stay',
+          subtitle: 'Stay Booking',
+          description: 'Your stay at Sumiran Jungle Resort has been confirmed.',
+          bookingDate: booking.stayDetails?.checkIn,
+          emailText: booking.guestDetails?.email || 'Guest details can be completed at check-in',
+        }
+      }
+
+      return {
+        title: booking.visitDetails?.packageName || 'Day Visit',
+        subtitle: 'Day Visit Booking',
+        description: 'Your day visit at Sumiran Jungle Resort has been confirmed.',
+        bookingDate: booking.visitDetails?.visitDate,
+        emailText: booking.guestDetails?.email || 'Guest details can be completed at arrival',
+      }
+    }
+
     if (type === 'full' || type === 'half') {
       return {
         title: type === 'full' ? 'Full Day Visit' : 'Half Day Visit',
         subtitle: 'Day Visit Booking',
         description: `Your ${type === 'full' ? 'full' : 'half'} day visit to Sumiran Jungle Resort has been confirmed.`,
+        bookingDate: null,
+        emailText: 'Sent to your email address',
       }
     } else if (type === 'stay') {
       const roomNames: Record<string, string> = {
@@ -28,16 +94,18 @@ function BookedContent() {
         title: roomNames[room || 'deluxe'] || 'Resort Stay',
         subtitle: 'Stay Booking',
         description: 'Your stay at Sumiran Jungle Resort has been confirmed.',
+        bookingDate: null,
+        emailText: 'Sent to your email address',
       }
     }
     return {
       title: 'Booking Confirmed',
       subtitle: 'Thank you for booking',
       description: 'Your booking has been confirmed.',
+      bookingDate: null,
+      emailText: 'Sent to your email address',
     }
-  }
-
-  const details = getBookingDetails()
+  }, [booking, room, type])
 
   return (
     <div className="min-h-screen bg-white">
@@ -73,6 +141,7 @@ function BookedContent() {
           </div>
           <h1 className="text-4xl text-gray-900 mb-4">Booking Confirmed!</h1>
           <p className="text-xl text-gray-600">{details.description}</p>
+          {loading && <p className="text-gray-500 mt-2">Loading booking details...</p>}
         </div>
 
         {/* Booking Details Card */}
@@ -91,7 +160,7 @@ function BookedContent() {
                 <div>
                   <p className="text-gray-600 text-sm">Booking Date</p>
                   <p className="text-gray-900">
-                    {new Date().toLocaleDateString('en-US', { 
+                    {new Date(details.bookingDate || Date.now()).toLocaleDateString('en-US', {
                       weekday: 'long', 
                       year: 'numeric', 
                       month: 'long', 
@@ -116,7 +185,7 @@ function BookedContent() {
                 <Mail className="w-5 h-5 text-gray-600 mt-1" />
                 <div>
                   <p className="text-gray-600 text-sm">Confirmation Email</p>
-                  <p className="text-gray-900">Sent to your email address</p>
+                  <p className="text-gray-900">{details.emailText}</p>
                 </div>
               </div>
 
@@ -132,7 +201,7 @@ function BookedContent() {
 
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-gray-600 text-sm">
-              <strong>Booking Reference:</strong> SR{Date.now().toString().slice(-8)}
+              <strong>Booking Reference:</strong> {booking?.bookingId || `SR${Date.now().toString().slice(-8)}`}
             </p>
           </div>
         </div>

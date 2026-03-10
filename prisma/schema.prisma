@@ -41,6 +41,17 @@ enum BookingType {
   VISIT
 }
 
+enum VisitPackageType {
+  FULL_DAY
+  HALF_DAY
+  SHORT_VISIT
+}
+
+enum PackageStatus {
+  ACTIVE
+  INACTIVE
+}
+
 // Models
 
 model User {
@@ -69,6 +80,7 @@ model RoomType {
   basePrice Float
   size_sqft String
   amenities String[]
+  totalRooms Int @default(0)
     //opposite relation
   rooms Room[]
 }
@@ -81,6 +93,8 @@ model Room {
   roomTypeId String
   // relation definition
   roomType RoomType @relation(fields: [roomTypeId], references: [id])
+  floor Int?
+  view String?
   roomStatus RoomStatus @default(AVAILABLE)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -104,8 +118,14 @@ model Activity {
 model VisitPackage {
   id String @id @default(cuid())
   name String
+  packageType VisitPackageType @default(SHORT_VISIT)
   duration Float
   basePrice Float
+  maxActivity Int @default(1)
+  maxGroupSize Int @default(1)
+  timing String?
+  includes String[]
+  status PackageStatus @default(ACTIVE)
   image String[]
   description String?
 
@@ -118,8 +138,8 @@ model VisitPackage {
 model Booking {
   id String @id @default(cuid())
 
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  userId String?
+  user User? @relation(fields: [userId], references: [id])
 
   roomId String?
   room Room? @relation(fields: [roomId], references: [id])
@@ -128,6 +148,12 @@ model Booking {
   visitPackage VisitPackage? @relation(fields: [visitPackageId], references: [id])
 
   bookingActivities BookingActivity[]
+
+  // guest details captured in step-2 of booking flow
+  guestName String?
+  guestEmail String?
+  guestPhone String?
+  specialRequest String?
 
   // stay fields
   checkIn DateTime?

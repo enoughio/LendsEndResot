@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { AlertCircle, RefreshCcw, Home } from 'lucide-react'
 import Link from 'next/link'
+import { notifyError } from '@/lib/client-notify'
  
 export default function Error({
   error,
@@ -12,12 +13,11 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error)
+    notifyError(error, 'Something went wrong. Please try again.')
   }, [error])
  
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-red-50 to-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-red-50 to-white px-4">
       <div className="max-w-2xl mx-auto text-center">
         <div className="mb-8 flex justify-center">
           <div className="bg-red-100 p-4 rounded-full">

@@ -61,4 +61,14 @@ export type VisitPackage = {
   timing: string;
 };
 
-export type Section = 'overview' | 'room-types' | 'rooms' | 'visit-packages' | 'bookings';
+export type ActivityStatus = 'ACTIVE' | 'INACTIVE';
+
+export type Activity = {
+  id: string;
+  name: string;
+  duration: number;
+  price: number;
+  status: ActivityStatus;
+};
+
+export type Section = 'overview' | 'room-types' | 'rooms' | 'visit-packages' | 'activities' | 'bookings';

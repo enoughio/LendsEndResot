@@ -12,8 +12,8 @@ importers:
         specifier: ^7.4.2
         version: 7.4.2
       '@prisma/client':
-        specifier: ^5.22.0
-        version: 5.22.0(prisma@7.4.2(@types/react@19.2.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.3))
+        specifier: ^7.4.2
+        version: 7.4.2(prisma@7.4.2(@types/react@19.2.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.3))(typescript@5.9.3)
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(next@15.5.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
@@ -41,6 +41,9 @@ importers:
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
+      sonner:
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3
@@ -595,13 +598,19 @@ packages:
   '@prisma/adapter-pg@7.4.2':
     resolution: {integrity: sha512-oUo2Zhe9Tf6YwVL8kLPuOLTK1Z2pwi/Ua77t2PuGyBan2w7shRKqHvYK+3XXmRH9RWhPJ4SMtHZKpNo6Ax/4bQ==}
 
-  '@prisma/client@5.22.0':
-    resolution: {integrity: sha512-M0SVXfyHnQREBKxCgyo7sffrKttwE6R8PMq330MIUF0pTwjUhLbW84pFDlf06B27XyCR++VtjugEnIHdr07SVA==}
-    engines: {node: '>=16.13'}
+  '@prisma/client-runtime-utils@7.4.2':
+    resolution: {integrity: sha512-cID+rzOEb38VyMsx5LwJMEY4NGIrWCNpKu/0ImbeooQ2Px7TI+kOt7cm0NelxUzF2V41UVVXAmYjANZQtCu1/Q==}
+
+  '@prisma/client@7.4.2':
+    resolution: {integrity: sha512-ts2mu+cQHriAhSxngO3StcYubBGTWDtu/4juZhXCUKOwgh26l+s4KD3vT2kMUzFyrYnll9u/3qWrtzRv9CGWzA==}
+    engines: {node: ^20.19 || ^22.12 || >=24.0}
     peerDependencies:
       prisma: '*'
+      typescript: '>=5.4.0'
     peerDependenciesMeta:
       prisma:
+        optional: true
+      typescript:
         optional: true
 
   '@prisma/config@7.4.2':
@@ -2247,6 +2256,12 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
+  sonner@2.0.7:
+    resolution: {integrity: sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==}
+    peerDependencies:
+      react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -2803,9 +2818,14 @@ snapshots:
     transitivePeerDependencies:
       - pg-native
 
-  '@prisma/client@5.22.0(prisma@7.4.2(@types/react@19.2.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.3))':
+  '@prisma/client-runtime-utils@7.4.2': {}
+
+  '@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.3))(typescript@5.9.3)':
+    dependencies:
+      '@prisma/client-runtime-utils': 7.4.2
     optionalDependencies:
       prisma: 7.4.2(@types/react@19.2.6)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.9.3)
+      typescript: 5.9.3
 
   '@prisma/config@7.4.2':
     dependencies:
@@ -4649,6 +4669,11 @@ snapshots:
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
+
+  sonner@2.0.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   source-map-js@1.2.1: {}
 

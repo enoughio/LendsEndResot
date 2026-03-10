@@ -7,7 +7,7 @@ export default function Loading() {
             Loading...
           </span>
         </div>
-        <p className="mt-4 text-gray-600 font-medium">Loading Land&apos;s End Resort...</p>
+        <p className="mt-4 w-full h-full text-gray-600 font-medium">Loading Land&apos;s End Resort...</p>
       </div>
     </div>
   )

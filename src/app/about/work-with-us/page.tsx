@@ -4,6 +4,7 @@ import WorkWithUsForm from "@/components/aboutPage/WorkWithUsForm";
 export const metadata = {
   title: "Lend's End | Work With Us",
   description: "Join our team at Landsend. Submit your details and we'll get in touch.",
+ 
 };
 
 export default function WorkWithUsPage() {

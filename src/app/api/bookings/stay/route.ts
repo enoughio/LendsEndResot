@@ -89,6 +89,7 @@ export async function POST(request: Request) {
         checkIn,
         checkOut,
         guests,
+        paymentStatus : "PENDING",
         totalAmount,
         currency: "INR",
         bookingActivities: {

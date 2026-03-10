@@ -1,4 +1,5 @@
 'use client'
+// TODO : overfetching here in /api/booking
 
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Calendar, Users, CheckCircle2, Clock, TreePine } from 'lucide-react';
@@ -79,7 +80,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch('/api/booking');
+        const res = await fetch('/api/bookings');
         if (!res.ok) throw new Error('Failed to load booking data');
         const json = (await res.json()) as BookingCatalogResponse;
         setVisitPackages(json.data.visitPackages || []);

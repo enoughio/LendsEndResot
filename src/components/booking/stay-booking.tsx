@@ -1,5 +1,7 @@
 'use client'
 
+// TODO : overfetching here in /api/booking 
+
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Calendar, Users, CheckCircle2, Plus, Minus } from 'lucide-react';
 import Image from 'next/image';
@@ -73,7 +75,7 @@ export function StayBooking({ }: StayBookingProps) {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch('/api/booking');
+        const res = await fetch('/api/bookings');
         if (!res.ok) throw new Error('Failed to load booking data');
         const json = (await res.json()) as BookingCatalogResponse;
         setRoomTypes(json.data.rooms || []);

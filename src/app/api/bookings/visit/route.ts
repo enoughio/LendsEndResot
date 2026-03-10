@@ -61,6 +61,7 @@ export async function POST(request: Request) {
         userId,
         bookingType: "VISIT",
         status: "PENDING",
+        paymentStatus : "PENDING",
         visitDate,
         guests,
         visitPackageId,

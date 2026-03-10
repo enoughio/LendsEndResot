@@ -6,6 +6,7 @@ import { BookingType } from '@/lib/types';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import AboutHero from './AboutHero';
+import Link from 'next/link';
 
 type VisitPackageApi = {
   id: string;
@@ -48,7 +49,7 @@ export function OverviewPage() {
   
   useEffect(() => {
     const loadCatalog = async () => {
-      const res = await fetch('/api/booking');
+      const res = await fetch('/api/bookings');
       if (!res.ok) return;
       const json = (await res.json()) as BookingCatalogResponse;
       setVisitPackages(json.data.visitPackages || []);
@@ -106,6 +107,8 @@ export function OverviewPage() {
     <div className="min-h-screen bg-white px-4 sm:px-6 lg:px-10 xl:px-16">
       {/* Header */}
       <AboutHero />
+      <Link href={'/booking/stay'} className='hidden' />
+      <Link href={'/booking/visit'} className='hidden' />
       {/* Main Content */}
       <div className="max-w-7xl mx-auto py-8 sm:py-10 md:py-12">
         {/* Overview Section */}

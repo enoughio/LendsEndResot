@@ -59,7 +59,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("GET /api/booking failed", error);
+    console.error("GET /api/bookings failed", error);
     return NextResponse.json(
       { error: { code: "INTERNAL_ERROR", message: "Failed to load booking data." } },
       { status: 500 }

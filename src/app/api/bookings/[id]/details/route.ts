@@ -1,3 +1,6 @@
+
+// update details of the guest and redirect to payment getway
+
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
@@ -35,6 +38,7 @@ export async function POST(request: Request, { params }: Params) {
         guestEmail: email,
         guestPhone: phone,
         specialRequest,
+        // status : "FAILED"
       },
     });
 

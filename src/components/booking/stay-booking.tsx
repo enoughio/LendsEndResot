@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Calendar, Users, CheckCircle2, Plus, Minus } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { notifyError, notifyInfo, notifySuccess } from '@/lib/client-notify';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface StayBookingProps {}
@@ -78,7 +79,8 @@ export function StayBooking({ }: StayBookingProps) {
         setRoomTypes(json.data.rooms || []);
         setActivities((json.data.activities || []).filter((activity) => activity.status.toUpperCase() !== 'INACTIVE'));
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load booking data');
+        const message = notifyError(err, 'Failed to load booking data');
+        setError(message);
       } finally {
         setLoading(false);
       }
@@ -94,8 +96,24 @@ export function StayBooking({ }: StayBookingProps) {
     return [...freeActivities, ...extras];
   }, [additionalActivities, freeActivities]);
 
+  const missingRequirements = useMemo(() => {
+    const missing: string[] = [];
+    if (!checkInDate) missing.push('Select check-in date');
+    if (!checkOutDate) missing.push('Select check-out date');
+    if (freeActivities.length !== 2) missing.push('Select 2 complimentary activities');
+    return missing;
+  }, [checkInDate, checkOutDate, freeActivities.length]);
+
   const handleConfirmBooking = async () => {
-    if (!selectedRoom || !checkInDate || !checkOutDate || selectedActivityIds.length < 1) return;
+    if (!selectedRoom) {
+      notifyInfo('Please select a room before continuing.');
+      return;
+    }
+
+    if (missingRequirements.length > 0) {
+      notifyInfo(`Please complete: ${missingRequirements.join(', ')}.`);
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -140,9 +158,11 @@ export function StayBooking({ }: StayBookingProps) {
       }
 
       const bookingId = createJson?.data?.bookingId;
+      notifySuccess('Stay booking created', 'Redirecting you to confirmation.');
       router.push(`/booking/booked?id=${bookingId}&type=stay`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to confirm booking');
+      const message = notifyError(err, 'Failed to confirm booking');
+      setError(message);
     } finally {
       setSubmitting(false);
     }
@@ -530,19 +550,24 @@ export function StayBooking({ }: StayBookingProps) {
 
                 {/* TODO: Re-enable booking functionality */}
                 <button 
-                  disabled={submitting || !selectedRoom || freeActivities.length !== 2 || !checkInDate || !checkOutDate}
+                  disabled={submitting}
                   onClick={handleConfirmBooking}
                   className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-200 hover:border-green-400 hover:border-2 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitting ? 'Confirming...' : 'Confirm Booking (pay at property)'}
                 </button>
                 <button 
-                  disabled={submitting || !selectedRoom || freeActivities.length !== 2 || !checkInDate || !checkOutDate}
+                  disabled={submitting}
                   onClick={handleConfirmBooking}
                   className="w-full py-3 mt-3  border-green-500 border-2 rounded-lg hover:bg-green-200 transition-colors hover:scale-104 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitting ? 'Confirming...' : 'Confirm Booking (pay now)'}
                 </button>
+                {missingRequirements.length > 0 && (
+                  <p className="mt-3 text-sm text-amber-700">
+                    Please complete: {missingRequirements.join(', ')}.
+                  </p>
+                )}
               </div>
             </div>
           )}

@@ -26,11 +26,14 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+    
 
+    // find activities and visit package  
     const [visitPackage, activities] = await Promise.all([
       prisma.visitPackage.findUnique({ where: { id: visitPackageId } }),
       prisma.activity.findMany({ where: { id: { in: activityIds } } }),
     ]);
+
 
     if (!visitPackage) {
       return NextResponse.json(
@@ -45,11 +48,14 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-
+     
+    // later add promocode and discount options
     const packageAmount = Math.round(Number(visitPackage.basePrice));
     const activitiesAmount = sumActivityPrice(activities);
     const { totalAmount, taxAmount } = buildPriceBreakdown(packageAmount, activitiesAmount);
 
+
+    // create a pending booking 
     const booking = await prisma.booking.create({
       data: {
         userId,

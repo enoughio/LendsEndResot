@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { notifyError, notifySuccess } from "@/lib/client-notify";
 
 interface FormData {
   name: string;
@@ -75,11 +76,11 @@ const WorkWithUsForm: React.FC = () => {
       }
 
       setSubmitSuccess(true);
+      notifySuccess("Application sent", "Thanks for your interest. We will contact you soon.");
       setFormData({ name: "", email: "", phone: "", position: "", message: "" });
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Unable to send your message right now.";
+      const message = notifyError(error, "Unable to send your message right now.");
       setSubmitError(message);
-      if (process.env.NODE_ENV === "development") console.error(error);
     } finally {
       setIsSubmitting(false);
     }

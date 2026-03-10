@@ -16,6 +16,8 @@ export async function GET(request: Request) {
     const pageSize = Math.min(Math.max(Number(url.searchParams.get("pageSize") || 20), 1), 100);
     const skip = (page - 1) * pageSize;
 
+
+    // creating where clause
     const where = {
       deletedAt: null as Date | null,
       ...(statusParam ? { status: statusParam as "PENDING" | "CONFIRMED" | "CANCELLED" | "REFUNDED" | "FAILED" } : {}),

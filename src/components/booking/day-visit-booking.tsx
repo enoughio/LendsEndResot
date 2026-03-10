@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Calendar, Users, CheckCircle2, Clock, TreePine } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { notifyError, notifyInfo, notifySuccess } from '@/lib/client-notify';
 
 interface DayVisitBookingProps {
   type?: 'full' | 'half';
@@ -60,6 +61,15 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
   const [visitDate, setVisitDate] = useState('');
   const [numGuests, setNumGuests] = useState(2);
 
+  const missingRequirements = useMemo(() => {
+    const missing: string[] = [];
+    if (!visitDate) missing.push('Select visit date');
+    if (selectedActivities.length !== maxActivities) {
+      missing.push(`Select ${maxActivities} ${maxActivities === 1 ? 'activity' : 'activities'}`);
+    }
+    return missing;
+  }, [maxActivities, selectedActivities.length, visitDate]);
+
   const handleBack = () => {
     router.push('/booking');
   };
@@ -75,7 +85,8 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
         setVisitPackages(json.data.visitPackages || []);
         setActivities((json.data.activities || []).filter((activity) => activity.status.toUpperCase() !== 'INACTIVE'));
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load booking data');
+        const message = notifyError(err, 'Failed to load booking data');
+        setError(message);
       } finally {
         setLoading(false);
       }
@@ -84,7 +95,15 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
   }, []);
 
   const handleConfirmBooking = async () => {
-    if (!selectedPackage || !visitDate || selectedActivities.length < 1) return;
+    if (!selectedPackage) {
+      notifyInfo('Please wait until booking options are loaded.');
+      return;
+    }
+
+    if (missingRequirements.length > 0) {
+      notifyInfo(`Please complete: ${missingRequirements.join(', ')}.`);
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -104,9 +123,11 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
         throw new Error(json?.error?.message || 'Failed to create visit booking');
       }
 
+      notifySuccess('Visit booking created', 'Redirecting you to confirmation.');
       router.push(`/booking/booked?id=${json?.data?.bookingId}&type=visit`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to confirm booking');
+      const message = notifyError(err, 'Failed to confirm booking');
+      setError(message);
     } finally {
       setSubmitting(false);
     }
@@ -418,12 +439,17 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
               {loading && <p className="mb-3 text-gray-600 text-sm">Loading booking options...</p>}
               {error && <p className="mb-3 text-red-600 text-sm">{error}</p>}
               <button 
-                disabled={submitting || selectedActivities.length !== maxActivities || !visitDate || !selectedPackage}
+                disabled={submitting || !selectedPackage}
                 onClick={handleConfirmBooking}
                 className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? 'Confirming...' : 'Confirm Booking'}
               </button>
+              {missingRequirements.length > 0 && (
+                <p className="mt-3 text-sm text-amber-700">
+                  Please complete: {missingRequirements.join(', ')}.
+                </p>
+              )}
             </div>
           </div>
         </div>

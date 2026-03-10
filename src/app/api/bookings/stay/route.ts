@@ -46,6 +46,7 @@ export async function POST(request: Request) {
       prisma.activity.findMany({ where: { id: { in: activityIds } } }),
     ]);
 
+
     if (!roomType) {
       return NextResponse.json(
         { error: { code: "NOT_FOUND", message: "Room type not found." } },
@@ -73,6 +74,8 @@ export async function POST(request: Request) {
       );
     }
 
+
+    // charges are on night stay basis
     const nights = calculateNights(checkIn, checkOut);
     const roomBaseAmount = Math.round(Number(roomType.basePrice) * nights);
     const activitiesAmount = sumActivityPrice(activities);

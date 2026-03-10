@@ -51,12 +51,12 @@ export async function getAvailableRoomCount({ roomTypeId, checkIn, checkOut }: S
 
   const overlappingBookedRooms = await prisma.booking.count({
     where: {
-      deletedAt: null,
+      deletedAt: null,  // active  rooms only
       bookingType: "STAY",
       status: "CONFIRMED",
-      roomId: { not: null },
+      roomId: { not: null },  // valid booking
       room: {
-        roomTypeId,
+        roomTypeId : roomTypeId,
       },
       NOT: {
         OR: [

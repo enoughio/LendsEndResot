@@ -5,6 +5,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next"
 import NavBaR from "@/components/NavBaR";
 import StructuredData from "@/components/StructuredData";
+import ToastProvider from "@/components/ToastProvider";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -83,6 +84,7 @@ export default function RootLayout({
         <Analytics />
         <NavBaR />
         {children}
+        <ToastProvider />
         {/* <Fotter /> */}
       </body>
     </html>

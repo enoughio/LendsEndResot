@@ -15,6 +15,7 @@ import { RoomTypesSection } from './sections/RoomTypesSection';
 import { RoomsSection } from './sections/RoomsSection';
 import { VisitPackagesSection } from './sections/VisitPackagesSection';
 import { type Activity, type Booking, type BookingStatus, type Room, type RoomType, type Section, type VisitPackage } from './types';
+import { notifyError, notifySuccess } from '@/lib/client-notify';
 
 type ApiResponse<T> = { data: T; meta?: { total: number; page: number; pageSize: number } };
 
@@ -258,7 +259,8 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
         }))
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load admin data');
+      const message = notifyError(err, 'Failed to load admin data');
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -278,24 +280,36 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     const url = exists ? `/api/admin/room-types/${rt.id}` : '/api/admin/room-types';
     const method = exists ? 'PATCH' : 'POST';
 
-    await fetchJson(url, {
-      method,
-      body: JSON.stringify({
-        name: rt.name,
-        description: rt.description,
-        basePrice: rt.basePrice,
-        maxCapacity: rt.maxOccupancy,
-        amenities: rt.amenities,
-        totalRooms: rt.totalRooms,
-      }),
-    });
+    try {
+      await fetchJson(url, {
+        method,
+        body: JSON.stringify({
+          name: rt.name,
+          description: rt.description,
+          basePrice: rt.basePrice,
+          maxCapacity: rt.maxOccupancy,
+          amenities: rt.amenities,
+          totalRooms: rt.totalRooms,
+        }),
+      });
 
-    await loadAdminData();
+      await loadAdminData();
+      notifySuccess(exists ? 'Room type updated' : 'Room type created');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to save room type');
+      setError(message);
+    }
   };
 
   const deleteRoomType = async (id: string) => {
-    await fetchJson(`/api/admin/room-types/${id}`, { method: 'DELETE' });
-    await loadAdminData();
+    try {
+      await fetchJson(`/api/admin/room-types/${id}`, { method: 'DELETE' });
+      await loadAdminData();
+      notifySuccess('Room type deleted');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to delete room type');
+      setError(message);
+    }
   };
 
   const saveRoom = async (room: Room) => {
@@ -303,23 +317,35 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     const url = exists ? `/api/admin/rooms/${room.id}` : '/api/admin/rooms';
     const method = exists ? 'PATCH' : 'POST';
 
-    await fetchJson(url, {
-      method,
-      body: JSON.stringify({
-        roomNo: room.roomNumber,
-        roomTypeId: room.roomTypeId,
-        floor: room.floor,
-        view: room.view,
-        status: room.status,
-      }),
-    });
+    try {
+      await fetchJson(url, {
+        method,
+        body: JSON.stringify({
+          roomNo: room.roomNumber,
+          roomTypeId: room.roomTypeId,
+          floor: room.floor,
+          view: room.view,
+          status: room.status,
+        }),
+      });
 
-    await loadAdminData();
+      await loadAdminData();
+      notifySuccess(exists ? 'Room updated' : 'Room created');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to save room');
+      setError(message);
+    }
   };
 
   const deleteRoom = async (id: string) => {
-    await fetchJson(`/api/admin/rooms/${id}`, { method: 'DELETE' });
-    await loadAdminData();
+    try {
+      await fetchJson(`/api/admin/rooms/${id}`, { method: 'DELETE' });
+      await loadAdminData();
+      notifySuccess('Room deleted');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to delete room');
+      setError(message);
+    }
   };
 
   const saveVisitPackage = async (pkg: VisitPackage) => {
@@ -327,28 +353,40 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     const url = exists ? `/api/admin/packages/${pkg.id}` : '/api/admin/packages';
     const method = exists ? 'PATCH' : 'POST';
 
-    await fetchJson(url, {
-      method,
-      body: JSON.stringify({
-        name: pkg.name,
-        packageType: pkg.type,
-        description: pkg.description,
-        duration: Number(pkg.duration.replace(/[^\d.]/g, '') || 0),
-        maxActivity: pkg.includedActivities,
-        basePrice: pkg.pricePerPerson,
-        maxGroupSize: pkg.maxGroupSize,
-        status: pkg.isActive ? 'ACTIVE' : 'INACTIVE',
-        timing: pkg.timing,
-        includes: pkg.includes,
-      }),
-    });
+    try {
+      await fetchJson(url, {
+        method,
+        body: JSON.stringify({
+          name: pkg.name,
+          packageType: pkg.type,
+          description: pkg.description,
+          duration: Number(pkg.duration.replace(/[^\d.]/g, '') || 0),
+          maxActivity: pkg.includedActivities,
+          basePrice: pkg.pricePerPerson,
+          maxGroupSize: pkg.maxGroupSize,
+          status: pkg.isActive ? 'ACTIVE' : 'INACTIVE',
+          timing: pkg.timing,
+          includes: pkg.includes,
+        }),
+      });
 
-    await loadAdminData();
+      await loadAdminData();
+      notifySuccess(exists ? 'Visit package updated' : 'Visit package created');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to save visit package');
+      setError(message);
+    }
   };
 
   const deleteVisitPackage = async (id: string) => {
-    await fetchJson(`/api/admin/packages/${id}`, { method: 'DELETE' });
-    await loadAdminData();
+    try {
+      await fetchJson(`/api/admin/packages/${id}`, { method: 'DELETE' });
+      await loadAdminData();
+      notifySuccess('Visit package deleted');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to delete visit package');
+      setError(message);
+    }
   };
 
   const saveActivity = async (activity: Activity) => {
@@ -356,42 +394,66 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     const url = exists ? `/api/admin/activities/${activity.id}` : '/api/admin/activities';
     const method = exists ? 'PATCH' : 'POST';
 
-    await fetchJson(url, {
-      method,
-      body: JSON.stringify({
-        name: activity.name,
-        duration: activity.duration,
-        price: activity.price,
-        status: activity.status,
-      }),
-    });
+    try {
+      await fetchJson(url, {
+        method,
+        body: JSON.stringify({
+          name: activity.name,
+          duration: activity.duration,
+          price: activity.price,
+          status: activity.status,
+        }),
+      });
 
-    await loadAdminData();
+      await loadAdminData();
+      notifySuccess(exists ? 'Activity updated' : 'Activity created');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to save activity');
+      setError(message);
+    }
   };
 
   const deleteActivity = async (id: string) => {
-    await fetchJson(`/api/admin/activities/${id}`, { method: 'DELETE' });
-    await loadAdminData();
+    try {
+      await fetchJson(`/api/admin/activities/${id}`, { method: 'DELETE' });
+      await loadAdminData();
+      notifySuccess('Activity deleted');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to delete activity');
+      setError(message);
+    }
   };
 
   const toggleVisitPackageActive = async (id: string) => {
     const pkg = visitPackages.find((item) => item.id === id);
     if (!pkg) return;
-    await fetchJson(`/api/admin/packages/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        status: pkg.isActive ? 'INACTIVE' : 'ACTIVE',
-      }),
-    });
-    await loadAdminData();
+    try {
+      await fetchJson(`/api/admin/packages/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          status: pkg.isActive ? 'INACTIVE' : 'ACTIVE',
+        }),
+      });
+      await loadAdminData();
+      notifySuccess(pkg.isActive ? 'Package disabled' : 'Package enabled');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to update package status');
+      setError(message);
+    }
   };
 
   const changeBookingStatus = async (id: string, status: BookingStatus) => {
-    await fetchJson(`/api/admin/bookings/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify({ status: toApiBookingStatus(status) }),
-    });
-    await loadAdminData();
+    try {
+      await fetchJson(`/api/admin/bookings/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ status: toApiBookingStatus(status) }),
+      });
+      await loadAdminData();
+      notifySuccess('Booking status updated');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to update booking status');
+      setError(message);
+    }
   };
 
   const filteredBookings = bookings.filter(b => {

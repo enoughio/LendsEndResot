@@ -103,18 +103,18 @@ export function OverviewPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white px-16">
+    <div className="min-h-screen bg-white px-4 sm:px-6 lg:px-10 xl:px-16">
       {/* Header */}
       <AboutHero />
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto py-8 sm:py-10 md:py-12">
         {/* Overview Section */}
         <section className="mb-12">
           <div className="mb-6">
             <h2 className="text-gray-900">Overview</h2>
             <div className="w-12 h-1 bg-green-600 mt-1"></div>
           </div>
-          <p className="text-gray-700 leading-relaxed mb-8">
+          <p className="text-gray-700 leading-relaxed mb-8 text-sm sm:text-base">
             Welcome to Sumiran Jungle Resort, where nature meets luxury. Nestled in the heart of pristine forest reserve, 
             Sumiran offers an unparalleled escape into the wilderness. Our resort features luxurious accommodations, curated 
             jungle experiences, and world-class amenities. Whether you&apos;re seeking a thrilling day adventure or a peaceful 
@@ -125,7 +125,7 @@ export function OverviewPage() {
           </p>
 
           {/* Rating Cards */}
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             <div className="bg-green-600 text-white p-4 rounded-lg">
               <div className="flex items-baseline gap-2 mb-1">
                 <span className="text-3xl">4.8</span>
@@ -155,26 +155,26 @@ export function OverviewPage() {
         {/* Offerings Section */}
         <section className="mb-12">
           <div className="mb-6">
-            <h2 className="text-gray-900 font-bold text-5xl pb-5">Our Offerings</h2>
+            <h2 className="text-gray-900 font-bold text-3xl sm:text-4xl lg:text-5xl pb-3 sm:pb-5">Our Offerings</h2>
             <div className="w-12 h-1 bg-green-600 mt-1"></div>
           </div>
 
           {/* Day Visits */}
           <div className="mb-8">
-            <h3 className="text-gray-900 mb-4 font-semibold text-4xl">Day Visit at Sumiran</h3>
+            <h3 className="text-gray-900 mb-4 font-semibold text-2xl sm:text-3xl lg:text-4xl">Day Visit at Sumiran</h3>
             <div className="space-y-4">
               {/* Full Day Visit */}
-              <div className="flex items-start gap-4 p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
+              <div className="flex flex-col sm:flex-row items-start gap-4 p-4 sm:p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
                 <Image 
                   src="https://images.unsplash.com/photo-1751931817996-368c9ee352ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWZhcmklMjBqZWVwJTIwZm9yZXN0fGVufDF8fHx8MTc2MzY5ODIxN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
                   alt="Full day visit"
                   width={80}
                   height={80}
-                  className="rounded object-cover"
+                  className="rounded object-cover w-full sm:w-20 h-40 sm:h-20"
                 />
                 <div className="flex-1">
                   <h4 className="text-gray-900 mb-2">{fullDayPackage?.name || 'Full Day Visit at Sumiran'}</h4>
-                  <div className="flex items-center gap-6 text-gray-600 mb-3">
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-gray-600 mb-3">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       <span>{fullDayPackage ? `${fullDayPackage.duration} hours` : '8-10 hours'}</span>
@@ -203,14 +203,14 @@ export function OverviewPage() {
                     </li>
                   </ul>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right w-full sm:w-auto">
                   <div className="mb-3">
                     <span className="text-2xl text-gray-900">₹{(fullDayPackage?.basePrice || 2999).toLocaleString()}</span>
                     <span className="text-gray-600">/person</span>
                   </div>
                    <button 
                     onClick={() => onSelectBooking('full-day', fullDayPackage?.id)}
-                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="w-full sm:w-auto px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Book now
                   </button> 
@@ -218,17 +218,17 @@ export function OverviewPage() {
               </div>
 
               {/* Half Day Visit */}
-              <div className="flex items-start gap-4 p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
+              <div className="flex flex-col sm:flex-row items-start gap-4 p-4 sm:p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
                 <Image 
                   src="https://images.unsplash.com/photo-1537166947947-46e504aa0555?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb3Jlc3QlMjBhZHZlbnR1cmUlMjBhY3Rpdml0aWVzfGVufDF8fHx8MTc2MzY5ODIxNnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
                   alt="Half day visit"
                   width={80}
                   height={80}
-                  className="rounded object-cover"
+                  className="rounded object-cover w-full sm:w-20 h-40 sm:h-20"
                 />
                 <div className="flex-1">
                   <h4 className="text-gray-900 mb-2">{halfDayPackage?.name || 'Half Day Visit at Sumiran'}</h4>
-                  <div className="flex items-center gap-6 text-gray-600 mb-3">
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-6 text-gray-600 mb-3">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
                       <span>{halfDayPackage ? `${halfDayPackage.duration} hours` : '4-5 hours'}</span>
@@ -253,14 +253,14 @@ export function OverviewPage() {
                     </li>
                   </ul>
                 </div>
-                <div className="text-right">
+                <div className="text-left sm:text-right w-full sm:w-auto">
                   <div className="mb-3">
                     <span className="text-2xl text-gray-900">₹{(halfDayPackage?.basePrice || 1499).toLocaleString()}</span>
                     <span className="text-gray-600">/person</span>
                   </div>
                    <button 
                     onClick={() => onSelectBooking('half-day', halfDayPackage?.id)}
-                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="w-full sm:w-auto px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     Book now
                   </button> 
@@ -271,15 +271,15 @@ export function OverviewPage() {
 
           {/* Stay at Sumiran */}
           <div>
-            <h3 className="text-gray-900 font-bold text-4xl mb-4">Stay at Sumiran</h3>
-            <div className="p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
-              <div className="flex items-start gap-4 mb-6">
+            <h3 className="text-gray-900 font-bold text-2xl sm:text-3xl lg:text-4xl mb-4">Stay at Sumiran</h3>
+            <div className="p-4 sm:p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
+              <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
                 <Image
                   src="https://images.unsplash.com/photo-1630823070635-5fe15b1a7c14?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqdW5nbGUlMjByZXNvcnR8ZW58MXx8fHwxNzYzNjk4MjE2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
                   alt="Resort stay"
                   width={80}
                   height={80}
-                  className="rounded object-cover"
+                  className="rounded object-cover w-full sm:w-20 h-40 sm:h-20"
                 />
                 <div className="flex-1">
                   <h4 className="text-gray-900 mb-2">Immersive Stay Experience</h4>
@@ -307,7 +307,7 @@ export function OverviewPage() {
                 </div>
               </div>
               
-              <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 {(rooms.length ? rooms : [
                   { id: 'fallback-1', name: 'Deluxe Room', description: 'Cozy room with forest views', basePrice: 4999 },
                   { id: 'fallback-2', name: 'Premium Suite', description: 'Spacious suite with premium amenities', basePrice: 7999 },
@@ -337,7 +337,7 @@ export function OverviewPage() {
             <h2 className="text-gray-900">Available Activities</h2>
             <div className="w-12 h-1 bg-green-600 mt-1"></div>
           </div>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {(activities.length ? activities : ['Bird Watching', 'Jungle Trek', 'Wildlife Safari']).map((activity) => (
               <div key={activity} className="p-4 border border-gray-200 rounded-lg text-center hover:border-green-500 transition-colors">
                 <span className="text-gray-700">{activity}</span>
@@ -363,7 +363,7 @@ export function OverviewPage() {
 
         {/* Reviews Section */}
         <section>
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <div>
               <h2 className="text-gray-900">Reviews</h2>
               <div className="w-12 h-1 bg-green-600 mt-1"></div>
@@ -386,10 +386,10 @@ export function OverviewPage() {
           <div className="space-y-6">
             {reviews.map((review) => (
               <div key={review.id} className="border-b border-gray-200 pb-6 last:border-b-0">
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3 sm:gap-4">
                   <div className="w-10 h-10 bg-gray-300 rounded-full shrink-0"></div>
                   <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
                       <h4 className="text-gray-900">{review.name}</h4>
                       <div className="flex items-center gap-1">
                         <span className="text-gray-900">{review.rating}.0</span>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { Suspense } from 'react'
 import { CheckCircle2, Calendar, MapPin, Phone, Mail, TreePine } from 'lucide-react'
 import Link from 'next/link'
@@ -32,7 +32,8 @@ function BookedContent() {
   const searchParams = useSearchParams()
   const type = searchParams.get('type')
   const room = searchParams.get('room')
-  const bookingId = searchParams.get('id')
+  const params = useParams<{ id: string }>()
+  const bookingId = params?.id
   const [booking, setBooking] = useState<BookingDetailsResponse['data'] | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -75,29 +76,7 @@ function BookedContent() {
       }
     }
 
-    if (type === 'full' || type === 'half') {
-      return {
-        title: type === 'full' ? 'Full Day Visit' : 'Half Day Visit',
-        subtitle: 'Day Visit Booking',
-        description: `Your ${type === 'full' ? 'full' : 'half'} day visit to Sumiran Jungle Resort has been confirmed.`,
-        bookingDate: null,
-        emailText: 'Sent to your email address',
-      }
-    } else if (type === 'stay') {
-      const roomNames: Record<string, string> = {
-        'deluxe': 'Deluxe Room',
-        'Executive': 'Executive Rooms',
-        'Tower': 'Tower Room',
-        'Dorm': 'Dorm Bed',
-      }
-      return {
-        title: roomNames[room || 'deluxe'] || 'Resort Stay',
-        subtitle: 'Stay Booking',
-        description: 'Your stay at Sumiran Jungle Resort has been confirmed.',
-        bookingDate: null,
-        emailText: 'Sent to your email address',
-      }
-    }
+
     return {
       title: 'Booking Confirmed',
       subtitle: 'Thank you for booking',
@@ -105,7 +84,7 @@ function BookedContent() {
       bookingDate: null,
       emailText: 'Sent to your email address',
     }
-  }, [booking, room, type])
+  }, [booking])
 
   return (
     <div className="min-h-screen bg-white">

@@ -1,32 +1,26 @@
 
-// update details of the guest and create an orderId
+// update details of the guest and create an orderId and open getway checkout page 
 
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-
-import Razorpay from "razorpay"; 
-
-
+import { createRazorpayOrder, getRazorpayKeys } from "@/lib/payments";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, { params }: Params) {
-
-try {
-
-  const body = await request.json()
-
-    const {id} = await params
+  try {
+    const body = await request.json();
+    const { id } = await params;
 
     const name = String(body?.name || "").trim();
     const phone = String(body?.phone || "").trim();
-    const email = String(body?.email || "").trim()
-    const specialRequest = String(body?.specialRequest || "").trim()
-    
+    const email = String(body?.email || "").trim();
+    const specialRequest = String(body?.specialRequest || "").trim();
 
     if (!name || !email || !phone) {
       return NextResponse.json(
         { error: { code: "BAD_REQUEST", message: "name, email and phone are required." } },
+        { status: 400 }
       );
     }
 
@@ -45,28 +39,12 @@ try {
       );
     }
 
-    const keyId = process.env.RAZORPAY_KEY_ID;
-    const keySecret = process.env.RAZORPAY_SECRET_KEY;
-
-    if (!keyId || !keySecret) {
-      return NextResponse.json(
-        { error: { code: "CONFIG_ERROR", message: "Payment gateway keys are not configured." } },
-        { status: 500 }
-      );
-    }
-
-    const instance = new Razorpay({
-      key_id: keyId,
-      key_secret: keySecret,
-    });
-
-    const amount = Math.round(Number(existing.totalAmount));
-    const order = await instance.orders.create({
-      amount,
-      currency: existing.currency || "INR",
+    const { keyId } = getRazorpayKeys();
+    const order = await createRazorpayOrder({
+      amountInRupees: Number(existing.totalAmount ),
+      currency: existing.currency  || "INR",
       receipt: `booking_${existing.id}`,
     });
-
 
     const booking = await prisma.booking.update({
       where: { id },
@@ -86,6 +64,7 @@ try {
         payment: {
           provider: "razorpay",
           keyId,
+          name: "Lend's End",
           orderId: order.id,
           amount: order.amount,
           currency: order.currency,

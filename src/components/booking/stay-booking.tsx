@@ -188,11 +188,13 @@ export function StayBooking({ }: StayBookingProps) {
   };
 
   const selectedRoomData = roomTypes.find(r => r.id === selectedRoom);
+  const selectedActivityKey = selectedActivityIds.join(',');
+  const freeActivityKey = freeActivities.join(',');
 
   useEffect(() => {
     setAvailabilityChecked(false);
     setIsAvailable(false);
-  }, [selectedRoom, checkInDate, checkOutDate, numGuests, selectedActivityIds.join(','), freeActivities.join(',')]);
+  }, [selectedRoom, checkInDate, checkOutDate, numGuests, selectedActivityKey, freeActivityKey]);
 
   const toggleFreeActivity = (activityId: string) => {
     if (freeActivities.includes(activityId)) {
@@ -467,7 +469,7 @@ export function StayBooking({ }: StayBookingProps) {
                     className="w-full h-32 object-cover rounded-lg mb-3"
                   />
                   <h3 className="text-gray-900 mb-1">{selectedRoomData?.name}</h3>
-                  <p className="text-gray-600">Lend's End The Last Resort</p>
+                  <p className="text-gray-600">Lend&apos;s End The Last Resort</p>
                   <div className="flex items-center gap-1 mt-2">
                     <span className="text-gray-900">4.8</span>
                     <span className="text-gray-600">Excellent</span>

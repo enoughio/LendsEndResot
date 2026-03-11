@@ -16,12 +16,13 @@ try {
 
   const body = await request.json()
 
+    const {id} = await params
+
     const name = String(body?.name || "").trim();
     const phone = String(body?.phone || "").trim();
     const email = String(body?.email || "").trim()
-    const id = String(body?.id || "").trim()
     const specialRequest = String(body?.specialRequest || "").trim()
-
+    
 
     if (!name || !email || !phone) {
       return NextResponse.json(

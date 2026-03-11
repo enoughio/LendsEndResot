@@ -1,12 +1,13 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
+import type { ActivityStatus } from "../src/generated/prisma/enums";
 
 type ActivitySeed = {
   name: string;
   duration: number;
   price: number;
-  status: string;
+  status: ActivityStatus;
 };
 
 type RoomTypeSeed = {

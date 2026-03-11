@@ -10,8 +10,32 @@ A modern, SEO-optimized website for Land's End Resort at Sumiran Forest, Bhopal.
 - **Production Ready**: Error boundaries, loading states, 404 pages
 - **Analytics**: Vercel Analytics integration
 - **Accessibility**: WCAG compliant with semantic HTML
+- **Booking System**: Stay and day-visit booking with availability checks
+- **Dynamic Billing**: Per-booking bill endpoint and UI route
+- **Payment Integration**: Razorpay order creation endpoint for booking payments
 
-## 🚀 Getting Started
+##  Booking, Bill, and Payment Flow
+
+1. User selects stay or visit options in booking pages.
+2. Frontend checks stay availability using the availability API.
+3. Backend creates booking in `PENDING` state.
+4. User lands on booking bill/details page:
+	- `/booking/[id]/bill`
+5. Bill page loads booking-specific totals from:
+	- `GET /api/bookings/[id]/bill`
+6. User submits guest details and starts payment using:
+	- `POST /api/bookings/[id]/pay`
+
+### Key API Routes
+
+- `POST /api/availability/stay`
+- `POST /api/bookings/stay`
+- `POST /api/bookings/visit`
+- `GET /api/bookings/[id]`
+- `GET /api/bookings/[id]/bill`
+- `POST /api/bookings/[id]/pay`
+
+##  Getting Started
 
 ### Prerequisites
 
@@ -92,6 +116,16 @@ See `.env.example` for all available environment variables:
 - `NEXT_PUBLIC_SITE_URL`: Your production URL
 - `NEXT_PUBLIC_GOOGLE_VERIFICATION`: Google Search Console verification code
 - Social media URLs for footer links
+- `DATABASE_URL`: PostgreSQL connection string used by Prisma
+- `RAZORPAY_KEY_ID`: Razorpay public key id for order creation
+- `RAZORPAY_SECRET_KEY`: Razorpay secret key for server-side payment operations
+
+### Database Commands
+
+```bash
+npm run prisma:generate
+npx prisma db push
+```
 
 ### SEO Configuration
 

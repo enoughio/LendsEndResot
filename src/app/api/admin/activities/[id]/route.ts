@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { ActivityStatus } from "@/generated/prisma/enums";
 import { ensureAdmin } from "@/lib/admin-auth";
 import { toActivityDto } from "@/lib/admin-serializers";
 import prisma from "@/lib/prisma";
@@ -12,6 +13,14 @@ export async function PATCH(request: Request, { params }: Params) {
   try {
     const { id } = await params;
     const body = await request.json();
+    const nextStatus = body?.status !== undefined ? String(body.status).trim().toUpperCase() : undefined;
+
+    if (nextStatus !== undefined && nextStatus !== "ACTIVE" && nextStatus !== "INACTIVE") {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "status must be ACTIVE or INACTIVE." } },
+        { status: 400 }
+      );
+    }
 
     const existing = await prisma.activity.findUnique({ where: { id } });
     if (!existing) {
@@ -27,7 +36,7 @@ export async function PATCH(request: Request, { params }: Params) {
         name: body?.name ?? undefined,
         duration: body?.duration !== undefined ? Number(body.duration) : undefined,
         price: body?.price !== undefined ? Number(body.price) : undefined,
-        status: body?.status !== undefined ? String(body.status) : undefined,
+        status: nextStatus as ActivityStatus | undefined,
       },
     });
 

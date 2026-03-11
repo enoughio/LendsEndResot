@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { Activity } from "@/generated/prisma/client";
+import type { ActivityStatus } from "@/generated/prisma/enums";
 import { ensureAdmin } from "@/lib/admin-auth";
 import { toActivityDto } from "@/lib/admin-serializers";
 import prisma from "@/lib/prisma";
@@ -34,11 +35,11 @@ export async function POST(request: Request) {
     const name = String(body?.name || "").trim();
     const duration = Number(body?.duration ?? 0);
     const price = Number(body?.price ?? 0);
-    const status = String(body?.status || "ACTIVE").trim();
+    const status = String(body?.status || "ACTIVE").trim().toUpperCase() as ActivityStatus;
 
-    if (!name || duration <= 0 || price < 0) {
+    if (!name || duration <= 0 || price < 0 || (status !== "ACTIVE" && status !== "INACTIVE")) {
       return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "name, duration (>0), and price (>=0) are required." } },
+        { error: { code: "BAD_REQUEST", message: "name, duration (>0), price (>=0), and valid status are required." } },
         { status: 400 }
       );
     }

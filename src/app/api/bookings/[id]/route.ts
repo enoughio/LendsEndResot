@@ -25,7 +25,7 @@ export async function GET(_request: Request, { params }: Params) {
       },
     });
 
-    if (!booking) {
+    if (!booking) { 
       return NextResponse.json(
         { error: { code: "NOT_FOUND", message: "Booking not found." } },
         { status: 404 }

@@ -17,6 +17,9 @@ export async function GET() {
         orderBy: { createdAt: "desc" },
       }),
       prisma.activity.findMany({
+        where : {
+          
+        },
         orderBy: { createdAt: "desc" },
       }),
     ]);

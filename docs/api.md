@@ -232,9 +232,9 @@ Response:
 }
 ```
 
-## 3.5 Save guest details
+## 3.5 Save guest details and show bill
 
-### POST `/bookings/:id/details`
+### POST `/bookings/:id/bill`
 
 Request:
 

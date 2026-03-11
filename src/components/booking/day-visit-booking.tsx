@@ -124,8 +124,8 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
         throw new Error(json?.error?.message || 'Failed to create visit booking');
       }
 
-      notifySuccess('Visit booking created', 'Redirecting you to confirmation.');
-      router.push(`/booking/booked?id=${json?.data?.bookingId}&type=visit`);
+      notifySuccess('Visit booking created', 'Redirecting you to details and payment.');
+      router.push(`/booking/${json?.data?.bookingId}/bill`);
     } catch (err) {
       const message = notifyError(err, 'Failed to confirm booking');
       setError(message);

@@ -23,11 +23,13 @@ function ImageWithFallback({ src, alt, className, width, height }: { src: string
       height={height || 300}
       className={className}
       onError={() => {
-        setImgSrc('/placeholder.png');
+        setImgSrc('/night sky.png');
       }}
     />
   );
 }
+
+
 type RoomTypeApi = {
   id: string;
   name: string;
@@ -65,13 +67,17 @@ export function StayBooking({ }: StayBookingProps) {
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
   const [numGuests, setNumGuests] = useState(2);
+  const [availabilityChecked, setAvailabilityChecked] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false);
 
   const handleBack = () => {
     router.push('/booking');
   };
 
+
+  // get all rooms information
   useEffect(() => {
-    const loadCatalog = async () => {
+    const loadCatalog = async () => {  
       try {
         setLoading(true);
         setError(null);
@@ -79,7 +85,7 @@ export function StayBooking({ }: StayBookingProps) {
         if (!res.ok) throw new Error('Failed to load booking data');
         const json = (await res.json()) as BookingCatalogResponse;
         setRoomTypes(json.data.rooms || []);
-        setActivities((json.data.activities || []).filter((activity) => activity.status.toUpperCase() !== 'INACTIVE'));
+        setActivities((json.data.activities || []));
       } catch (err) {
         const message = notifyError(err, 'Failed to load booking data');
         setError(message);
@@ -130,6 +136,7 @@ export function StayBooking({ }: StayBookingProps) {
           checkOut: new Date(checkOutDate).toISOString(),
           guests: numGuests,
           activityIds: selectedActivityIds,
+          freeActivityIds: freeActivities,
         }),
       });
 
@@ -139,7 +146,16 @@ export function StayBooking({ }: StayBookingProps) {
       }
 
       if (!availabilityJson?.data?.available) {
+        setAvailabilityChecked(true);
+        setIsAvailable(false);
         throw new Error('Selected room is not available for the selected dates.');
+      }
+
+      if (!availabilityChecked || !isAvailable) {
+        setAvailabilityChecked(true);
+        setIsAvailable(true);
+        notifySuccess('Room is available', 'Click the button again to continue booking.');
+        return;
       }
 
       const createRes = await fetch('/api/bookings/stay', {
@@ -151,6 +167,7 @@ export function StayBooking({ }: StayBookingProps) {
           checkOut: new Date(checkOutDate).toISOString(),
           guests: numGuests,
           activityIds: selectedActivityIds,
+          freeActivityIds: freeActivities,
         }),
       });
       const createJson = await createRes.json();
@@ -160,8 +177,8 @@ export function StayBooking({ }: StayBookingProps) {
       }
 
       const bookingId = createJson?.data?.bookingId;
-      notifySuccess('Stay booking created', 'Redirecting you to confirmation.');
-      router.push(`/booking/booked?id=${bookingId}&type=stay`);
+      notifySuccess('Stay booking created', 'Redirecting you to details and payment.');
+      router.push(`/booking/${bookingId}/bill`);
     } catch (err) {
       const message = notifyError(err, 'Failed to confirm booking');
       setError(message);
@@ -171,6 +188,11 @@ export function StayBooking({ }: StayBookingProps) {
   };
 
   const selectedRoomData = roomTypes.find(r => r.id === selectedRoom);
+
+  useEffect(() => {
+    setAvailabilityChecked(false);
+    setIsAvailable(false);
+  }, [selectedRoom, checkInDate, checkOutDate, numGuests, selectedActivityIds.join(','), freeActivities.join(',')]);
 
   const toggleFreeActivity = (activityId: string) => {
     if (freeActivities.includes(activityId)) {
@@ -240,7 +262,7 @@ export function StayBooking({ }: StayBookingProps) {
 
             {/* Room Selection */}
             <div>
-              <h2 className="text-gray-900 mb-4">Choose Your Room</h2>
+              <h2 className="text-gray-900 mb-4 text-2xl font-bold">Choose Your Room</h2>
               <div className="space-y-4">
                 {roomTypes.map((room) => {
                   const isSelected = selectedRoom === room.id;
@@ -424,63 +446,7 @@ export function StayBooking({ }: StayBookingProps) {
 
 
 
-                {/* Login Section */}
-                {/* <div className="border-t pt-6">
-                  <h2 className="text-gray-900 mb-4">Login or Sign up to book</h2>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-gray-700 mb-2">Phone Number</label>
-                      <input
-                        type="tel"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        placeholder="Phone Number"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                      />
-                      <p className="text-sm text-gray-500 mt-2">
-                        We&apos;ll call or text you to confirm your number.
-                      </p>
-                    </div>
-
-                    <button className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                      Continue
-                    </button>
-
-                    <div className="relative">
-                      <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-300"></div>
-                      </div>
-                      <div className="relative flex justify-center">
-                        <span className="bg-white px-4 text-gray-500">Or</span>
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-3 gap-3">
-                      <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        <Facebook className="w-5 h-5 text-blue-600" />
-                      </button>
-                      <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        <svg className="w-5 h-5" viewBox="0 0 24 24">
-                          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                      </button>
-                      <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        <Apple className="w-5 h-5" />
-                      </button>
-                    </div>
-
-                    <button className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                        <rect width="24" height="24" rx="4" fill="#EA4335"/>
-                        <path d="M18 12h-6v6h-1v-6H5v-1h6V5h1v6h6v1z" fill="white"/>
-                      </svg>
-                      Continue with email
-                    </button>
-                  </div>
-                </div> */}
+          
 
 
 
@@ -501,7 +467,7 @@ export function StayBooking({ }: StayBookingProps) {
                     className="w-full h-32 object-cover rounded-lg mb-3"
                   />
                   <h3 className="text-gray-900 mb-1">{selectedRoomData?.name}</h3>
-                  <p className="text-gray-600">Sumiran Jungle Resort</p>
+                  <p className="text-gray-600">Lend's End The Last Resort</p>
                   <div className="flex items-center gap-1 mt-2">
                     <span className="text-gray-900">4.8</span>
                     <span className="text-gray-600">Excellent</span>
@@ -556,15 +522,21 @@ export function StayBooking({ }: StayBookingProps) {
                   onClick={handleConfirmBooking}
                   className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-200 hover:border-green-400 hover:border-2 hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {submitting ? 'Confirming...' : 'Confirm Booking (pay at property)'}
+                  {submitting
+                    ? 'Checking...'
+                    : availabilityChecked && isAvailable
+                    ? 'Available - Continue Booking'
+                    : availabilityChecked && !isAvailable
+                    ? 'Not Available - Try Different Dates'
+                    : 'Check Availability'}
                 </button>
-                <button 
+                {/* <button 
                   disabled={submitting}
                   onClick={handleConfirmBooking}
                   className="w-full py-3 mt-3  border-green-500 border-2 rounded-lg hover:bg-green-200 transition-colors hover:scale-104 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitting ? 'Confirming...' : 'Confirm Booking (pay now)'}
-                </button>
+                </button> */}
                 {missingRequirements.length > 0 && (
                   <p className="mt-3 text-sm text-amber-700">
                     Please complete: {missingRequirements.join(', ')}.

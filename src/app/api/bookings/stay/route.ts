@@ -19,6 +19,9 @@ export async function POST(request: Request) {
     const activityIds: string[] = Array.isArray(body?.activityIds)
       ? body.activityIds.map((id: unknown) => String(id)).filter(Boolean)
       : [];
+    const freeActivityIds: string[] = Array.isArray(body?.freeActivityIds)
+      ? body.freeActivityIds.map((id: unknown) => String(id)).filter(Boolean)
+      : [];
 
     if (!roomTypeId || !checkIn || !checkOut || guests < 1) {
       return NextResponse.json(
@@ -34,9 +37,30 @@ export async function POST(request: Request) {
       );
     }
 
-    if (activityIds.length < 1) {
+    if (activityIds.length < 2) {
       return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "At least one activity is required." } },
+        { error: { code: "BAD_REQUEST", message: "At least two activities are required for stay bookings." } },
+        { status: 400 }
+      );
+    }
+
+    if (freeActivityIds.length !== 2) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "Exactly two complimentary activities are required for stay bookings." } },
+        { status: 400 }
+      );
+    }
+
+    if (new Set(freeActivityIds).size !== freeActivityIds.length) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "Duplicate complimentary activities are not allowed." } },
+        { status: 400 }
+      );
+    }
+
+    if (!freeActivityIds.every((id) => activityIds.includes(id))) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "Complimentary activities must be part of selected activities." } },
         { status: 400 }
       );
     }
@@ -75,10 +99,47 @@ export async function POST(request: Request) {
     }
 
 
+    // select a room for which no booking is done at the required time
+    const availableRoom = await prisma.room.findFirst({
+      where: {
+        roomTypeId,
+        roomStatus: "AVAILABLE",
+        bookings: {
+          none: {
+            deletedAt: null,
+            bookingType: "STAY",
+            status: "CONFIRMED",
+            NOT: {
+              OR: [
+                { checkOut: { lte: checkIn } },
+                { checkIn: { gte: checkOut } },
+              ],
+            },
+          },
+        },
+      },
+      orderBy: { roomNo: "asc" },
+      select: { id: true },
+    });
+
+    if (!availableRoom) {
+      return NextResponse.json(
+        {
+          error: {
+            code: "CONFLICT",
+            message: "No rooms available for the selected dates.",
+          },
+        },
+        { status: 409 }
+      );
+    }
+
+
     // charges are on night stay basis
     const nights = calculateNights(checkIn, checkOut);
     const roomBaseAmount = Math.round(Number(roomType.basePrice) * nights);
-    const activitiesAmount = sumActivityPrice(activities);
+    const additionalActivities = activities.filter((activity) => !freeActivityIds.includes(activity.id));
+    const activitiesAmount = sumActivityPrice(additionalActivities);
     const { totalAmount, taxAmount } = buildPriceBreakdown(roomBaseAmount, activitiesAmount);
 
     const booking = await prisma.booking.create({
@@ -86,6 +147,7 @@ export async function POST(request: Request) {
         userId,
         bookingType: "STAY",
         status: "PENDING",
+        roomId: availableRoom.id,
         checkIn,
         checkOut,
         guests,
@@ -93,7 +155,10 @@ export async function POST(request: Request) {
         totalAmount,
         currency: "INR",
         bookingActivities: {
-          create: activityIds.map((activityId) => ({ activityId })),
+          create: activityIds.map((activityId) => ({
+            activityId,
+            type: freeActivityIds.includes(activityId) ? "FREE" : "ADDITIONAL",
+          })),
         },
       },
     });

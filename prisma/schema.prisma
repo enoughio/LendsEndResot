@@ -47,13 +47,23 @@ enum VisitPackageType {
   SHORT_VISIT
 }
 
+enum ActivityType {
+  FREE
+  ADDITIONAL
+}
+
 enum PackageStatus {
   ACTIVE
   INACTIVE
 }
 
-// Models
+enum ActivityStatus {
+  ACTIVE
+  INACTIVE
+}
 
+
+// Models
 model User {
   id String @id @default(cuid())
   name String
@@ -107,7 +117,7 @@ model Activity {
   name String
   duration Float
   price Float
-  status String
+  status ActivityStatus @default(ACTIVE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -186,11 +196,13 @@ model Booking {
   @@index([visitPackageId])
 }
 
+// store paid and unpaid activity seperatly
 model BookingActivity {
   id String @id @default(cuid())
 
   bookingId String
   activityId String
+  type ActivityType @default(ADDITIONAL)
 
   booking Booking @relation(fields: [bookingId], references: [id])
   activity Activity @relation(fields: [activityId], references: [id])

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Script from "next/script";
+import { Sparkles, ShieldCheck, CreditCard, ReceiptText } from "lucide-react";
 
 function formatInr(value: number) {
   return new Intl.NumberFormat("en-IN", {
@@ -69,6 +70,7 @@ export default function BookingDetailsPage() {
   const [loadingBill, setLoadingBill] = useState(true);
   const [billError, setBillError] = useState<string | null>(null);
   const [paying, setPaying] = useState(false);
+  const [isFinalizingPayment, setIsFinalizingPayment] = useState(false);
   const [payError, setPayError] = useState<string | null>(null);
   const [paySuccess, setPaySuccess] = useState<string | null>(null);
 
@@ -136,6 +138,7 @@ export default function BookingDetailsPage() {
 
     try {
       setPaying(true);
+      setIsFinalizingPayment(false);
       setPayError(null);
       setPaySuccess(null);
 
@@ -196,6 +199,10 @@ export default function BookingDetailsPage() {
 		//step 3
         handler: async (response: RazorpaySuccessPayload) => {
           try {
+            setIsFinalizingPayment(true);
+            setPayError(null);
+            setPaySuccess("Payment received. Verifying and preparing your confirmation...");
+
             const verifyRes = await fetch("/api/payment/verify-order", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -212,9 +219,10 @@ export default function BookingDetailsPage() {
               throw new Error(verifyJson?.error?.message || "Payment verification failed");
             }
 
-            setPaySuccess("Payment verified successfully.");
+            setPaySuccess("Payment verified successfully. Redirecting to your confirmation page...");
             router.push(`/booking/${bookingId}/booked?id=${bookingId}`);
           } catch (error) {
+            setIsFinalizingPayment(false);
             setPayError(
               error instanceof Error ? error.message : "Payment verification failed"
             );
@@ -223,6 +231,7 @@ export default function BookingDetailsPage() {
       });
 
       razorpay.on("payment.failed", (response: RazorpayFailurePayload) => {
+        setIsFinalizingPayment(false);
         const message =
           response?.error?.description || response?.error?.code || "Payment failed.";
         setPayError(message);
@@ -232,6 +241,7 @@ export default function BookingDetailsPage() {
 
       setPaySuccess("Payment request created successfully.");
     } catch (error) {
+      setIsFinalizingPayment(false);
       setPayError(
         error instanceof Error ? error.message : "Unable to initiate payment",
       );
@@ -241,22 +251,32 @@ export default function BookingDetailsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 ">
-	 {/* loads razorpay script */}
-  <Script src="https://checkout.razorpay.com/v1/checkout.js"  />
+    <main className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40 px-4 py-8 sm:px-6 sm:py-10">
+      {/* loads razorpay script */}
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+
       <div className="mx-auto max-w-6xl">
-        <h1 className="mb-6 text-2xl font-semibold text-slate-900">
-          Guest Details & Final Bill
-        </h1>
+        <section className="mb-6 rounded-2xl border border-white/60 bg-white/90 p-5 shadow-sm backdrop-blur-sm sm:p-6">
+          <p className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+            <Sparkles className="h-3.5 w-3.5" />
+            Final step before confirmation
+          </p>
+          <h1 className="mt-3 text-2xl font-semibold text-slate-900 sm:text-3xl">
+            Guest Details & Final Bill
+          </h1>
+          <p className="mt-2 text-sm text-slate-600 sm:text-base">
+            Fill in your details, review the charges, and complete payment securely.
+          </p>
+        </section>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-xl border border-slate-200 bg-white p-6">
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
             <h2 className="mb-4 text-lg font-medium text-slate-900">
               Guest Form
             </h2>
 
-            <div className="space-y-4">
-              <div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
                 <label className="mb-1 block text-sm text-slate-700">
                   Full Name
                 </label>
@@ -264,7 +284,7 @@ export default function BookingDetailsPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Enter full name"
-                  className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-green-600"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 outline-none transition-all focus:border-green-600 focus:ring-2 focus:ring-green-100"
                 />
               </div>
 
@@ -277,7 +297,7 @@ export default function BookingDetailsPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter email"
-                  className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-green-600"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 outline-none transition-all focus:border-green-600 focus:ring-2 focus:ring-green-100"
                 />
               </div>
 
@@ -289,11 +309,11 @@ export default function BookingDetailsPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Enter phone"
-                  className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-green-600"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 outline-none transition-all focus:border-green-600 focus:ring-2 focus:ring-green-100"
                 />
               </div>
 
-              <div>
+              <div className="sm:col-span-2">
                 <label className="mb-1 block text-sm text-slate-700">
                   City
                 </label>
@@ -301,11 +321,11 @@ export default function BookingDetailsPage() {
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   placeholder="Enter city"
-                  className="w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-green-600"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 outline-none transition-all focus:border-green-600 focus:ring-2 focus:ring-green-100"
                 />
               </div>
 
-              <div>
+              <div className="sm:col-span-2">
                 <label className="mb-1 block text-sm text-slate-700">
                   Special Request
                 </label>
@@ -313,26 +333,36 @@ export default function BookingDetailsPage() {
                   value={specialRequest}
                   onChange={(e) => setSpecialRequest(e.target.value)}
                   placeholder="Add any special request"
-                  className="min-h-24 w-full rounded-md border border-slate-300 px-3 py-2 outline-none focus:border-green-600"
+                  className="min-h-24 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 outline-none transition-all focus:border-green-600 focus:ring-2 focus:ring-green-100"
                 />
               </div>
             </div>
           </section>
 
-          <section className="rounded-xl border border-slate-200 bg-white p-6">
-            <h2 className="mb-4 text-lg font-medium text-slate-900">
-              Final Bill
-            </h2>
+          <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-6 lg:h-fit">
+            <div className="mb-4 flex items-center gap-2">
+              <ReceiptText className="h-5 w-5 text-slate-700" />
+              <h2 className="text-lg font-medium text-slate-900">Final Bill</h2>
+            </div>
 
             {loadingBill ? (
-              <p className="text-slate-600">Loading bill...</p>
+              <div className="space-y-3 animate-pulse">
+                <div className="h-4 w-2/3 rounded bg-slate-100" />
+                <div className="h-4 w-full rounded bg-slate-100" />
+                <div className="h-4 w-5/6 rounded bg-slate-100" />
+                <div className="h-4 w-full rounded bg-slate-100" />
+                <div className="h-4 w-3/4 rounded bg-slate-100" />
+                <div className="h-10 w-full rounded bg-slate-100" />
+              </div>
             ) : billError ? (
-              <p className="text-red-600">{billError}</p>
+              <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-red-600">
+                {billError}
+              </p>
             ) : (
               <div className="space-y-3">
-                {payError && <p className="text-sm text-red-600">{payError}</p>}
+                {payError && <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">{payError}</p>}
                 {paySuccess && (
-                  <p className="text-sm text-green-700">{paySuccess}</p>
+                  <p className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">{paySuccess}</p>
                 )}
 
                 <div className="flex items-center justify-between text-slate-700">
@@ -347,18 +377,23 @@ export default function BookingDetailsPage() {
                   </div>
                 )}
 
-                <div className="pt-1 text-sm text-slate-600">
+                <div className="pt-1 text-sm font-medium text-slate-700">
                   Additional Activities
                 </div>
-                {additionalActivities.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between text-sm text-slate-700"
-                  >
-                    <span>{item.name}</span>
-                    <span>{formatInr(item.price)}</span>
-                  </div>
-                ))}
+
+                {additionalActivities.length === 0 ? (
+                  <p className="text-sm text-slate-500">No additional activities selected.</p>
+                ) : (
+                  additionalActivities.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between text-sm text-slate-700"
+                    >
+                      <span>{item.name}</span>
+                      <span>{formatInr(item.price)}</span>
+                    </div>
+                  ))
+                )}
 
                 <div className="flex items-center justify-between text-slate-700">
                   <span>Additional Activities Total</span>
@@ -383,16 +418,43 @@ export default function BookingDetailsPage() {
                 <button
                   type="button"
                   onClick={startCheckout}
-                  disabled={!canPay || paying}
-                  className="mt-4 w-full rounded-md bg-green-600 py-3 text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={!canPay || paying || isFinalizingPayment}
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-3 font-medium text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {paying ? "Processing..." : "Pay"}
+                  <CreditCard className="h-4 w-4" />
+                  {isFinalizingPayment ? "Finalizing Payment..." : paying ? "Processing..." : "Pay Securely"}
                 </button>
+
+                <div className="rounded-lg border border-emerald-100 bg-emerald-50/70 p-3 text-xs text-emerald-800">
+                  <p className="inline-flex items-center gap-2 font-medium">
+                    <ShieldCheck className="h-4 w-4" />
+                    Your payment is encrypted and securely processed.
+                  </p>
+                </div>
               </div>
             )}
           </section>
         </div>
       </div>
+
+      {isFinalizingPayment && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/35 px-4 backdrop-blur-[1px]">
+          <div className="w-full max-w-md rounded-2xl border border-emerald-100 bg-white p-5 shadow-xl">
+            <p className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Payment completed
+            </p>
+            <h3 className="mt-3 text-lg font-semibold text-slate-900">Please wait while we confirm your booking</h3>
+            <p className="mt-1 text-sm text-slate-600">We are verifying your payment and redirecting you to your booked page.</p>
+
+            <div className="mt-4 space-y-2 animate-pulse">
+              <div className="h-2 w-full rounded bg-emerald-100" />
+              <div className="h-2 w-5/6 rounded bg-emerald-100" />
+              <div className="h-2 w-2/3 rounded bg-emerald-100" />
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

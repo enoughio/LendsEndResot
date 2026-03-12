@@ -108,6 +108,7 @@ const NavBaR = () => {
             {/* <div className="border-2 border-gray-200 p-3 rounded-full px-6 cursor-pointer hover:bg-white/10 transition w-full sm:w-auto text-center">
               Book an Experience
             </div> */}
+            
             <div className="border-2 border-gray-200 p-3 rounded-full bg-white text-black px-6 cursor-pointer hover:bg-gray-200 transition w-full sm:w-auto text-center">
               <Link
                 href="/contact"

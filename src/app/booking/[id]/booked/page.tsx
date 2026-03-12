@@ -29,9 +29,6 @@ type BookingDetailsResponse = {
 }
 
 function BookedContent() {
-  const searchParams = useSearchParams()
-  const type = searchParams.get('type')
-  const room = searchParams.get('room')
   const params = useParams<{ id: string }>()
   const bookingId = params?.id
   const [booking, setBooking] = useState<BookingDetailsResponse['data'] | null>(null)

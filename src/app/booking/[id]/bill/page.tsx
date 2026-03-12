@@ -42,8 +42,9 @@ type RazorpayFailurePayload = {
     description?: string;
   };
 };
-
 // Type declaration for global Razorpay object injected by checkout.js.
+
+// this is complex understand it later
 declare global {
   interface Window {
     Razorpay: new (options: Record<string, unknown>) => {
@@ -129,10 +130,7 @@ export default function BookingDetailsPage() {
     return Boolean(fullName.trim() && email.trim() && phone.trim());
   }, [fullName, email, phone]);
 
-  // Checkout flow:
-  // 1) Ask backend to create order and save guest details.
-  // 2) Open Razorpay modal with server-provided order data.
-  // 3) Verify payment signature on backend before marking booking confirmed.
+  // Step 1: Create Razorpay order from backend, Step 2: open checkout, Step 3: verify signature.
   const startCheckout = async () => {
     if (!bookingId || !canPay) return;
 
@@ -159,8 +157,10 @@ export default function BookingDetailsPage() {
         }),
       });
 
-
-    // Read order payload returned by /api/bookings/:id/pay.
+      
+	 
+	 // rethink this as well in better way
+	//  step 2 
 	  const orderJson = (await orderRes.json()) as RazorpayOrderResponse & {
         error?: { message?: string };
       };
@@ -193,7 +193,7 @@ export default function BookingDetailsPage() {
           color: "#16a34a",
         },
 
-    // Handler runs after successful payment in Razorpay modal.
+		//step 3
         handler: async (response: RazorpaySuccessPayload) => {
           try {
             const verifyRes = await fetch("/api/payment/verify-order", {
@@ -222,7 +222,6 @@ export default function BookingDetailsPage() {
         },
       });
 
-      // Surface a readable payment failure message to the user.
       razorpay.on("payment.failed", (response: RazorpayFailurePayload) => {
         const message =
           response?.error?.description || response?.error?.code || "Payment failed.";
@@ -242,8 +241,8 @@ export default function BookingDetailsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 mt-10">
-     {/* Loads Razorpay checkout SDK and attaches window.Razorpay */}
+    <main className="min-h-screen bg-slate-50 px-4 py-8 ">
+	 {/* loads razorpay script */}
   <Script src="https://checkout.razorpay.com/v1/checkout.js"  />
       <div className="mx-auto max-w-6xl">
         <h1 className="mb-6 text-2xl font-semibold text-slate-900">

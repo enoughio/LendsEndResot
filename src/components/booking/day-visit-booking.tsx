@@ -1,7 +1,7 @@
 'use client'
 // TODO : overfetching here in /api/booking
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, Calendar, Users, CheckCircle2, Clock, TreePine } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -41,6 +41,7 @@ type BookingCatalogResponse = {
 
 export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBookingProps) {
   const router = useRouter();
+  const visitDateInputRef = useRef<HTMLInputElement>(null);
   const [visitPackages, setVisitPackages] = useState<VisitPackageApi[]>([]);
   const [activities, setActivities] = useState<ActivityApi[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,6 +74,13 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
 
   const handleBack = () => {
     router.push('/booking');
+  };
+
+  const openVisitDatePicker = () => {
+    const input = visitDateInputRef.current;
+    if (!input) return;
+    input.focus();
+    (input as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
   };
 
   useEffect(() => {
@@ -299,32 +307,62 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
 
             {/* Visit Details */}
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <label className="text-gray-600 mb-2 block">
-                  <Calendar className="w-4 h-4 inline mr-2" />
-                  Visit Date
-                </label>
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={openVisitDatePicker}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openVisitDatePicker();
+                  }
+                }}
+                className="rounded-xl border border-gray-200 bg-linear-to-br from-white to-green-50 p-4 shadow-xs transition-all hover:border-green-400 hover:shadow-sm"
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-gray-600">Visit Date</p>
+                  <Calendar className="w-4 h-4 text-green-700" />
+                </div>
+                <p className="mt-2 text-gray-900">
+                  {visitDate ? new Date(visitDate).toLocaleDateString() : 'Choose your date'}
+                </p>
                 <input
+                  ref={visitDateInputRef}
                   type="date"
                   value={visitDate}
                   onChange={(e) => setVisitDate(e.target.value)}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-full text-gray-900 focus:outline-none"
+                  className="mt-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-gray-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400"
                 />
               </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <label className="text-gray-600 mb-2 block">
-                  <Users className="w-4 h-4 inline mr-2" />
-                  Number of Guests
-                </label>
-                <input
-                  type="number"
-                  value={numGuests}
-                  onChange={(e) => setNumGuests(Math.max(1, parseInt(e.target.value) || 1))}
-                  min="1"
-                  max="20"
-                  className="w-full text-gray-900 focus:outline-none"
-                />
+
+              <div className="rounded-xl border border-gray-200 bg-linear-to-br from-white to-blue-50 p-4 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <p className="text-gray-600">Number of Guests</p>
+                  <Users className="w-4 h-4 text-blue-700" />
+                </div>
+                <p className="mt-2 text-2xl font-semibold text-gray-900">{numGuests}</p>
+                <div className="mt-3 flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setNumGuests((prev) => Math.max(1, prev - 1))}
+                    className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100"
+                    aria-label="Decrease guests"
+                  >
+                    -
+                  </button>
+                  <div className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-gray-700">
+                    {numGuests === 1 ? '1 guest' : `${numGuests} guests`}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setNumGuests((prev) => Math.min(20, prev + 1))}
+                    className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100"
+                    aria-label="Increase guests"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             </div>
               
@@ -402,16 +440,16 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                 </div>
                 <h3 className="text-gray-900 mb-1">{selectedPackage?.name || (type === 'full' ? 'Full Day Visit' : 'Half Day Visit')}</h3>
                 <p className="text-gray-600">Sumiran Jungle Resort</p>
-                <div className="flex items-center gap-1 mt-2">
+                {/* <div className="flex items-center gap-1 mt-2">
                   <span className="text-gray-900">4.8</span>
                   <span className="text-gray-600">Excellent</span>
                   <span className="text-gray-500 ml-1">286 reviews</span>
-                </div>
+                </div> */}
               </div>
 
-              <div className="mb-4 pb-4 border-b border-blue-200">
+              {/* <div className="mb-4 pb-4 border-b border-blue-200">
                 <p className="text-gray-600 mb-1">Your booking is protected by <span className="text-gray-900">Sumiran</span></p>
-              </div>
+              </div> */}
 
               <div className="mb-4 pb-4 border-b border-blue-200">
                 <h4 className="text-gray-900 mb-3">Price Details</h4>

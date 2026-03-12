@@ -35,6 +35,12 @@ type VisitPackageSeed = {
   description: string;
 };
 
+type AdminSeed = {
+  name: string;
+  email: string;
+  phone: string;
+};
+
 const activities: ActivitySeed[] = [
   { name: "Kayaking", duration: 1.5, price: 800, status: "ACTIVE" },
   { name: "Target Shooting", duration: 2.5, price: 1200, status: "ACTIVE" },
@@ -133,6 +139,19 @@ const visitPackages: VisitPackageSeed[] = [
   },
 ];
 
+const admins: AdminSeed[] = [
+  {
+    name: "Aniket",
+    email: "aniketjatav.dev@gmail.com",
+    phone: "+919000000001",
+  },
+  {
+    name: "Aviral",
+    email: "aviralp@live.com",
+    phone: "+919000000002",
+  },
+];
+
 async function main() {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
@@ -191,16 +210,41 @@ async function main() {
       }
     }
 
-    const [activityCount, roomTypeCount, packageCount] = await Promise.all([
+    for (const admin of admins) {
+      await prisma.user.upsert({
+        where: { email: admin.email },
+        update: {
+          name: admin.name,
+          role: "ADMIN",
+          emailVerified: true,
+          phoneVerified: true,
+          phone: admin.phone,
+        },
+        create: {
+          name: admin.name,
+          email: admin.email,
+          role: "ADMIN",
+          // Password is required by schema, but OTP flow does not use password login.
+          password: "otp-only-admin-account",
+          phone: admin.phone,
+          emailVerified: true,
+          phoneVerified: true,
+        },
+      });
+    }
+
+    const [activityCount, roomTypeCount, packageCount, adminCount] = await Promise.all([
       prisma.activity.count(),
       prisma.roomType.count(),
       prisma.visitPackage.count(),
+      prisma.user.count({ where: { role: "ADMIN" } }),
     ]);
 
     console.log("Seed completed.");
     console.log(`Activities: ${activityCount}`);
     console.log(`Room types: ${roomTypeCount}`);
     console.log(`Visit packages: ${packageCount}`);
+    console.log(`Admins: ${adminCount}`);
   } finally {
     await prisma.$disconnect();
   }

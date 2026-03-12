@@ -6,5 +6,10 @@ import AdminDashboard from '../../components/admin-dashboard';
 export default function AdminPage() {
   const router = useRouter();
 
-  return <AdminDashboard onExit={() => router.push('/')} />;
+  const logout = async () => {
+    await fetch('/api/admin/auth/logout', { method: 'POST' });
+    router.push('/');
+  };
+
+  return <AdminDashboard onExit={() => { void logout(); }} />;
 }

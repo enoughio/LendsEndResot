@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40">
       {/* Header */}
 
       {/* Hero Section */}
@@ -39,7 +39,7 @@ export default function AboutPage() {
             width={1920}
             height={600}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#07180f]/80 via-[#0d2b1b]/45 to-black/35"></div>
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center">
           <div className="text-white max-w-2xl">
@@ -55,9 +55,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-16">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-16 space-y-8 md:space-y-10">
         {/* Our Story Section */}
-        <section className="mb-12 md:mb-20">
+        <section className="rounded-2xl border border-emerald-100 bg-linear-to-br from-white to-emerald-50/45 p-6 shadow-sm md:p-8">
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className="order-2 md:order-1">
               <div className="mb-4 md:mb-6">
@@ -102,10 +102,10 @@ export default function AboutPage() {
         </section>
 
         {/* Mission & Vision */}
-        <section className="mb-12 md:mb-20">
+        <section className="rounded-2xl border border-slate-200 bg-linear-to-br from-white via-slate-50/40 to-emerald-50/30 p-6 shadow-sm md:p-8">
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             {/* Mission */}
-            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-6 md:p-8 text-white">
+            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-xl p-6 md:p-8 text-white shadow-sm">
               <div className="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-full flex items-center justify-center mb-4 md:mb-6">
                 <Target className="w-6 h-6 md:w-7 md:h-7 text-white" />
               </div>
@@ -118,7 +118,7 @@ export default function AboutPage() {
             </div>
 
             {/* Vision */}
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-6 md:p-8 text-white">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 md:p-8 text-white shadow-sm">
               <div className="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-full flex items-center justify-center mb-4 md:mb-6">
                 <Eye className="w-6 h-6 md:w-7 md:h-7 text-white" />
               </div>
@@ -186,7 +186,7 @@ export default function AboutPage() {
         </section> */}
 
         {/* Core Values */}
-        <section className="mb-12 md:mb-20">
+        <section className="rounded-2xl border border-emerald-100 bg-linear-to-br from-white to-sky-50/35 p-6 shadow-sm md:p-8">
           <div className="mb-6 md:mb-8">
             <h2 className="text-gray-900 text-2xl md:text-4xl">
               What Defines Us
@@ -195,7 +195,7 @@ export default function AboutPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            <div className="p-5 md:p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
+            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-white to-emerald-50/45 hover:border-green-500 transition-colors">
               <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
                 <Leaf className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
               </div>
@@ -209,7 +209,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
+            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-white to-sky-50/45 hover:border-green-500 transition-colors">
               <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
                 <Heart className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
               </div>
@@ -223,7 +223,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
+            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-white to-emerald-50/35 hover:border-green-500 transition-colors">
               <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
                 <Users className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
               </div>
@@ -237,7 +237,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 border border-gray-200 rounded-lg hover:border-green-500 transition-colors">
+            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-white to-sky-50/35 hover:border-green-500 transition-colors">
               <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
                 <Shield className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
               </div>

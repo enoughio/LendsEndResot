@@ -116,7 +116,7 @@ const ContactForm: React.FC = () => {
   /* Right Column - Contact Form */
   if (submitSuccess) {
     return (
-      <div className="space-y-4 rounded-md border border-green-200 bg-green-50 p-6">
+      <div className="space-y-4 rounded-xl border border-green-200 bg-green-50 p-6">
         <h3 className="text-xl font-semibold text-green-800">
           Message sent successfully
         </h3>
@@ -126,7 +126,7 @@ const ContactForm: React.FC = () => {
         <button
           type="button"
           onClick={() => setSubmitSuccess(false)}
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-md transition-colors"
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
         >
           Send another message
         </button>
@@ -136,6 +136,10 @@ const ContactForm: React.FC = () => {
 
   return (
     <div>
+      <div className="mb-5">
+        <h3 className="text-xl font-semibold text-gray-900">Send Us a Message</h3>
+        <p className="text-sm text-gray-600 mt-1">Share your requirement and we will get back to you soon.</p>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Name, Email, Phone - Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -146,7 +150,7 @@ const ContactForm: React.FC = () => {
               placeholder="Your Name *"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors ${
+              className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100 transition-all ${
                 errors.name ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -161,7 +165,7 @@ const ContactForm: React.FC = () => {
               placeholder="Your Email *"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors ${
+              className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100 transition-all ${
                 errors.email ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -176,7 +180,7 @@ const ContactForm: React.FC = () => {
               placeholder="Your Phone *"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors ${
+              className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100 transition-all ${
                 errors.phone ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -193,8 +197,8 @@ const ContactForm: React.FC = () => {
             placeholder="Your Message"
             value={formData.message}
             onChange={handleChange}
-            rows={8}
-            className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors resize-none ${
+            rows={7}
+            className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100 transition-all resize-none ${
               errors.message ? "border-red-500" : "border-gray-300"
             }`}
           ></textarea>
@@ -208,14 +212,14 @@ const ContactForm: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-12 py-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold px-10 py-3.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </button>
         </div>
 
         {submitError && (
-          <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded">
+          <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg">
             {submitError}
           </div>
         )}

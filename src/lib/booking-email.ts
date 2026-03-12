@@ -75,6 +75,8 @@ export async function sendBookingConfirmationEmail(input: BookingConfirmationInp
       : `Visit: ${input.packageName || "Package"} on ${formatDate(input.visitDate)}`;
 
   const baseUrl = getBaseUrl();
+  const supportEmail = "landsend.sumiran@gmail.com";
+  const supportPhone = "+91 8871317382";
   const logoUrl = `${baseUrl}/landsend.svg`;
   const bookingDetailsUrl = `${baseUrl}/booking/${input.bookingId}/booked`;
   const termsUrl = `${baseUrl}/terms-and-conditions`;
@@ -89,7 +91,8 @@ export async function sendBookingConfirmationEmail(input: BookingConfirmationInp
   const bookingTypeLabel = input.bookingType === "STAY" ? "Stay" : "Visit";
 
   await transporter.sendMail({
-    from: fromEmail,
+    from: `Land's End Resort at Sumiran <${fromEmail}>`,
+    replyTo: supportEmail,
     to: input.to,
     subject: `Booking Confirmed - ${input.bookingId}`,
     text: `Hi ${input.guestName},
@@ -103,8 +106,8 @@ Amount Paid: ${amountPaid}
 View booking details: ${bookingDetailsUrl}
 
 Resort Contact:
-Phone: +91 8871317382
-Email: landsend.sumiran@gmail.com
+Phone: ${supportPhone}
+Email: ${supportEmail}
 Location: Land's End Resort at Sumiran Ecological Foundation, Sagoni, Bilkisganj, Madhya Pradesh 466115
 Map: ${mapUrl}
 
@@ -159,8 +162,8 @@ Thank you for choosing Land's End Resort at Sumiran.
                       </tr>
                       <tr>
                         <td style="padding:12px 16px;font-size:14px;line-height:1.7;color:#334155;">
-                          Phone: +91 8871317382<br />
-                          Email: landsend.sumiran@gmail.com<br />
+                          Phone: ${supportPhone}<br />
+                          Email: ${supportEmail}<br />
                           Address: Land's End Resort at Sumiran Ecological Foundation, Sagoni, Bilkisganj, Madhya Pradesh 466115<br />
                           Map: <a href="${mapUrl}" style="color:#166534;text-decoration:none;">Open location</a>
                         </td>

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const Contact = () => {
 
   return (
-    <div>
+    <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40">
       <ContactHero />
       <ContactInfo/>
       <Fotter />

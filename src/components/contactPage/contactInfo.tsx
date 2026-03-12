@@ -3,16 +3,17 @@
 import React from "react";
 import ContactForm from "./ContactForm";
 import Image from "next/image";
+import Link from "next/link";
 
 const ContactInfo = () => {
   return (
-    <div className="w-full bg-gray-50 py-12 lg:py-18 px-[8vw]">
+    <div className="w-full py-12 lg:py-18 px-[6vw] md:px-[8vw]">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8 lg:gap-12">
           {/* Left Column - Contact Info */}
-          <div className="space-y-8 md:space-y-12 lg:block md:flex justify-between">
+          <div className="space-y-5">
             {/* Call To Us Section */}
-            <div>
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
                   <div className="relative w-6 h-6">
@@ -36,11 +37,8 @@ const ContactInfo = () => {
               </div>
             </div>
 
-            {/* Divider */}
-            <div className="border-t md:border-l border-gray-300"></div>
-
             {/* Write To Us Section */}
-            <div className="md:max-w-[50%] lg:max-w-full">
+            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-4 mb-6 ">
                 <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
                   <div className="relative w-6 h-6">
@@ -61,12 +59,18 @@ const ContactInfo = () => {
                   Fill out our form and we will contact you within 24 hours.
                 </p>
                 <p className="text-base">Email: landsend.sumiran@gmail.com</p>
-                <p className="text-base">Website: www.sumiran.org</p>
+                <p className="text-base">Website: sumiran.org</p>
+                <div className="flex flex-wrap gap-3 pt-1 text-sm text-green-700">
+                  <Link href="/terms-and-conditions" className="hover:text-green-800">Terms &amp; Conditions</Link>
+                  <Link href="/privacy-policy" className="hover:text-green-800">Privacy Policy</Link>
+                </div>
               </div>
             </div>
           </div>
           {/* Right Column - Contact form */}
-          <ContactForm />
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <ContactForm />
+          </div>
         </div>
       </div>
     </div>

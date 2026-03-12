@@ -3,7 +3,7 @@ import React from "react";
 
 const AboutSerenity = () => {
   return (
-    <section className="px-[5vw] py-4 sm:my-[10vw] mx-auto">
+    <section className="px-[5vw] py-4 sm:mt-[10vw] mx-auto">
       {/* Mobile Heading (on top) */}
       <div className="mb-1 md:hidden">
         <h2 className="text-3xl leading-none ">

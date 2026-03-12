@@ -1,156 +1,157 @@
-import Image from 'next/image'
-import React from 'react'
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
 const Activities = () => {
+  const activities = [
+    {
+      title: "Lake Boating",
+      description:
+        "Glide across still waters with panoramic forest views and golden-hour reflections.",
+      image: "/gallery/rafting.jpeg",
+      className: "md:col-span-4 md:row-span-2",
+      overlay: "bg-black/45",
+    },
+    {
+      title: "Stargazing",
+      description: "Clear skies, quiet nights, and stories under constellations.",
+      image: "/gallery/stargazing.jpeg",
+      className: "md:col-span-2",
+      overlay: "bg-indigo-950/40",
+    },
+    {
+      title: "Bird Watching",
+      description: "Spot rare species with guides who know every call and trail.",
+      image: "/gallery/bird.jpeg",
+      className: "md:col-span-2",
+      overlay: "bg-emerald-950/40",
+    },
+    {
+      title: "Forest Walks",
+      description:
+        "Walk shaded paths and discover biodiversity at a gentle, mindful pace.",
+      image: "/gallery/WhatsApp Image 2026-02-04 at 8.32.06 PM.jpeg",
+      className: "md:col-span-2",
+      overlay: "bg-emerald-900/45",
+    },
+    {
+      title: "Yoga & Wellness",
+      description:
+        "Recenter with sunrise yoga, breathwork, and calm nature-led recovery time.",
+      image: "/gallery/mediation.jpeg",
+      className: "md:col-span-4",
+      overlay: "bg-black/45",
+    },
+    {
+      title: "Zipline & Climbing",
+      description: "Add thrill to your stay with guided adventure challenges.",
+      image: "/gallery/climbing.jpeg",
+      className: "md:col-span-3",
+      overlay: "bg-slate-900/40",
+    },
+    {
+      title: "Nature Rhythm",
+      description:
+        "Wake up to birdsong, earthy meals, and the peaceful rhythm of the forest.",
+      image: "/gallery/room1.jpeg",
+      className: "md:col-span-3",
+      overlay: "bg-black/45",
+    },
+  ];
+
   return (
-    <section className="w-full relative py-6">
-      <div className="mx-auto max-w-7xl   ">
-        {/* Header */}
-        <div className="flex  justify-between items-center relative px-2  md:pr-8 h-50  ">
-         
-         <div className='bg-blue-700 w-1/2 '>
+    <section className="w-full relative px-[4vw] py-10 sm:pb-14">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-7 flex flex-col gap-4 sm:mb-8">
+          <div className="relative h-12 w-full">
             <Image
               src="/home/home-activities-leves.svg"
               alt="Leaves decorative"
               width={220}
               height={90}
-              className=" w-[150px] md:w-[240px] select-none object-contain -translate-4 absolute top-5 left-0  md:-top-15 md:left-0"
+              className="rotate-180 w-[140px] md:w-[220px] select-none object-contain absolute -top-2 -right-10 md:top-2"
               priority
-              />
+            />
           </div>
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-extralight leading-tight text-neutral-900 pr-2 sm:pr-4 text-nowrap">
-            Experiences &
-            <br />
-            <span className="font-medium">Activities</span>
+          <p className="inline-flex w-fit rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+            Signature Experiences
+          </p>
+          <h2 className="text-3xl sm:text-5xl md:text-6xl leading-tight text-neutral-900">
+            Activities Crafted
+            <span className="block font-light">For Every Mood</span>
           </h2>
+          <p className="max-w-2xl text-sm sm:text-base text-gray-600 leading-relaxed">
+            From peaceful exploration to high-energy adventure, every activity at Land&apos;s End is rooted in
+            nature and guided by safety, storytelling, and local ecological wisdom.
+          </p>
+          <div className="h-1.5 w-20 bg-[#067C0B]" />
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-4 md:px-10 px-2">
-          {/* 1. Lake Boating (overlay card) */}
-          <div className="order-1 md:order-1 md:col-span-2">
-            <div className="relative h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700 ">
+        <div className="grid grid-cols-2 gap-3 md:hidden">
+          {activities.map((item, idx) => (
+            (() => {
+              const isLargeCard = idx === 0 || item.title === "Forest Walks";
+              return (
+            <article
+              key={`mobile-${item.title}`}
+              className={`relative rounded-2xl overflow-hidden ${isLargeCard ? "col-span-2 min-h-56" : "min-h-40"}`}
+            >
               <Image
-                src="/gallery/rafting.jpeg"
-                alt="Lake and water activities"
+                src={item.image}
+                alt={item.title}
                 fill
-                sizes="(max-width: 768px) 100vw, 66vw"
+                sizes="(max-width: 768px) 50vw, 50vw"
                 className="object-cover"
-                priority
+                priority={isLargeCard || idx === 0}
               />
-              <div className="absolute inset-0 bg-black/45" />
-              <div className="absolute inset-0 p-5 sm:p-6 md:p-8 flex flex-col justify-center text-white">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-2">Lake Boating</h3>
-                <p className="max-w-md text-sm sm:text-base opacity-90">
-                  Enjoy peaceful boat rides on the pristine Upper Lake with stunning sunset views.
-                </p>
+              <div className={`absolute inset-0 ${item.overlay}`} />
+              <div className="absolute inset-0 p-4 flex flex-col justify-end text-white">
+                <h3 className={`${isLargeCard ? "text-3xl" : "text-xl"} font-semibold mb-1`}>{item.title}</h3>
+                {isLargeCard && <p className="text-sm opacity-95">{item.description}</p>}
               </div>
-            </div>
-          </div>
+            </article>
+              );
+            })()
+          ))}
+        </div>
 
-          {/* 2. Sunset image (top-right on desktop) */}
-          <div className="order-5 md:order-2">
-            <div className="relative h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
+        <div className="hidden md:grid md:grid-cols-6 gap-4 md:gap-5">
+          {activities.map((item, idx) => (
+            <article
+              key={item.title}
+              className={`relative min-h-44 md:min-h-52 rounded-2xl overflow-hidden ${item.className}`}
+            >
               <Image
-                src="/gallery/stargazing.jpeg"
-                alt="Bird watching in nature"
+                src={item.image}
+                alt={item.title}
                 fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-500 hover:scale-105"
+                priority={idx === 0}
               />
-              <div className="absolute inset-0 bg-black/30" />
-              <div className="absolute inset-0 p-5 sm:p-6 flex items-end">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white">Stargazing</h3>
+              <div className={`absolute inset-0 ${item.overlay}`} />
+              <div className="absolute inset-0 p-5 sm:p-6 md:p-7 flex flex-col justify-end text-white">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-2">{item.title}</h3>
+                <p className="max-w-xl text-sm sm:text-base opacity-95">{item.description}</p>
               </div>
-            </div>
-          </div>
+            </article>
+          ))}
+        </div>
 
-          {/* 3. Text card (wake up...) */}
-          <div className="order-2 md:order-3">
-            <div className="rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6  h-32 md:h-36 flex">
-              <p className="text-neutral-800 text-lg leading-7">
-                Wake up to misty lake views and the sound of birdsong echoing through nature.
-              </p>
-            </div>
-          </div>
-
-          {/* 4. Boat image (small) */}
-          <div className="order-3 md:order-4">
-            <div className="relative  h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
-              <Image
-                src="/gallery/bird.jpeg"
-                alt="Night sky and stargazing"
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-center"
-              />
-              <div className="absolute inset-0 bg-black/30" />
-              <div className="absolute inset-0 p-5 sm:p-6 flex items-end">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white">Bird Watching</h3>
-              </div>
-            </div>
-          </div>
-
-          {/* 5. Nature Walks (overlay card) */}
-          <div className="order-6 md:order-5">
-            <div className="relative  h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
-              <Image
-                src="/gallery/WhatsApp Image 2026-02-04 at 8.32.06 PM.jpeg"
-                alt="Forest walks and nature trails"
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-emerald-900/40" />
-              <div className="absolute inset-0 p-5 sm:p-6 md:p-8 flex flex-col justify-center text-white">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-2">Forest Walks</h3>
-                <p className="max-w-md text-sm sm:text-base opacity-95">
-                  Explore the rich biodiversity around the lake with guided nature walks.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* 6. Wellness (wide text card) */}
-          <div className="order-4 md:order-6 md:col-span-2">
-            <div className="relative h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
-              <Image
-                src="/gallery/mediation.jpeg"
-                alt="Yoga and wellness activities"
-                fill
-                sizes="(max-width: 768px) 100vw, 66vw"
-                className="object-center"
-              />
-              <div className="absolute inset-0 bg-black/40" />
-              <div className="absolute inset-0 p-6 sm:p-7 md:p-10 flex flex-col justify-center text-white">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-2">Yoga & Wellness</h3>
-                <p className="max-w-2xl text-sm sm:text-base opacity-90">
-                  Rejuvenate with traditional Ayurvedic treatments and modern wellness therapies.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* 7. Birds photo (bottom-right) */}
-          <div className="order-7 md:order-7">
-            <div className="relative  h-32 md:h-36 rounded-2xl overflow-hidden border-gray-700">
-              <Image
-                src="/gallery/climbing.jpeg"
-                alt="Adventure activities"
-                fill
-                sizes="(max-width: 768px) 100vw, 33vw"
-                className="object-center"
-              />
-              <div className="absolute inset-0 bg-black/30" />
-              <div className="absolute inset-0 p-5 sm:p-6 flex items-end">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white">Zipline & Climbing</h3>
-              </div>
-            </div>
-          </div>
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm sm:text-base text-gray-600">
+            Personalized activity schedules are available for families, groups, and retreats.
+          </p>
+          <Link
+            href="/booking"
+            className="inline-flex items-center justify-center rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-800"
+          >
+            Plan Your Experience
+          </Link>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Activities
+export default Activities;

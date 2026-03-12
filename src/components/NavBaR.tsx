@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // function signOut() {
 //   return true;
@@ -10,12 +10,48 @@ import React from "react";
 
 const NavBaR = () => {
   // const session = { user: { role: "ADMIN" } };
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const lastScrollYRef = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const currentY = window.scrollY;
+
+      if (currentY < 40) {
+        setIsNavVisible(true);
+        lastScrollYRef.current = currentY;
+        return;
+      }
+
+      const previousY = lastScrollYRef.current;
+      const delta = currentY - previousY;
+
+      if (delta > 8) {
+        setIsNavVisible(false);
+      } else if (delta < -8) {
+        setIsNavVisible(true);
+      }
+
+      lastScrollYRef.current = currentY;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <nav className="max-w-[99vw] h-12 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 justify-between ml-auto sm:justify-end items-center text-white bg-black/10  shadow-md">
+    <nav
+      className={`max-w-[99vw] h-12 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 justify-between ml-auto sm:justify-end items-center text-white bg-black/20 backdrop-blur-sm shadow-md transition-transform duration-300 ${
+        isNavVisible || isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       {/* Logo */}
       <Link
         href="/"
+        onClick={closeMobileMenu}
         className="cursor-pointer h-full p-2 rounded-md hover:bg-gray-600/40"
       >
         <div className="font-bold text-md sm:text-2xl text-start w-full pl-5 absolute top-5 left-2">
@@ -24,13 +60,12 @@ const NavBaR = () => {
       </Link>
 
       <div className="flex justify-end items-center w-full sm:w-auto">
-        {/* checkbox controller */}
-        <input type="checkbox" id="sidebar-active" className="peer hidden" />
-
         {/* Menu icon (RIGHT SIDE) */}
-        <label
-          htmlFor="sidebar-active"
+        <button
+          type="button"
+          onClick={() => setIsMobileMenuOpen(true)}
           className="ml-auto cursor-pointer block sm:hidden z-[1100]"
+          aria-label="Open menu"
         >
           <Image
             src="/icons/menuicon.svg"
@@ -38,7 +73,16 @@ const NavBaR = () => {
             height={32}
             alt="menuicon"
           />
-        </label>
+        </button>
+
+        {isMobileMenuOpen && (
+          <button
+            type="button"
+            aria-label="Close menu overlay"
+            onClick={closeMobileMenu}
+            className="fixed inset-0 z-[999] bg-black/40 sm:hidden"
+          />
+        )}
 
         {/* Sidebar / Links */}
         <div
@@ -57,14 +101,17 @@ const NavBaR = () => {
             justify-start sm:justify-between
 
             transform transition-transform duration-300 ease-in-out
-            translate-x-full peer-checked:translate-x-0
+            translate-x-full
             sm:translate-x-0 sm:static sm:rounded-none 
           "
+          style={{ transform: isMobileMenuOpen ? "translateX(0)" : undefined }}
         >
           {/* Close icon */}
-          <label
-            htmlFor="sidebar-active"
+          <button
+            type="button"
+            onClick={closeMobileMenu}
             className="block sm:hidden cursor-pointer mb-6"
+            aria-label="Close menu"
           >
             <Image
               src="/icons/closedicon.svg"
@@ -72,29 +119,36 @@ const NavBaR = () => {
               height={32}
               alt="closeicon"
             />
-          </label>
+          </button>
 
           {/* Pages */}
           <ul className="flex flex-col sm:flex-row sm:pl-[12rem] text-white gap-4 sm:gap-0">
             <Link
               href="/"
+              onClick={closeMobileMenu}
               className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40"
             >
               Home
             </Link>
             <Link
               href="/about"
+              onClick={closeMobileMenu}
               className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40"
             >
               About
             </Link>
             <Link
               href="/gallery"
+              onClick={closeMobileMenu}
               className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40"
             >
               Gallery
             </Link>
-            <Link href="/events" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
+            <Link
+              href="/events"
+              onClick={closeMobileMenu}
+              className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40"
+            >
               Events
             </Link>
             {/* <Link href="/contact" className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40">
@@ -109,14 +163,20 @@ const NavBaR = () => {
               Book an Experience
             </div> */}
             
-            <div className="border-2 border-gray-200 p-3 rounded-full bg-white text-black px-6 cursor-pointer hover:bg-gray-200 transition w-full sm:w-auto text-center">
-              <Link
-                href="/contact"
-                className="cursor-pointer h-full sm:p-2 rounded-md hover:bg-gray-600/40"
-              >
-                Contact Us
-              </Link>
-            </div>
+            <Link
+              href="/booking"
+              onClick={closeMobileMenu}
+              className="border-2 border-green-300 p-3 rounded-full bg-green-600 text-white px-6 cursor-pointer hover:bg-green-500 transition w-full sm:w-auto text-center"
+            >
+              Book Now
+            </Link>
+            <Link
+              href="/contact"
+              onClick={closeMobileMenu}
+              className="border-2 border-gray-200 p-3 rounded-full bg-white text-black px-6 cursor-pointer hover:bg-gray-200 transition w-full sm:w-auto text-center"
+            >
+              Contact Us
+            </Link>
             {/* {session ? (
               <div className="flex items-center gap-2 text-sm">
                 {session.user?.role === "ADMIN" && (

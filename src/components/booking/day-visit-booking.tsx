@@ -2,7 +2,7 @@
 // TODO : overfetching here in /api/booking
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Calendar, Users, CheckCircle2, Clock, TreePine } from 'lucide-react';
+import { ArrowLeft, Calendar, Users, CheckCircle2, Clock, TreePine, ShieldCheck, CreditCard, PhoneCall, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { notifyError, notifyInfo, notifySuccess } from '@/lib/client-notify';
@@ -154,9 +154,16 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
   const taxes = Math.floor(totalPrice * 0.05);
   const serviceFee = 100;
   const grandTotal = totalPrice + taxes + serviceFee;
+  const visitSteps = [
+    { id: '1', label: 'Choose package' },
+    { id: '2', label: 'Pick activities' },
+    { id: '3', label: 'Select date & guests' },
+    { id: '4', label: 'Review and pay' },
+  ];
+  const activitySkeletons = [1, 2, 3, 4];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40">
 
 
       {/* Hero Section */}
@@ -167,15 +174,19 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-slate-900/70 to-transparent">
+        <div className="absolute inset-0 bg-linear-to-r from-slate-900/80 via-slate-900/45 to-transparent">
           <div className="max-w-7xl mx-auto px-6 h-full flex items-center">
             <div>
               <button onClick={handleBack} className="flex items-center gap-2 text-white mb-2 hover:text-green-400 transition-colors">
                 <ArrowLeft className="w-5 h-5" />
                 Back to offerings
               </button>
+              <p className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-xs text-white/90 backdrop-blur-sm">
+                <Sparkles className="h-3.5 w-3.5" />
+                Nature day visit booking
+              </p>
               <h1 className="text-white mb-2">{type === 'full' ? 'Full Day Visit' : 'Half Day Visit'} Booking</h1>
-              <div className="w-12 h-1 bg-green-500"></div>
+              <p className="text-sm text-white/85">Build your perfect day with guided activities and instant confirmation.</p>
             </div>
           </div>
         </div>
@@ -183,12 +194,25 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="mb-6 rounded-2xl border border-emerald-100 bg-white/90 p-4 shadow-sm">
+          <p className="mb-3 text-sm font-medium text-gray-700">Booking steps</p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            {visitSteps.map((step) => (
+              <div key={step.id} className="flex items-center gap-2 rounded-xl border border-gray-100 bg-gray-50/80 px-3 py-2 text-sm text-gray-700">
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">{step.id}</span>
+                <span>{step.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Booking Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Package Info */}
-            <div>
-              <h2 className="text-gray-900 mb-4">{type === 'full' ? 'Full Day Visit at Sumiran' : 'Half Day Visit at Sumiran'}</h2>
+            <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <h2 className="text-gray-900 mb-1 text-2xl font-bold">{type === 'full' ? 'Full Day Visit at Sumiran' : 'Half Day Visit at Sumiran'}</h2>
+              <p className="mb-4 text-sm text-gray-600">Choose activities and lock your preferred slot in minutes.</p>
               <div className="grid md:grid-cols-3 gap-4 mb-4">
                 <div className="flex items-center gap-3">
                   <div className="p-3 bg-green-50 rounded-lg">
@@ -220,7 +244,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
               </div>
 
               {/* What's Included */}
-              <div className="bg-green-50 rounded-lg p-4">
+              <div className="bg-green-50 rounded-xl p-4 border border-green-100">
                 <h3 className="text-gray-900 mb-3">What&apos;s Included</h3>
                 <div className="grid md:grid-cols-2 gap-2">
                   {type === 'full' ? (
@@ -264,49 +288,65 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                   )}
                 </div>
               </div>
-            </div>
+            </section>
 
             {/* Activity Selection */}
-            <div>
-              <h2 className="text-gray-900 mb-2">Select Your Activities</h2>
+            <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <h2 className="text-gray-900 mb-2 text-xl font-semibold">Select Your Activities</h2>
               <p className="text-gray-600 mb-4">
                 Choose {maxActivities} {maxActivities === 1 ? 'activity' : 'activities'} ({selectedActivities.length}/{maxActivities} selected)
               </p>
-              <div className="grid md:grid-cols-2 gap-4">
-                {activities.map((activity) => {
-                  const isSelected = selectedActivities.includes(activity.id);
-                  const isDisabled = !isSelected && selectedActivities.length >= maxActivities;
-                  
-                  return (
-                    <div
-                      key={activity.id}
-                      onClick={() => !isDisabled && toggleActivity(activity.id)}
-                      className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
-                        isSelected
-                          ? 'border-green-600 bg-green-50'
-                          : isDisabled
-                          ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
-                          : 'border-gray-200 hover:border-green-300'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="text-gray-900">{activity.name}</h4>
-                        {isSelected && (
-                          <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Clock className="w-4 h-4" />
-                        <span>{activity.duration}</span>
+              {loading ? (
+                <div className="grid grid-cols-2 gap-4">
+                  {activitySkeletons.map((item) => (
+                    <div key={item} className="rounded-xl border border-gray-200 p-4">
+                      <div className="animate-pulse space-y-3">
+                        <div className="h-4 w-2/3 rounded bg-gray-200" />
+                        <div className="h-3 w-1/3 rounded bg-gray-100" />
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  {activities.map((activity) => {
+                    const isSelected = selectedActivities.includes(activity.id);
+                    const isDisabled = !isSelected && selectedActivities.length >= maxActivities;
+                    
+                    return (
+                      <div
+                        key={activity.id}
+                        onClick={() => !isDisabled && toggleActivity(activity.id)}
+                        className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                          isSelected
+                            ? 'border-green-600 bg-green-50 shadow-xs'
+                            : isDisabled
+                            ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
+                            : 'border-gray-200 hover:border-green-300 hover:shadow-xs'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between mb-2 gap-2">
+                          <h4 className="text-gray-900 font-medium">{activity.name}</h4>
+                          {isSelected && (
+                            <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Clock className="w-4 h-4" />
+                          <span>{activity.duration}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
 
             {/* Visit Details */}
-            <div className="grid md:grid-cols-2 gap-4">
+            <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <h2 className="text-gray-900 mb-1 text-xl font-semibold">Visit Details</h2>
+              <p className="mb-4 text-sm text-gray-600">Click anywhere on the date card to open the calendar quickly.</p>
+              <div className="grid grid-cols-2 gap-3">
               <div
                 role="button"
                 tabIndex={0}
@@ -364,7 +404,8 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                   </button>
                 </div>
               </div>
-            </div>
+              </div>
+            </section>
               
             {/* Login Section */}
             <div className="border-t pt-6 pb-5" />
@@ -428,7 +469,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
 
           {/* Right Column - Price Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-blue-50 rounded-lg p-6 border border-blue-200 sticky top-4">
+            <div className="sticky top-4 rounded-2xl border border-blue-200 bg-linear-to-b from-blue-50 to-white p-6 shadow-sm">
               <div className="mb-4">
                 <div className="relative w-full h-32 mb-3">
                   <Image 
@@ -440,6 +481,11 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                 </div>
                 <h3 className="text-gray-900 mb-1">{selectedPackage?.name || (type === 'full' ? 'Full Day Visit' : 'Half Day Visit')}</h3>
                 <p className="text-gray-600">Sumiran Jungle Resort</p>
+                {visitDate && (
+                  <p className="mt-2 rounded-lg bg-blue-100 px-3 py-2 text-xs text-blue-800">
+                    Visit date: {new Date(visitDate).toLocaleDateString()}
+                  </p>
+                )}
                 {/* <div className="flex items-center gap-1 mt-2">
                   <span className="text-gray-900">4.8</span>
                   <span className="text-gray-600">Excellent</span>
@@ -475,7 +521,12 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
               </div>
 
               {/* TODO: Re-enable booking functionality */}
-              {loading && <p className="mb-3 text-gray-600 text-sm">Loading booking options...</p>}
+              {loading && (
+                <div className="mb-3 space-y-2 animate-pulse">
+                  <div className="h-3 w-2/3 rounded bg-blue-100" />
+                  <div className="h-3 w-1/2 rounded bg-blue-100" />
+                </div>
+              )}
               {error && <p className="mb-3 text-red-600 text-sm">{error}</p>}
               <button 
                 disabled={submitting || !selectedPackage}
@@ -489,9 +540,45 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                   Please complete: {missingRequirements.join(', ')}.
                 </p>
               )}
+
+              <div className="mt-4 border-t border-blue-200 pt-4 space-y-2 text-xs text-gray-600">
+                <p className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-emerald-600" /> Secure booking and payment flow</p>
+                <p className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-blue-600" /> Instant confirmation after successful payment</p>
+              </div>
             </div>
           </div>
         </div>
+
+        <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 className="text-gray-900 text-xl font-semibold mb-1">Important Booking Information</h2>
+          <p className="text-gray-600 text-sm mb-5">Please review these details before confirming your day visit.</p>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-4">
+              <h3 className="text-sm font-semibold text-emerald-800 mb-2">Arrival and Reporting</h3>
+              <p className="text-sm text-emerald-900/90">Please report 30 minutes before your selected time slot for check-in and briefing.</p>
+            </div>
+
+            <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-4">
+              <h3 className="text-sm font-semibold text-blue-800 mb-2">Reschedule Policy</h3>
+              <p className="text-sm text-blue-900/90">You can request one free reschedule up to 24 hours before your visit, subject to availability.</p>
+            </div>
+
+            <div className="rounded-xl border border-amber-100 bg-amber-50/60 p-4">
+              <h3 className="text-sm font-semibold text-amber-800 mb-2">Safety and Guidelines</h3>
+              <p className="text-sm text-amber-900/90">Follow guide instructions at all times and wear provided safety equipment during activities.</p>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+              <h3 className="text-sm font-semibold text-slate-800 mb-2">Need Help?</h3>
+              <p className="text-sm text-slate-700 mb-2">Our team can help you pick the right package and activities.</p>
+              <p className="inline-flex items-center gap-2 text-sm font-medium text-slate-900">
+                <PhoneCall className="h-4 w-4" />
+                +91 98765 43210
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
 
     </div>

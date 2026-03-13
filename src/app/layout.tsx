@@ -13,10 +13,17 @@ const urbanist = Urbanist({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: {
     default: "Lend's End | Home",
     template: "%s"
+  },
+  icons: {
+    icon: '/lendsend.ico',
+    shortcut: '/lendsend.ico',
+    apple: '/lendsend.ico',
   },
   description: "Experience nature at Land's End Resort in Sumiran Forest, Bhopal. 600 acres of pristine forest, AQI <10, naturally alkaline water. Book your eco-friendly stay today.",
   keywords: ["eco resort", "Bhopal resort", "nature resort", "Sumiran Forest", "Land's End Resort", "sustainable tourism", "forest resort", "wildlife resort", "eco-friendly accommodation", "Madhya Pradesh resort"],
@@ -28,7 +35,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://landsend.bharatstorytellers.com'),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: '/',
   },

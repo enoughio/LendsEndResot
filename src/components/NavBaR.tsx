@@ -166,7 +166,7 @@ const NavBaR = () => {
             <Link
               href="/booking"
               onClick={closeMobileMenu}
-              className="border-2 border-green-300 p-3 rounded-full bg-green-600 text-white px-6 cursor-pointer hover:bg-green-500 transition w-full sm:w-auto text-center"
+              className="border-2 border-green-300 p-3 rounded-full bg00 text-white px-6 cursor-pointer hover:bg-green-500 transition w-full sm:w-auto text-center"
             >
               Book Now
             </Link>

@@ -85,6 +85,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="google-site-verification" content="uhe6IQP9A2nK8QftgqSXA03aFExfUX-O7Z_h3kmhYpE" />
         <StructuredData />
       </head>
       <body className={`${urbanist.className} relative`}>

@@ -5,54 +5,50 @@ import React from "react";
 const Activities = () => {
   const activities = [
     {
-      title: "Lake Boating",
-      description:
-        "Glide across still waters with panoramic forest views and golden-hour reflections.",
+      title: "Forest Retreats",
+      description: "Forest retreats and nature immersion experiences.",
       image: "/gallery/rafting.jpeg",
       className: "md:col-span-4 md:row-span-2",
       overlay: "bg-black/45",
     },
     {
-      title: "Stargazing",
-      description: "Clear skies, quiet nights, and stories under constellations.",
+      title: "Storytelling Retreats",
+      description: "Storytelling retreats and creative gatherings.",
       image: "/gallery/stargazing.jpeg",
       className: "md:col-span-2",
       overlay: "bg-indigo-950/40",
     },
     {
-      title: "Bird Watching",
-      description: "Spot rare species with guides who know every call and trail.",
+      title: "Wellness Retreats",
+      description: "Wellness, mindfulness and meditation retreats.",
       image: "/gallery/bird.jpeg",
       className: "md:col-span-2",
       overlay: "bg-emerald-950/40",
     },
     {
-      title: "Forest Walks",
-      description:
-        "Walk shaded paths and discover biodiversity at a gentle, mindful pace.",
+      title: "Learning Circles",
+      description: "Deep conversations, learning circles and healing spaces.",
       image: "/gallery/WhatsApp Image 2026-02-04 at 8.32.06 PM.jpeg",
       className: "md:col-span-2",
       overlay: "bg-emerald-900/45",
     },
     {
-      title: "Yoga & Wellness",
-      description:
-        "Recenter with sunrise yoga, breathwork, and calm nature-led recovery time.",
+      title: "Forest Walks",
+      description: "Forest walks, nature walks and forest immersion.",
       image: "/gallery/mediation.jpeg",
       className: "md:col-span-4",
       overlay: "bg-black/45",
     },
     {
-      title: "Zipline & Climbing",
-      description: "Add thrill to your stay with guided adventure challenges.",
+      title: "Natural Mud Baths",
+      description: "Natural mud baths and simple earth-based experiences.",
       image: "/gallery/climbing.jpeg",
       className: "md:col-span-3",
       overlay: "bg-slate-900/40",
     },
     {
-      title: "Nature Rhythm",
-      description:
-        "Wake up to birdsong, earthy meals, and the peaceful rhythm of the forest.",
+      title: "Artists & Thinkers",
+      description: "Spaces for artists, writers and thinkers seeking inspiration.",
       image: "/gallery/room1.jpeg",
       className: "md:col-span-3",
       overlay: "bg-black/45",
@@ -81,8 +77,11 @@ const Activities = () => {
             <span className="block font-light">For Every Mood</span>
           </h2>
           <p className="max-w-2xl text-sm sm:text-base text-gray-600 leading-relaxed">
-            From peaceful exploration to high-energy adventure, every activity at Land&apos;s End is rooted in
-            nature and guided by safety, storytelling, and local ecological wisdom.
+            At Land&apos;s End we host and facilitate forest retreats and nature immersion experiences, storytelling
+            retreats and creative gatherings, wellness, mindfulness and meditation retreats, deep conversations,
+            learning circles and healing spaces, forest walks, nature walks and forest immersion, natural mud baths
+            and simple earth-based experiences, and spaces for artists, writers and thinkers seeking inspiration.
+            It is a place to stay still, breathe deeply, and grow.
           </p>
           <div className="h-1.5 w-20 bg-[#067C0B]" />
         </div>

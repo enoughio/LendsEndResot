@@ -5,6 +5,7 @@ import Activites from "@/components/home/Activites";
 import Dining from "@/components/home/Dining";
 import Gallery from "@/components/home/Gallery";
 import Hero from "@/components/home/Hero"; 
+import IdealFor from "@/components/home/IdealFor";
 import Location from "@/components/home/Location";
 
 import "reflect-metadata";
@@ -27,6 +28,7 @@ export default function Home() {
       <Hero />
       <AboutSerenity />
       <Activites />
+      <IdealFor />
       <Dining />
       <Gallery />
       <Location />

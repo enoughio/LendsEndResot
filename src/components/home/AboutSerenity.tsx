@@ -9,7 +9,8 @@ const AboutSerenity = () => {
         <h2 className="text-3xl leading-none ">
           About{" "}
           <span className="font-light">
-            Land&apos;s End<br />  Resort
+            Land&apos;s End
+            <br /> Resort
           </span>
         </h2>
         <div className="w-12 h-2 bg-[#067C0B]"></div>
@@ -24,17 +25,26 @@ const AboutSerenity = () => {
             <h2 className="md:text-5xl xl:text-7xl md:mb-2 xl:mb-4">
               About{" "}
               <span className="font-light">
-                Land&apos;s End<br />  Resort
+                Land&apos;s End
+                <br />The Last Resort
               </span>
             </h2>
             <div className="w-16 h-3 md:h-2 bg-[#067C0B]"></div>
           </div>
 
           {/* Text Content */}
+
           <p className="text-gray-700 text-md sm:text-md xl:text-[1em] leading-5 sm:leading-normal 2xl:text-xl mb-2 xl:mb-12 2xl:mb-16">
-            Tucked deep inside the quiet embrace of Sumiran Forest, Land’s End – The Last Resort is a place to pause, unplug, and return to what truly matters. This is not conventional luxury, but a slow, nature-rooted retreat where simplicity, silence, and meaningful connection take center stage—and where the forest itself becomes the storyteller. <br />
-            <div className="mb-4" />
-           Built with ecological sensitivity and guided by the philosophy of living lightly, Land’s End offers an off-grid experience shaped by nature’s rhythm—sunrise walks, earthy meals, star-lit evenings, and moments of stillness. It is a space for reflection, learning, and shared stories, hosting eco-festivals, retreats, and quiet personal journeys—where the road ends and the journey inward begins.
+            Land’s End – The Last Resort is not a conventional resort.
+            
+            <br /> It is a forest retreat, created for those who wish to slow down,
+            step away from noise, and reconnect with nature, themselves, and
+            meaningful conversations
+            <div className="mb-2" />
+            Nestled within the forests of Sumiran, Land’s End offers a space for
+            retreat, reflection, learning, and inner renewal. Here, life moves
+            at a gentler pace — mornings begin with birdsong, days unfold under
+            the canopy of trees, and evenings return to stillness.
           </p>
 
           {/* Stats */}

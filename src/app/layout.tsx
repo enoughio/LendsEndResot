@@ -17,7 +17,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
   title: {
-    default: "Lend's End | Home",
+    default: "Land's End | Home",
     template: "%s"
   },
   icons: {

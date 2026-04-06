@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import NavBaR from "@/components/NavBaR";
 import StructuredData from "@/components/StructuredData";
 import ToastProvider from "@/components/ToastProvider";
+import { headers } from "next/headers";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -13,9 +14,10 @@ const urbanist = Urbanist({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const defaultSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lendsend.storyretreat.in";
 
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: {
     default: "Land's End | Home",
     template: "%s"
@@ -35,14 +37,9 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(siteUrl),
-  alternates: {
-    canonical: '/',
-  },
   openGraph: {
     title: "Land's End Resort | Sumiran Forest - Eco Resort Near Bhopal",
     description: "Experience nature at its finest. 600 acres of pristine forest with AQI <10, naturally alkaline water, and sustainable living.",
-    url: 'https://landsend.bharatstorytellers.com',
     siteName: "Land's End Resort",
     images: [
       {
@@ -76,6 +73,34 @@ export const metadata: Metadata = {
     google: 'your-google-verification-code',
   },
 };
+
+async function getRequestBaseUrl(): Promise<URL> {
+  const headersList = await headers();
+  const host = headersList.get("x-forwarded-host") ?? headersList.get("host");
+  const proto = headersList.get("x-forwarded-proto") ?? "https";
+
+  if (!host) {
+    return new URL(defaultSiteUrl);
+  }
+
+  return new URL(`${proto}://${host}`);
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = await getRequestBaseUrl();
+
+  return {
+    ...baseMetadata,
+    metadataBase: baseUrl,
+    alternates: {
+      canonical: "./",
+    },
+    openGraph: {
+      ...baseMetadata.openGraph,
+      url: baseUrl.toString(),
+    },
+  };
+}
 
 export default function RootLayout({
   children,

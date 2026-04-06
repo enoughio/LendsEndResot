@@ -1,10 +1,17 @@
 import { MetadataRoute } from "next";
 import { events } from "@/data/events";
+import { headers } from "next/headers";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-    "https://lendsend.storyretreat.in";
+export const dynamic = "force-dynamic";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const headersList = await headers();
+  const host = headersList.get("x-forwarded-host") ?? headersList.get("host");
+  const proto = headersList.get("x-forwarded-proto") ?? "https";
+  const baseUrl = host
+    ? `${proto}://${host}`
+    : process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+      "https://lendsend.storyretreat.in";
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [

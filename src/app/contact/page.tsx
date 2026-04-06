@@ -36,7 +36,7 @@ const Contact = () => {
                 during business hours.
               </p>
             </div>
-
+    
             <div className="rounded-xl border border-gray-200 bg-white p-4 md:p-5">
               <h3 className="text-gray-900 font-semibold">Can I book a day visit or a group outing?</h3>
               <p className="mt-2 text-sm md:text-base text-gray-700">

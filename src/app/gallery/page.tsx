@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   },
 };
 
+
+
 // Gallery images from public/gallery folder
 const COLLAGE_IMAGES: string[] = [
   "/gallery/bird.jpeg",
@@ -167,6 +169,8 @@ const CollagePage = () => {
           </figure>
         ))}
       </div>
+
+      
 
       <Fotter />
     </section>

@@ -548,6 +548,69 @@ export default function AboutPage() {
           </div>
         </section>
 
+        <section className="rounded-2xl border border-emerald-100 bg-linear-to-br from-white to-emerald-50/35 p-6 shadow-sm md:p-8">
+          <div className="mb-6">
+            <h2 className="text-gray-900 text-2xl md:text-4xl">
+              Frequently Asked Questions
+            </h2>
+            <div className="w-12 h-1 bg-green-600 mt-1"></div>
+            <p className="mt-3 text-gray-600 text-sm md:text-base max-w-3xl">
+              Quick answers about Land&apos;s End Resort in Sumiran Forest, including location, stays, day visits, and
+              eco-friendly practices near Bhopal.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="rounded-xl border border-gray-200 bg-white p-5">
+              <h3 className="text-gray-900 text-lg font-semibold">Where is Land&apos;s End Resort located?</h3>
+              <p className="mt-2 text-gray-700 text-sm md:text-base">
+                Land&apos;s End Resort is located in Sumiran Forest near Bhopal, Madhya Pradesh, surrounded by protected
+                woodland, water bodies, and organic farms across 600 acres.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-gray-200 bg-white p-5">
+              <h3 className="text-gray-900 text-lg font-semibold">What experiences can guests enjoy?</h3>
+              <p className="mt-2 text-gray-700 text-sm md:text-base">
+                Guests enjoy forest walks, bird watching, storytelling circles, organic dining, stargazing, and
+                nature-led retreats designed around slow, mindful living.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-gray-200 bg-white p-5">
+              <h3 className="text-gray-900 text-lg font-semibold">Do you offer day visits and overnight stays?</h3>
+              <p className="mt-2 text-gray-700 text-sm md:text-base">
+                Yes. Land&apos;s End Resort offers day visit packages and overnight stays with forest-view rooms and
+                cottages. Booking options vary by season and availability.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-gray-200 bg-white p-5">
+              <h3 className="text-gray-900 text-lg font-semibold">What makes the resort eco-friendly?</h3>
+              <p className="mt-2 text-gray-700 text-sm md:text-base">
+                The resort follows low-impact hospitality, conservation-first planning, renewable energy use, and
+                organic sourcing to protect the Sumiran Forest ecosystem.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-gray-200 bg-white p-5">
+              <h3 className="text-gray-900 text-lg font-semibold">How far is the resort from Bhopal city?</h3>
+              <p className="mt-2 text-gray-700 text-sm md:text-base">
+                The resort is a short drive from Bhopal, making it ideal for weekend getaways, day outings, and
+                nature retreats close to the city.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-gray-200 bg-white p-5">
+              <h3 className="text-gray-900 text-lg font-semibold">What is the best time to visit Sumiran Forest?</h3>
+              <p className="mt-2 text-gray-700 text-sm md:text-base">
+                The best time is from October to March for cool weather, clear skies, and wildlife activity, while
+                monsoon visits are popular for lush greenery and fresh air.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* CTA Section */}
         <section className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl md:rounded-2xl p-6 md:p-12 text-center text-white">
           <h2 className="text-white mb-3 md:mb-4 text-xl md:text-3xl">

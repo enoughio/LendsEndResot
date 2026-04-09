@@ -4,7 +4,7 @@ import Image from "next/image";
 import Fotter from "@/components/Fotter";
 
 export const metadata: Metadata = {
-  title: "Lend's End | Gallery",
+  title: "Land's End | Gallery",
   description: "Explore stunning photos of Land's End Resort at Sumiran Forest - pristine nature, wildlife, activities, accommodations, and the beautiful landscape of our 600-acre eco resort near Bhopal.",
   openGraph: {
     title: "Gallery | Land's End Resort - Sumiran Forest",

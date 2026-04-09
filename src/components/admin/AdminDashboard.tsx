@@ -541,7 +541,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
               <h1 className="text-white text-base">
                 {navItems.find(n => n.id === section)?.label}
               </h1>
-              <p className="text-stone-500 text-xs hidden sm:block">Lend&apos;s End Resort Management System</p>
+              <p className="text-stone-500 text-xs hidden sm:block">Land&apos;s End Resort Management System</p>
             </div>
           </div>
           <div className="text-stone-500 text-xs hidden sm:block">March 3, 2026</div>

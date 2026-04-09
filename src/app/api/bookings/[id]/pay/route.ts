@@ -64,7 +64,7 @@ export async function POST(request: Request, { params }: Params) {
         payment: {
           provider: "razorpay",
           keyId,
-          name: "Lend's End",
+          name: "Land's End",
           orderId: order.id,
           amount: order.amount,
           currency: order.currency,

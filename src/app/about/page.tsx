@@ -13,7 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Lend's End | About Us",
+  title: "Land's End | About Us",
   description:
     "Learn about Land's End Resort at Sumiran Forest - our story, mission, and commitment to conservation. 600 acres of protected forest, 300 acres of woodland, 90 acres of water bodies, and 100 acres of organic farms.",
   openGraph: {

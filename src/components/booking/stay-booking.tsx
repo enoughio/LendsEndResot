@@ -587,7 +587,7 @@ export function StayBooking({ }: StayBookingProps) {
                     className="w-full h-32 object-cover rounded-lg mb-3"
                   />
                   <h3 className="text-gray-900 mb-1">{selectedRoomData?.name}</h3>
-                  <p className="text-gray-600">Lend&apos;s End The Last Resort</p>
+                  <p className="text-gray-600">Land&apos;s End The Last Resort</p>
                   {checkInDate && checkOutDate && (
                     <p className="mt-2 rounded-lg bg-blue-100 px-3 py-2 text-xs text-blue-800">
                       {nights} {nights === 1 ? 'night' : 'nights'} stay selected

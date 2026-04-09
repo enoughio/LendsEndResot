@@ -2,8 +2,8 @@ import React from "react";
 import WorkWithUsForm from "@/components/aboutPage/WorkWithUsForm";
 
 export const metadata = {
-  title: "Lend's End | Work With Us",
-  description: "Join our team at Landsend. Submit your details and we'll get in touch.",
+  title: "Land's End | Work With Us",
+  description: "Join our team at Land's End. Submit your details and we'll get in touch.",
  
 };
 

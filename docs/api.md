@@ -1,4 +1,4 @@
-# Lendsend Booking API Documentation (Draft v1)
+# Land's End Booking API Documentation (Draft v1)
 
 Base URL: `/api`
 

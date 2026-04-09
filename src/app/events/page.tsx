@@ -6,7 +6,7 @@ import type { Event } from "@/data/events";
 import { events } from "@/data/events";
 
 export const metadata: Metadata = {
-  title: "Lend's End | Events",
+  title: "Land's End | Events",
   description: "Upcoming events at Land's End Resort — workshops, festivals, retreats and more.",
 };
 

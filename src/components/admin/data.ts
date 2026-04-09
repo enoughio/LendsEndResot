@@ -249,7 +249,7 @@ export const initialBookings: Booking[] = [
     guestEmail: 'ananya.r@email.com',
     guestPhone: '+91 32109 87654',
     guests: 2,
-    status: 'checked-out',
+    status: 'completed',
     paymentStatus: 'paid',
     totalAmount: 47998,
     paidAmount: 47998,

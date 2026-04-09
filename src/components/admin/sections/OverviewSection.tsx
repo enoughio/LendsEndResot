@@ -113,7 +113,7 @@ export function OverviewSection({
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        {(['confirmed', 'pending', 'checked-in', 'checked-out', 'cancelled'] as BookingStatus[]).map(s => {
+        {(['confirmed', 'pending', 'checked-in', 'completed', 'cancelled'] as BookingStatus[]).map(s => {
           const count = bookings.filter(b => b.status === s).length;
           const cfg = statusConfig[s];
           return (

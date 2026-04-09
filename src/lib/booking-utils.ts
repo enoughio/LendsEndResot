@@ -38,7 +38,7 @@ export function buildPriceBreakdown(baseAmount: number, activitiesAmount: number
 }
 
 export function isValidStatus(status: string): status is BookingStatus {
-  return ["PENDING", "CONFIRMED", "CANCELLED", "REFUNDED", "FAILED"].includes(status);
+  return ["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED", "REFUNDED", "FAILED"].includes(status);
 }
 
 export async function getAvailableRoomCount({ roomTypeId, checkIn, checkOut }: StayAvailabilityInput) {

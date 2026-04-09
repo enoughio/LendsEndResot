@@ -5,7 +5,7 @@ import { toBookingDto } from "@/lib/admin-serializers";
 
 type Params = { params: Promise<{ id: string }> };
 
-const ALLOWED_STATUS = new Set(["PENDING", "CONFIRMED", "CANCELLED", "REFUNDED", "FAILED"]);
+const ALLOWED_STATUS = new Set(["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED", "REFUNDED", "FAILED"]);
 
 export async function GET(request: Request, { params }: Params) {
   const unauthorized = ensureAdmin(request);
@@ -70,7 +70,7 @@ export async function PUT(request: Request, { params }: Params) {
     const updated = await prisma.booking.update({
       where: { id },
       data: {
-        status: status as "PENDING" | "CONFIRMED" | "CANCELLED" | "REFUNDED" | "FAILED" | undefined,
+        status: status as "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED" | "REFUNDED" | "FAILED" | undefined,
         roomId,
         guestName,
         guestEmail,

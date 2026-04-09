@@ -5,9 +5,9 @@ import { type BookingStatus, type PaymentStatus, type Room, type VisitPackageCat
 export const statusConfig: Record<BookingStatus, { label: string; color: string; icon: ReactNode }> = {
   confirmed: { label: 'Confirmed', color: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20', icon: <CheckCircle2 size={12} /> },
   pending: { label: 'Pending', color: 'text-amber-400 bg-amber-400/10 border-amber-400/20', icon: <Clock size={12} /> },
-  cancelled: { label: 'Cancelled', color: 'text-red-400 bg-red-400/10 border-red-400/20', icon: <XCircle size={12} /> },
   'checked-in': { label: 'Checked In', color: 'text-sky-400 bg-sky-400/10 border-sky-400/20', icon: <CheckCircle2 size={12} /> },
-  'checked-out': { label: 'Checked Out', color: 'text-stone-400 bg-stone-400/10 border-stone-400/20', icon: <CheckCircle2 size={12} /> },
+  completed: { label: 'Completed', color: 'text-stone-400 bg-stone-400/10 border-stone-400/20', icon: <CheckCircle2 size={12} /> },
+  cancelled: { label: 'Cancelled', color: 'text-red-400 bg-red-400/10 border-red-400/20', icon: <XCircle size={12} /> },
 };
 
 export const paymentConfig: Record<PaymentStatus, { label: string; color: string }> = {

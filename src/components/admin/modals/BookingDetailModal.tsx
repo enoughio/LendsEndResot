@@ -19,7 +19,7 @@ export function BookingDetailModal({
   const room = booking.roomId ? rooms.find(r => r.id === booking.roomId) : undefined;
   const roomType = booking.roomTypeId ? roomTypes.find(rt => rt.id === booking.roomTypeId) : undefined;
 
-  const statusOptions: BookingStatus[] = ['pending', 'confirmed', 'checked-in', 'checked-out', 'cancelled'];
+  const statusOptions: BookingStatus[] = ['pending', 'confirmed', 'checked-in', 'completed', 'cancelled'];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>

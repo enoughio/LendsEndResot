@@ -56,7 +56,7 @@ type VisitPackageApi = {
 type BookingApi = {
   bookingId: string;
   type: 'STAY' | 'VISIT';
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'REFUNDED' | 'FAILED';
+  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED' | 'REFUNDED' | 'FAILED';
   paymentStatus: 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
   name?: string | null;
   email?: string | null;
@@ -90,11 +90,13 @@ function mapPackageType(type?: string): 'half-day' | 'full-day' | 'short-visit' 
 function mapBookingStatus(status: BookingApi['status']): BookingStatus {
   if (status === 'CONFIRMED') return 'confirmed';
   if (status === 'PENDING') return 'pending';
+  if (status === 'COMPLETED') return 'completed';
   return 'cancelled';
 }
 
 function toApiBookingStatus(status: BookingStatus): BookingApi['status'] {
-  if (status === 'confirmed' || status === 'checked-in' || status === 'checked-out') return 'CONFIRMED';
+  if (status === 'confirmed' || status === 'checked-in') return 'CONFIRMED';
+  if (status === 'completed') return 'COMPLETED';
   if (status === 'pending') return 'PENDING';
   return 'CANCELLED';
 }

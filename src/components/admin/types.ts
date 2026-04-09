@@ -17,7 +17,7 @@ export type Room = {
   view: string;
 };
 
-export type BookingStatus = 'confirmed' | 'pending' | 'cancelled' | 'checked-in' | 'checked-out';
+export type BookingStatus = 'confirmed' | 'pending' | 'checked-in' | 'completed' | 'cancelled';
 export type PaymentStatus = 'paid' | 'partial' | 'unpaid' | 'refunded';
 
 export type Booking = {

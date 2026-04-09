@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     // creating where clause
     const where = {
       deletedAt: null as Date | null,
-      ...(statusParam ? { status: statusParam as "PENDING" | "CONFIRMED" | "CANCELLED" | "REFUNDED" | "FAILED" } : {}),
+      ...(statusParam ? { status: statusParam as "PENDING" | "CONFIRMED" | "CANCELLED" | "COMPLETED" | "REFUNDED" | "FAILED" } : {}),
       ...(typeParam ? { bookingType: typeParam as "STAY" | "VISIT" } : {}),
     };
 

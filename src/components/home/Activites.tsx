@@ -42,14 +42,14 @@ const Activities = () => {
     {
       title: "Natural Mud Baths",
       description: "Natural mud baths and simple earth-based experiences.",
-      image: "/gallery/climbing.jpeg",
+      image: "/gallery/flowers_sumiran.jpeg",
       className: "md:col-span-3",
       overlay: "bg-slate-900/40",
     },
     {
       title: "Artists & Thinkers",
       description: "Spaces for artists, writers and thinkers seeking inspiration.",
-      image: "/gallery/room1.jpeg",
+      image: "/gallery/stoneCircle.jpeg",
       className: "md:col-span-3",
       overlay: "bg-black/45",
     },

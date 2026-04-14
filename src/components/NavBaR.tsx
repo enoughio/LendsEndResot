@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import EventRibbon from "./EventRibbon";
 
 // function signOut() {
 //   return true;
@@ -205,6 +206,7 @@ const NavBaR = () => {
           </div>
         </div>
       </div>
+      <EventRibbon />
     </nav>
   );
 };

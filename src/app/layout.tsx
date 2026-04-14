@@ -116,6 +116,7 @@ export default function RootLayout({
       <body className={`${urbanist.className} relative`}>
         <Analytics />
         <NavBaR />
+        
         {children}
         <ToastProvider />
         {/* <Fotter /> */}

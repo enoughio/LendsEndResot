@@ -15,7 +15,7 @@ const urbanist = Urbanist({
 });
 
 const defaultSiteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lendsend.storyretreat.in";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://landsend.storyretreat.in";
 
 const baseMetadata: Metadata = {
   title: {

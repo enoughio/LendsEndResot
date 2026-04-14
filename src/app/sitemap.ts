@@ -11,7 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = host
     ? `${proto}://${host}`
     : process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-      "https://lendsend.storyretreat.in";
+      "https://landsend.storyretreat.in";
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [

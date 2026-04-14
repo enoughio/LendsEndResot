@@ -6,44 +6,44 @@ import Image from 'next/image'
 const testimonials = [
   {
     id: 1,
-    quote: "Flow transformed my energy use. Efficient, green tech, outstanding service!",
-    name: "Jenny Wilson",
-    service: "Solar energy service",
+    quote: "Woke up to forest mist, birdsong, and a peaceful silence we have not felt in years.",
+    name: "Neha Kapoor",
+    service: "Couple stay",
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
   },
   {
     id: 2,
-    quote: "Flow redefined my energy game – green, efficient, and top-notch service!",
-    name: "Dianne Russell",
-    service: "EV service",
+    quote: "The organic meals were the highlight. Simple, fresh, and unbelievably comforting.",
+    name: "Arjun Mehta",
+    service: "Family retreat",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
   },
   {
     id: 3,
-    quote: "Thanks to Flow, my energy is now solar-powered – sustainable, efficient, and exceptional service.",
-    name: "Cody Fisher",
-    service: "Solar energy service",
+    quote: "Booked a day visit and ended up staying till sunset. The staff was warm and attentive.",
+    name: "Ritika Shah",
+    service: "Day visit",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop"
   },
   {
     id: 4,
-    quote: "Flow revolutionized my energy approach – clean tech, efficiency, and great service!",
-    name: "Robert Fox",
-    service: "Solar energy service",
+    quote: "Rooms were spotless, the view was unreal, and the team handled every request quickly.",
+    name: "Vivek Rao",
+    service: "Executive room",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
   },
   {
     id: 5,
-    quote: "Flow revolutionized my energy approach – clean tech, efficiency, and great service!",
-    name: "Robert Fox",
-    service: "Solar energy service",
+    quote: "The night sky was incredible. Stargazing here felt like a reset for the mind.",
+    name: "Kavya Nair",
+    service: "Forest villa stay",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
   },
   {
     id: 6,
-    quote: "Flow revolutionized my energy approach – clean tech, efficiency, and great service!",
-    name: "Robert Fox",
-    service: "Solar energy service",
+    quote: "Perfect for a quiet weekend. Loved the trails, the fresh air, and the slow pace.",
+    name: "Sahil Verma",
+    service: "Weekend getaway",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
   }
 ]

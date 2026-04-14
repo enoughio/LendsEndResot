@@ -26,7 +26,8 @@ const AboutSerenity = () => {
               About{" "}
               <span className="font-light">
                 Land&apos;s End
-                <br />The Last Resort
+                <br />
+                The Last Resort
               </span>
             </h2>
             <div className="w-16 h-3 md:h-2 bg-[#067C0B]"></div>
@@ -34,17 +35,26 @@ const AboutSerenity = () => {
 
           {/* Text Content */}
 
-          <p className="text-gray-700 text-md sm:text-md xl:text-[1em] leading-5 sm:leading-normal 2xl:text-xl mb-2 xl:mb-12 2xl:mb-16">
-            Land’s End – The Last Resort is not a conventional resort.
-            
-            <br /> It is a forest retreat, created for those who wish to slow down,
-            step away from noise, and reconnect with nature, themselves, and
-            meaningful conversations
+          <p className="text-gray-700 text-md sm:text-md xl:text-[1em] leading-5 sm:leading-normal 2xl:text-xl mb-2 xl:mb-10 2xl:mb-16">
+            Land’s End – The Last Resort is not a conventional resort. It is a
+            forest retreat—created for those who wish to slow down, step away
+            from noise, and return to what truly matters.
             <div className="mb-2" />
-            Nestled within the forests of Sumiran, Land’s End offers a space for
-            retreat, reflection, learning, and inner renewal. Here, life moves
-            at a gentler pace — mornings begin with birdsong, days unfold under
-            the canopy of trees, and evenings return to stillness.
+            Nestled within the forests of Sumiran, it offers a space for  
+            retreat, reflection, and renewal. Life moves gently here: mornings
+            with birdsong, days beneath trees, and evenings in stillness. It is
+            a place for deep conversations and unhurried time—where stories are
+            shared, and nature becomes both teacher and companion.
+            <div className="mb-2" />
+            Experiences go beyond a stay—forest immersions, mindful walks,
+            storytelling, meditation, and creative spaces. Whether alone or with
+            others, the intention remains the same: to reconnect—with yourself,
+            others, and the natural world. It is also a space for learning and
+            growth—for students, artists, seekers, and teams—nurturing
+            reflection and authentic connection.
+            <div className="mb-2" />
+            Land’s End is not where you come to get away. It is where you come
+            to find your way back.
           </p>
 
           {/* Stats */}

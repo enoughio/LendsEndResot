@@ -145,7 +145,7 @@ export function OverviewPage() {
             <div className="mb-2" />
             Our forest retreat features comfortable stay options—both
             pocket-friendly and deluxe—along with thoughtfully curated nature
-            and adventure experiences. Whether you're seeking a short day visit
+            and adventure experiences. Whether you&apos;re seeking a short day visit
             or a peaceful multi-day retreat, Land’s End offers a balanced blend
             of exploration and stillness.
             <div className="mb-2" />

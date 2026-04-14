@@ -132,9 +132,15 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
                 <div className="text-sm text-gray-700">
                   <div className="text-gray-900 font-medium">Contact Us:</div>
                   <div className="mt-1 space-y-1">
-                    {event.contact.map((c) => (
-                      <div key={c}><a href={`tel:${c.replace(/\s+/g, '')}`} className="text-green-700">{c}</a></div>
-                    ))}
+                    {event.contact.map((c) => {
+                      const isEmail = c.includes("@");
+                      const href = isEmail ? `mailto:${c}` : `tel:${c.replace(/\s+/g, "")}`;
+                      return (
+                        <div key={c}>
+                          <a href={href} className="text-green-700">{c}</a>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               ) : null}

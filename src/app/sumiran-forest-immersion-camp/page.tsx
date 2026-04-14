@@ -242,10 +242,20 @@ export default function SumiranForestImmersionCampPage() {
             </div>
             <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 px-5 py-4 text-sm md:text-base text-emerald-900">
               <div className="font-semibold">Registrations Open</div>
-              <div className="mt-1 text-emerald-900/80">Contact: ____________________</div>
-              <div className="text-emerald-900/80">Phone/WhatsApp: ____________________</div>
-              <div className="text-emerald-900/80">Email: ____________________</div>
-              <div className="mt-2 text-emerald-900/80">Registration link / QR Code: ____________________</div>
+              <div className="mt-1 text-emerald-900/80">Contact: Land&apos;s End Resort Team</div>
+              <div className="text-emerald-900/80">Phone/WhatsApp: +91 6268244196</div>
+              <div className="text-emerald-900/80">Email: landsend.sumiran@gmail.com</div>
+              <div className="mt-2 text-emerald-900/80">
+                Registration link: {" "}
+                <Link
+                  href="https://rzp.io/rzp/fnnrvFkZ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-800 underline decoration-emerald-400 underline-offset-2"
+                >
+                  https://rzp.io/rzp/fnnrvFkZ
+                </Link>
+              </div>
             </div>
           </div>
         </div>

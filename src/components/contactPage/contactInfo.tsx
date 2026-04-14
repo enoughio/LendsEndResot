@@ -33,7 +33,7 @@ const ContactInfo = () => {
                 <p className="text-base">
                   We are available to assist you with your journey to nature 24/7.
                 </p>
-                <p className="text-base font-medium">Phone: +91 8871317382</p>
+                <p className="text-base font-medium">Phone: +91 6268244196, +91 8871317382</p>
               </div>
             </div>
 

@@ -128,6 +128,8 @@ The camp blends adventure, hands-on learning, creative expression, and community
     time: "3 days, 3 nights (multiple batches)",
     location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
     price: "INR 9,900 per participant",
+    registrationLink: "https://rzp.io/rzp/fnnrvFkZ",
+    contact: ["+91 6268244196 ", "landsend.sumiran@gmail.com"],
     includes: [
       "Stay (air-conditioned shared dormitories)",
       "Food",

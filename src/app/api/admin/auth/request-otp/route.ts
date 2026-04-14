@@ -79,7 +79,7 @@ This OTP expires in 10 minutes.
 If you did not request this code, please ignore this email.
 
 Land's End Resort at Sumiran
-Support: landsend.sumiran@gmail.com | +91 8871317382
+Support: landsend.sumiran@gmail.com | +91 6268244196
 Terms: ${termsUrl}
 Privacy: ${privacyUrl}`,
       html: `
@@ -102,7 +102,7 @@ Privacy: ${privacyUrl}`,
                       <p style="margin:0 0 14px 0;font-size:13px;color:#475569;">This code expires in 10 minutes.</p>
                       <p style="margin:0 0 12px 0;font-size:12px;color:#64748b;">If you did not request this code, you can safely ignore this email.</p>
                       <p style="margin:0;font-size:12px;color:#64748b;line-height:1.7;">
-                        Support: landsend.sumiran@gmail.com | +91 8871317382<br />
+                        Support: landsend.sumiran@gmail.com | +91 6268244196<br />
                         <a href="${termsUrl}" style="color:#166534;text-decoration:none;">Terms &amp; Conditions</a> |
                         <a href="${privacyUrl}" style="color:#166534;text-decoration:none;"> Privacy Policy</a>
                       </p>

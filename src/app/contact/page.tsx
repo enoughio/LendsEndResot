@@ -6,7 +6,7 @@ import Fotter from "@/components/Fotter";
 
 export const metadata: Metadata = {
   title: "Land's End | Contact Us",
-  description: "Get in touch with Land's End Resort at Sumiran Forest. Phone: +91 8871317382 | Email: landsend.sumiran@gmail.com | Located near Bhopal, Madhya Pradesh 462038.",
+  description: "Get in touch with Land's End Resort at Sumiran Forest. Phone: +91 6268244196 | Email: landsend.sumiran@gmail.com | Located near Bhopal, Madhya Pradesh 462038.",
   openGraph: {
     title: "Contact Land's End Resort | Sumiran Forest",
     description: "Reach out to us for bookings, inquiries, or more information about our eco resort near Bhopal.",

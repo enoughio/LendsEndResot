@@ -214,4 +214,4 @@ pnpm build
 
 ## 🤝 Support
 
-For support, email landsend.sumiran@gmail.com or call +91 8871317382.
+For support, email landsend.sumiran@gmail.com or call +91 6268244196.

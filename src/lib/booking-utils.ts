@@ -23,14 +23,23 @@ export function sumActivityPrice(activities: Activity[]): number {
   return activities.reduce((sum, activity) => sum + Number(activity.price || 0), 0);
 }
 
-export function buildPriceBreakdown(baseAmount: number, activitiesAmount: number) {
-  const subTotal = baseAmount + activitiesAmount;
-  const taxAmount = Math.round(subTotal * 0.18);
+export function buildPriceBreakdown({
+  baseAmount,
+  mealPlanAmount = 0,
+  extraGuestAmount = 0,
+}: {
+  baseAmount: number;
+  mealPlanAmount?: number;
+  extraGuestAmount?: number;
+}) {
+  const subTotal = baseAmount + mealPlanAmount + extraGuestAmount;
+  const taxAmount = Math.round(subTotal * 0.05);
   const totalAmount = subTotal + taxAmount;
 
   return {
     roomBaseAmount: baseAmount,
-    activitiesAmount,
+    mealPlanAmount,
+    extraGuestAmount,
     taxAmount,
     totalAmount,
     currency: "INR",

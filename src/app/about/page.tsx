@@ -34,7 +34,7 @@ export default function AboutPage() {
         <div className="absolute inset-0">
           <Image
             src="/about/aboutHero.png"
-            alt="Sumiran Resort"
+            alt="Lend's End Resort"
             className="w-full h-full object-cover"
             width={1920}
             height={600}

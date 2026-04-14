@@ -19,6 +19,8 @@ export function toRoomTypeDto(roomType: RoomType, roomsCount?: number) {
     description: roomType.description,
     basePrice: Number(roomType.basePrice),
     maxOccupancy: roomType.capacity,
+    baseOccupancy: roomType.baseOccupancy,
+    extraPersonPrice: Number(roomType.extraPersonPrice),
     amenities: roomType.amenities,
     totalRooms: typeof roomsCount === "number" ? roomsCount : roomType.totalRooms,
   };

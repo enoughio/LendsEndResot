@@ -34,6 +34,8 @@ export async function POST(request: Request) {
     const description = String(body?.description || "").trim();
     const basePrice = Number(body?.basePrice ?? body?.base_price ?? 0);
     const capacity = Number(body?.maxCapacity ?? body?.capacity ?? 0);
+    const baseOccupancy = Number(body?.baseOccupancy ?? body?.base_occupancy ?? 0);
+    const extraPersonPrice = Number(body?.extraPersonPrice ?? body?.extra_person_price ?? 0);
     const amenities: string[] = Array.isArray(body?.amenities)
       ? body.amenities.map((item: unknown) => String(item).trim()).filter(Boolean)
       : [];
@@ -48,12 +50,21 @@ export async function POST(request: Request) {
       );
     }
 
+    if (baseOccupancy < 1 || baseOccupancy > capacity) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "baseOccupancy must be between 1 and capacity." } },
+        { status: 400 }
+      );
+    }
+
     const created = await prisma.roomType.create({
       data: {
         name,
         description,
         basePrice,
         capacity,
+        baseOccupancy,
+        extraPersonPrice: Math.max(0, extraPersonPrice),
         amenities,
         totalRooms: Math.max(0, totalRooms),
         bedType,

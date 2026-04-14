@@ -25,6 +25,8 @@ export async function PATCH(request: Request, { params }: Params) {
         description: body?.description ?? undefined,
         basePrice: body?.basePrice ?? undefined,
         capacity: body?.maxCapacity ?? body?.capacity ?? undefined,
+        baseOccupancy: body?.baseOccupancy ?? body?.base_occupancy ?? undefined,
+        extraPersonPrice: body?.extraPersonPrice ?? body?.extra_person_price ?? undefined,
         amenities: Array.isArray(body?.amenities) ? body.amenities : undefined,
         totalRooms: typeof body?.totalRooms === "number" ? body.totalRooms : undefined,
         bedType: body?.bedType ?? undefined,

@@ -18,6 +18,8 @@ export function RoomTypeModal({
       description: '',
       basePrice: 0,
       maxOccupancy: 2,
+      baseOccupancy: 2,
+      extraPersonPrice: 0,
       amenities: [],
       totalRooms: 0,
     }
@@ -81,6 +83,24 @@ export function RoomTypeModal({
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]"
                 value={form.maxOccupancy}
                 onChange={e => setForm(f => ({ ...f, maxOccupancy: Number(e.target.value) }))}
+              />
+            </div>
+            <div>
+              <label className="text-stone-400 text-xs uppercase tracking-widest block mb-2">Base Occupancy</label>
+              <input
+                type="number"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]"
+                value={form.baseOccupancy}
+                onChange={e => setForm(f => ({ ...f, baseOccupancy: Number(e.target.value) }))}
+              />
+            </div>
+            <div>
+              <label className="text-stone-400 text-xs uppercase tracking-widest block mb-2">Extra Person (₹/night)</label>
+              <input
+                type="number"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]"
+                value={form.extraPersonPrice}
+                onChange={e => setForm(f => ({ ...f, extraPersonPrice: Number(e.target.value) }))}
               />
             </div>
           </div>

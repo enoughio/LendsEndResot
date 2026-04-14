@@ -24,18 +24,18 @@ type VisitPackageApi = {
   timing?: string | null;
 };
 
-type ActivityApi = {
+type MealPlanApi = {
   id: string;
   name: string;
-  duration: number;
-  price: number;
-  status: string;
+  description?: string | null;
+  pricePerPerson: number;
+  isActive: boolean;
 };
 
 type BookingCatalogResponse = {
   data: {
     visitPackages: VisitPackageApi[];
-    activities: ActivityApi[];
+    mealPlans: MealPlanApi[];
   };
 };
 
@@ -43,7 +43,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
   const router = useRouter();
   const visitDateInputRef = useRef<HTMLInputElement>(null);
   const [visitPackages, setVisitPackages] = useState<VisitPackageApi[]>([]);
-  const [activities, setActivities] = useState<ActivityApi[]>([]);
+  const [mealPlans, setMealPlans] = useState<MealPlanApi[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,20 +57,17 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
     return visitPackages.find((pkg) => pkg.packageType === desiredType) ?? visitPackages[0] ?? null;
   }, [packageId, type, visitPackages]);
 
-  const maxActivities = Math.max(1, Number(selectedPackage?.maxActivity || (type === 'full' ? 2 : 1)));
   const basePrice = Number(selectedPackage?.basePrice || (type === 'full' ? 2999 : 1499));
-  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
+  const [selectedMealPlanId, setSelectedMealPlanId] = useState<string | null>(null);
   const [visitDate, setVisitDate] = useState('');
   const [numGuests, setNumGuests] = useState(2);
 
   const missingRequirements = useMemo(() => {
     const missing: string[] = [];
     if (!visitDate) missing.push('Select visit date');
-    if (selectedActivities.length !== maxActivities) {
-      missing.push(`Select ${maxActivities} ${maxActivities === 1 ? 'activity' : 'activities'}`);
-    }
+    if (!selectedMealPlanId) missing.push('Select a meal plan');
     return missing;
-  }, [maxActivities, selectedActivities.length, visitDate]);
+  }, [selectedMealPlanId, visitDate]);
 
   const handleBack = () => {
     router.push('/booking');
@@ -92,7 +89,9 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
         if (!res.ok) throw new Error('Failed to load booking data');
         const json = (await res.json()) as BookingCatalogResponse;
         setVisitPackages(json.data.visitPackages || []);
-        setActivities((json.data.activities || []).filter((activity) => activity.status.toUpperCase() !== 'INACTIVE'));
+        const plans = json.data.mealPlans || [];
+        setMealPlans(plans);
+        setSelectedMealPlanId((prev) => prev || plans[0]?.id || null);
       } catch (err) {
         const message = notifyError(err, 'Failed to load booking data');
         setError(message);
@@ -124,7 +123,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
           visitPackageId: selectedPackage.id,
           visitDate: new Date(visitDate).toISOString(),
           guests: numGuests,
-          activityIds: selectedActivities,
+          mealPlanId: selectedMealPlanId,
         }),
       });
       const json = await res.json();
@@ -142,25 +141,16 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
     }
   };
 
-  const toggleActivity = (activityId: string) => {
-    if (selectedActivities.includes(activityId)) {
-      setSelectedActivities(selectedActivities.filter(id => id !== activityId));
-    } else if (selectedActivities.length < maxActivities) {
-      setSelectedActivities([...selectedActivities, activityId]);
-    }
-  };
-
   const totalPrice = basePrice * numGuests;
   const taxes = Math.floor(totalPrice * 0.05);
   const serviceFee = 100;
   const grandTotal = totalPrice + taxes + serviceFee;
   const visitSteps = [
     { id: '1', label: 'Choose package' },
-    { id: '2', label: 'Pick activities' },
+    { id: '2', label: 'Select meal plan' },
     { id: '3', label: 'Select date & guests' },
     { id: '4', label: 'Review and pay' },
   ];
-  const activitySkeletons = [1, 2, 3, 4];
 
   return (
     <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40">
@@ -186,7 +176,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                 Nature day visit booking
               </p>
               <h1 className="text-white mb-2">{type === 'full' ? 'Full Day Visit' : 'Half Day Visit'} Booking</h1>
-              <p className="text-sm text-white/85">Build your perfect day with guided activities and instant confirmation.</p>
+              <p className="text-sm text-white/85">Pick your package, meal plan, date, and guests in one flow.</p>
             </div>
           </div>
         </div>
@@ -212,7 +202,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
             {/* Package Info */}
             <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
               <h2 className="text-gray-900 mb-1 text-2xl font-bold">{type === 'full' ? 'Full Day Visit at Sumiran' : 'Half Day Visit at Sumiran'}</h2>
-              <p className="mb-4 text-sm text-gray-600">Choose activities and lock your preferred slot in minutes.</p>
+              <p className="mb-4 text-sm text-gray-600">Choose your package and lock your preferred slot in minutes.</p>
               <div className="grid md:grid-cols-3 gap-4 mb-4">
                 <div className="flex items-center gap-3">
                   <div className="p-3 bg-green-50 rounded-lg">
@@ -229,7 +219,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                   </div>
                   <div>
                     <p className="text-gray-600">Activities</p>
-                    <p className="text-gray-900">{maxActivities} included</p>
+                    <p className="text-gray-900">Curated set included</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -251,7 +241,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                     <>
                       <div className="flex items-center gap-2 text-gray-700">
                         <CheckCircle2 className="w-4 h-4 text-green-600" />
-                        <span>Choose {maxActivities} activities</span>
+                        <span>Curated activities included</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-700">
                         <CheckCircle2 className="w-4 h-4 text-green-600" />
@@ -270,7 +260,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                     <>
                       <div className="flex items-center gap-2 text-gray-700">
                         <CheckCircle2 className="w-4 h-4 text-green-600" />
-                        <span>Choose {maxActivities} activity</span>
+                        <span>Curated activity included</span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-700">
                         <CheckCircle2 className="w-4 h-4 text-green-600" />
@@ -290,56 +280,45 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
               </div>
             </section>
 
-            {/* Activity Selection */}
+            {/* Meal Plan */}
             <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <h2 className="text-gray-900 mb-2 text-xl font-semibold">Select Your Activities</h2>
-              <p className="text-gray-600 mb-4">
-                Choose {maxActivities} {maxActivities === 1 ? 'activity' : 'activities'} ({selectedActivities.length}/{maxActivities} selected)
-              </p>
-              {loading ? (
-                <div className="grid grid-cols-2 gap-4">
-                  {activitySkeletons.map((item) => (
-                    <div key={item} className="rounded-xl border border-gray-200 p-4">
-                      <div className="animate-pulse space-y-3">
-                        <div className="h-4 w-2/3 rounded bg-gray-200" />
-                        <div className="h-3 w-1/3 rounded bg-gray-100" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-4">
-                  {activities.map((activity) => {
-                    const isSelected = selectedActivities.includes(activity.id);
-                    const isDisabled = !isSelected && selectedActivities.length >= maxActivities;
-                    
-                    return (
-                      <div
-                        key={activity.id}
-                        onClick={() => !isDisabled && toggleActivity(activity.id)}
-                        className={`p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                          isSelected
-                            ? 'border-green-600 bg-green-50 shadow-xs'
-                            : isDisabled
-                            ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
-                            : 'border-gray-200 hover:border-green-300 hover:shadow-xs'
-                        }`}
-                      >
-                        <div className="flex items-start justify-between mb-2 gap-2">
-                          <h4 className="text-gray-900 font-medium">{activity.name}</h4>
-                          {isSelected && (
-                            <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0" />
+              <h2 className="text-gray-900 mb-2 text-xl font-semibold">Meal Plan (Included)</h2>
+              <p className="text-gray-600 mb-4">Meal plan is mandatory and included in the visit package price.</p>
+              <div className="grid gap-3 md:grid-cols-2">
+                {mealPlans.map((plan) => {
+                  const isSelected = selectedMealPlanId === plan.id;
+                  return (
+                    <button
+                      type="button"
+                      key={plan.id}
+                      onClick={() => setSelectedMealPlanId(plan.id)}
+                      className={`text-left rounded-xl border-2 p-4 transition-all ${
+                        isSelected
+                          ? 'border-green-600 bg-green-50'
+                          : 'border-gray-200 hover:border-green-300'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="text-gray-900 font-medium">{plan.name}</p>
+                          {plan.description && (
+                            <p className="mt-1 text-xs text-gray-600">{plan.description}</p>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Clock className="w-4 h-4" />
-                          <span>{activity.duration}</span>
+                        <div className="text-right">
+                          <p className="text-gray-900 font-semibold">Included</p>
+                          <p className="text-xs text-gray-500">No extra charge</p>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
+                    </button>
+                  );
+                })}
+                {mealPlans.length === 0 && (
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+                    Meal plan details are not configured yet. Please contact support.
+                  </div>
+                )}
+              </div>
             </section>
 
             {/* Visit Details */}
@@ -504,6 +483,12 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                     <span>Base Fare ({numGuests} {numGuests === 1 ? 'guest' : 'guests'})</span>
                     <span>₹{totalPrice.toLocaleString()}</span>
                   </div>
+                  {selectedMealPlanId && (
+                    <div className="flex justify-between text-gray-700">
+                      <span>Meal plan (included)</span>
+                      <span>₹0</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-gray-700">
                     <span>Taxes (5%)</span>
                     <span>₹{taxes}</span>

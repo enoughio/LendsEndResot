@@ -4,6 +4,8 @@ export type RoomType = {
   description: string;
   basePrice: number;
   maxOccupancy: number;
+  baseOccupancy: number;
+  extraPersonPrice: number;
   amenities: string[];
   totalRooms: number;
 };
@@ -71,4 +73,12 @@ export type Activity = {
   status: ActivityStatus;
 };
 
-export type Section = 'overview' | 'room-types' | 'rooms' | 'visit-packages' | 'activities' | 'bookings';
+export type MealPlan = {
+  id: string;
+  name: string;
+  description?: string;
+  pricePerPerson: number;
+  isActive: boolean;
+};
+
+export type Section = 'overview' | 'room-types' | 'rooms' | 'visit-packages' | 'meal-plans' | 'activities' | 'bookings';

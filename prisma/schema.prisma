@@ -86,9 +86,11 @@ model RoomType {
   id String @id @default(cuid())
   name String
   capacity Int
+  baseOccupancy Int @default(2)
   bedType String
   description String
   basePrice Float
+  extraPersonPrice Float @default(0)
   size_sqft String
   amenities String[]
   totalRooms Int @default(0)
@@ -160,6 +162,9 @@ model Booking {
 
   bookingActivities BookingActivity[]
 
+  mealPlanId String?
+  mealPlan MealPlan? @relation(fields: [mealPlanId], references: [id])
+
   // guest details captured in step-2 of booking flow
   guestName String?
   guestEmail String?
@@ -185,6 +190,11 @@ model Booking {
 
   paymentStatus PaymentStatus @default(PENDING)
 
+  mealPlanName String?
+  mealPlanPrice Float @default(0)
+  extraGuestCount Int @default(0)
+  extraGuestPrice Float @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -195,6 +205,19 @@ model Booking {
   @@index([roomId])
   @@index([status])
   @@index([visitPackageId])
+}
+
+model MealPlan {
+  id String @id @default(cuid())
+  name String
+  description String?
+  pricePerPerson Float
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings Booking[]
 }
 
 // store paid and unpaid activity seperatly

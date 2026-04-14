@@ -5,16 +5,18 @@ import { BedDouble, Building2, CalendarCheck, ChevronRight, LayoutDashboard, Lea
 import { BookingDetailModal } from './modals/BookingDetailModal';
 import { DeleteConfirm } from './modals/DeleteConfirm';
 import { ActivityModal } from './modals/ActivityModal';
+import { MealPlanModal } from './modals/MealPlanModal';
 import { RoomModal } from './modals/RoomModal';
 import { RoomTypeModal } from './modals/RoomTypeModal';
 import { VisitPackageModal } from './modals/VisitPackageModal';
 import { ActivitiesSection } from './sections/ActivitiesSection';
+import { MealPlansSection } from './sections/MealPlansSection';
 import { BookingsSection } from './sections/BookingsSection';
 import { OverviewSection } from './sections/OverviewSection';
 import { RoomTypesSection } from './sections/RoomTypesSection';
 import { RoomsSection } from './sections/RoomsSection';
 import { VisitPackagesSection } from './sections/VisitPackagesSection';
-import { type Activity, type Booking, type BookingStatus, type Room, type RoomType, type Section, type VisitPackage } from './types';
+import { type Activity, type Booking, type BookingStatus, type MealPlan, type Room, type RoomType, type Section, type VisitPackage } from './types';
 import { notifyError, notifySuccess } from '@/lib/client-notify';
 
 type ApiResponse<T> = { data: T; meta?: { total: number; page: number; pageSize: number } };
@@ -25,6 +27,8 @@ type RoomTypeApi = {
   description: string;
   basePrice: number;
   maxOccupancy: number;
+  baseOccupancy: number;
+  extraPersonPrice: number;
   amenities: string[];
   totalRooms: number;
 };
@@ -81,6 +85,14 @@ type ActivityApi = {
   status: 'ACTIVE' | 'INACTIVE';
 };
 
+type MealPlanApi = {
+  id: string;
+  name: string;
+  description?: string | null;
+  pricePerPerson: number;
+  isActive: boolean;
+};
+
 function mapPackageType(type?: string): 'half-day' | 'full-day' | 'short-visit' {
   if (type === 'FULL_DAY') return 'full-day';
   if (type === 'HALF_DAY') return 'half-day';
@@ -116,6 +128,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [visitPackages, setVisitPackages] = useState<VisitPackage[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [mealPlans, setMealPlans] = useState<MealPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -123,10 +136,12 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
   const [editingRoom, setEditingRoom] = useState<Room | null | undefined>(undefined);
   const [editingVisitPkg, setEditingVisitPkg] = useState<VisitPackage | null | undefined>(undefined);
   const [editingActivity, setEditingActivity] = useState<Activity | null | undefined>(undefined);
+  const [editingMealPlan, setEditingMealPlan] = useState<MealPlan | null | undefined>(undefined);
   const [deletingRoomTypeId, setDeletingRoomTypeId] = useState<string | null>(null);
   const [deletingRoomId, setDeletingRoomId] = useState<string | null>(null);
   const [deletingVisitPkgId, setDeletingVisitPkgId] = useState<string | null>(null);
   const [deletingActivityId, setDeletingActivityId] = useState<string | null>(null);
+  const [deletingMealPlanId, setDeletingMealPlanId] = useState<string | null>(null);
   const [viewingBooking, setViewingBooking] = useState<Booking | null>(null);
 
   const [bookingSearch, setBookingSearch] = useState('');
@@ -169,12 +184,13 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     setLoading(true);
     setError(null);
     try {
-      const [roomTypesRes, roomsRes, packagesRes, bookingsRes, activitiesRes] = await Promise.all([
+      const [roomTypesRes, roomsRes, packagesRes, bookingsRes, activitiesRes, mealPlansRes] = await Promise.all([
         fetchJson<ApiResponse<RoomTypeApi[]>>('/api/admin/room-types'),
         fetchJson<ApiResponse<RoomApi[]>>('/api/admin/rooms'),
         fetchJson<ApiResponse<VisitPackageApi[]>>('/api/admin/packages'),
         fetchJson<ApiResponse<BookingApi[]>>('/api/admin/bookings?page=1&pageSize=200'),
         fetchJson<ApiResponse<ActivityApi[]>>('/api/admin/activities'),
+        fetchJson<ApiResponse<MealPlanApi[]>>('/api/admin/meal-plans'),
       ]);
 
       setRoomTypes(
@@ -184,6 +200,8 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
           description: item.description,
           basePrice: Number(item.basePrice),
           maxOccupancy: Number(item.maxOccupancy),
+          baseOccupancy: Number(item.baseOccupancy || item.maxOccupancy || 1),
+          extraPersonPrice: Number(item.extraPersonPrice || 0),
           amenities: item.amenities || [],
           totalRooms: Number(item.totalRooms || 0),
         }))
@@ -260,6 +278,16 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
           status: item.status,
         }))
       );
+
+      setMealPlans(
+        mealPlansRes.data.map((item) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description || undefined,
+          pricePerPerson: Number(item.pricePerPerson),
+          isActive: item.isActive,
+        }))
+      );
     } catch (err) {
       const message = notifyError(err, 'Failed to load admin data');
       setError(message);
@@ -290,6 +318,8 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
           description: rt.description,
           basePrice: rt.basePrice,
           maxCapacity: rt.maxOccupancy,
+          baseOccupancy: rt.baseOccupancy,
+          extraPersonPrice: rt.extraPersonPrice,
           amenities: rt.amenities,
           totalRooms: rt.totalRooms,
         }),
@@ -426,6 +456,41 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     }
   };
 
+  const saveMealPlan = async (plan: MealPlan) => {
+    const exists = mealPlans.some((item) => item.id === plan.id);
+    const url = exists ? `/api/admin/meal-plans/${plan.id}` : '/api/admin/meal-plans';
+    const method = exists ? 'PATCH' : 'POST';
+
+    try {
+      await fetchJson(url, {
+        method,
+        body: JSON.stringify({
+          name: plan.name,
+          description: plan.description,
+          pricePerPerson: plan.pricePerPerson,
+          isActive: plan.isActive,
+        }),
+      });
+
+      await loadAdminData();
+      notifySuccess(exists ? 'Meal plan updated' : 'Meal plan created');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to save meal plan');
+      setError(message);
+    }
+  };
+
+  const deleteMealPlan = async (id: string) => {
+    try {
+      await fetchJson(`/api/admin/meal-plans/${id}`, { method: 'DELETE' });
+      await loadAdminData();
+      notifySuccess('Meal plan deleted');
+    } catch (err) {
+      const message = notifyError(err, 'Failed to delete meal plan');
+      setError(message);
+    }
+  };
+
   const toggleVisitPackageActive = async (id: string) => {
     const pkg = visitPackages.find((item) => item.id === id);
     if (!pkg) return;
@@ -474,6 +539,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     { id: 'room-types', label: 'Room Types', icon: <Building2 size={18} /> },
     { id: 'rooms', label: 'Rooms', icon: <BedDouble size={18} /> },
     { id: 'visit-packages', label: 'Visit Packages', icon: <Sun size={18} /> },
+    { id: 'meal-plans', label: 'Meal Plans', icon: <Sun size={18} /> },
     { id: 'activities', label: 'Activities', icon: <Leaf size={18} /> },
     { id: 'bookings', label: 'Bookings', icon: <CalendarCheck size={18} /> },
   ];
@@ -490,7 +556,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
               <Leaf size={16} className="text-white" />
             </div>
             <div>
-              <p className="text-white text-sm font-medium">Sumiran Resort</p>
+              <p className="text-white text-sm font-medium">Lend&apos;s End Resort</p>
               <p className="text-stone-500 text-xs">Admin Panel</p>
             </div>
           </div>
@@ -607,6 +673,15 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
             />
           )}
 
+          {section === 'meal-plans' && (
+            <MealPlansSection
+              mealPlans={mealPlans}
+              onAddMealPlan={() => setEditingMealPlan(null)}
+              onEditMealPlan={setEditingMealPlan}
+              onDeleteMealPlan={setDeletingMealPlanId}
+            />
+          )}
+
           {section === 'activities' && (
             <ActivitiesSection
               activities={activities}
@@ -690,11 +765,27 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
         />
       )}
 
+      {editingMealPlan !== undefined && (
+        <MealPlanModal
+          mealPlan={editingMealPlan}
+          onClose={() => setEditingMealPlan(undefined)}
+          onSave={(plan) => { void saveMealPlan(plan); }}
+        />
+      )}
+
       {deletingActivityId && (
         <DeleteConfirm
           label={activities.find((activity) => activity.id === deletingActivityId)?.name ?? 'Activity'}
           onConfirm={() => { void deleteActivity(deletingActivityId); setDeletingActivityId(null); }}
           onCancel={() => setDeletingActivityId(null)}
+        />
+      )}
+
+      {deletingMealPlanId && (
+        <DeleteConfirm
+          label={mealPlans.find((plan) => plan.id === deletingMealPlanId)?.name ?? 'Meal Plan'}
+          onConfirm={() => { void deleteMealPlan(deletingMealPlanId); setDeletingMealPlanId(null); }}
+          onCancel={() => setDeletingMealPlanId(null)}
         />
       )}
 

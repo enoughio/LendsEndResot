@@ -5,7 +5,6 @@ import {
   calculateNights,
   getAvailableRoomCount,
   parseDate,
-  sumActivityPrice,
 } from "@/lib/booking-utils";
 
 export async function POST(request: Request) {
@@ -15,12 +14,7 @@ export async function POST(request: Request) {
     const guests = Number(body?.guests || 0);
     const checkIn = parseDate(body?.checkIn);
     const checkOut = parseDate(body?.checkOut);
-    const activityIds: string[] = Array.isArray(body?.activityIds)
-      ? body.activityIds.map((id: unknown) => String(id)).filter(Boolean)
-      : [];
-    const freeActivityIds: string[] = Array.isArray(body?.freeActivityIds)
-      ? body.freeActivityIds.map((id: unknown) => String(id)).filter(Boolean)
-      : [];
+    const mealPlanId = body?.mealPlanId ? String(body.mealPlanId) : null;
 
     if (!roomTypeId || !checkIn || !checkOut || guests < 1) {
       return NextResponse.json(
@@ -36,30 +30,11 @@ export async function POST(request: Request) {
       );
     }
 
-    if (activityIds.length < 2) {
-      return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "At least two activities are required for stay bookings." } },
-        { status: 400 }
-      );
-    }
-
-    if (freeActivityIds.length !== 2) {
-      return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "Exactly two complimentary activities are required for stay bookings." } },
-        { status: 400 }
-      );
-    }
-
-    if (!freeActivityIds.every((id) => activityIds.includes(id))) {
-      return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "Complimentary activities must be part of selected activities." } },
-        { status: 400 }
-      );
-    }
-
-    const [roomType, activities] = await Promise.all([
+    const [roomType, mealPlan] = await Promise.all([
       prisma.roomType.findUnique({ where: { id: roomTypeId } }),
-      prisma.activity.findMany({ where: { id: { in: activityIds } } }),
+      mealPlanId
+        ? prisma.mealPlan.findUnique({ where: { id: mealPlanId } })
+        : prisma.mealPlan.findFirst({ where: { isActive: true }, orderBy: { createdAt: "desc" } }),
     ]);
 
     if (!roomType) {
@@ -69,9 +44,16 @@ export async function POST(request: Request) {
       );
     }
 
-    if (activities.length !== activityIds.length) {
+    if (!mealPlan || !mealPlan.isActive) {
       return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "One or more selected activities are invalid." } },
+        { error: { code: "NOT_FOUND", message: "Meal plan not available." } },
+        { status: 404 }
+      );
+    }
+
+    if (guests > roomType.capacity) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "Guests exceed max occupancy for this room type." } },
         { status: 400 }
       );
     }
@@ -81,9 +63,14 @@ export async function POST(request: Request) {
 
     const nights = calculateNights(checkIn, checkOut);
     const roomBaseAmount = Math.round(Number(roomType.basePrice) * nights);
-    const additionalActivities = activities.filter((activity) => !freeActivityIds.includes(activity.id));
-    const activitiesAmount = sumActivityPrice(additionalActivities);
-    const priceBreakdown = buildPriceBreakdown(roomBaseAmount, activitiesAmount);
+    const extraGuestCount = Math.max(0, guests - Number(roomType.baseOccupancy || 0));
+    const extraGuestAmount = Math.round(Number(roomType.extraPersonPrice || 0) * extraGuestCount * nights);
+    const mealPlanAmount = Math.round(Number(mealPlan.pricePerPerson || 0) * guests * nights);
+    const priceBreakdown = buildPriceBreakdown({
+      baseAmount: roomBaseAmount,
+      mealPlanAmount,
+      extraGuestAmount,
+    });
 
     return NextResponse.json({
       data: {

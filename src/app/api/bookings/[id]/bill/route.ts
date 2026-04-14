@@ -79,7 +79,7 @@ export async function GET(_req: Request, { params }: Params) {
         const additionalActivitiesAmount = additionalActivities.reduce((sum, a) => sum + a.price, 0);
 
         const subTotal = roomCharges + packageCharges + additionalActivitiesAmount;
-        const taxAmount = Math.round(subTotal * 0.18);
+        const taxAmount = Math.round(subTotal * 0.05);
         const totalAmount = subTotal + taxAmount;
 
     const billData = {

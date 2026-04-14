@@ -3,7 +3,7 @@
 // TODO : overfetching here in /api/booking 
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Calendar, Users, CheckCircle2, Plus, Minus, ShieldCheck, CreditCard, PhoneCall, Sparkles } from 'lucide-react';
+import { ArrowLeft, Calendar, Users, CheckCircle2, ShieldCheck, CreditCard, PhoneCall, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { notifyError, notifyInfo, notifySuccess } from '@/lib/client-notify';
@@ -29,28 +29,29 @@ function ImageWithFallback({ src, alt, className, width, height }: { src: string
   );
 }
 
-
 type RoomTypeApi = {
   id: string;
   name: string;
   description: string;
   basePrice: number;
   maxOccupancy: number;
+  baseOccupancy: number;
+  extraPersonPrice: number;
   amenities: string[];
 };
 
-type ActivityApi = {
+type MealPlanApi = {
   id: string;
   name: string;
-  duration: number;
-  price: number;
-  status: string;
+  description?: string | null;
+  pricePerPerson: number;
+  isActive: boolean;
 };
 
 type BookingCatalogResponse = {
   data: {
     rooms: RoomTypeApi[];
-    activities: ActivityApi[];
+    mealPlans: MealPlanApi[];
   };
 };
 
@@ -59,16 +60,15 @@ export function StayBooking({ }: StayBookingProps) {
   const checkInInputRef = useRef<HTMLInputElement>(null);
   const checkOutInputRef = useRef<HTMLInputElement>(null);
   const [roomTypes, setRoomTypes] = useState<RoomTypeApi[]>([]);
-  const [activities, setActivities] = useState<ActivityApi[]>([]);
+  const [mealPlans, setMealPlans] = useState<MealPlanApi[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
-  const [freeActivities, setFreeActivities] = useState<string[]>([]);
-  const [additionalActivities, setAdditionalActivities] = useState<Record<string, number>>({});
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
-  const [numGuests, setNumGuests] = useState(2);
+  const [extraGuests, setExtraGuests] = useState(0);
+  const [selectedMealPlanId, setSelectedMealPlanId] = useState<string | null>(null);
   const [availabilityChecked, setAvailabilityChecked] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
 
@@ -101,7 +101,9 @@ export function StayBooking({ }: StayBookingProps) {
         if (!res.ok) throw new Error('Failed to load booking data');
         const json = (await res.json()) as BookingCatalogResponse;
         setRoomTypes(json.data.rooms || []);
-        setActivities((json.data.activities || []));
+        const plans = json.data.mealPlans || [];
+        setMealPlans(plans);
+        setSelectedMealPlanId((prev) => prev || plans[0]?.id || null);
       } catch (err) {
         const message = notifyError(err, 'Failed to load booking data');
         setError(message);
@@ -112,21 +114,13 @@ export function StayBooking({ }: StayBookingProps) {
     void loadCatalog();
   }, []);
 
-  const selectedActivityIds = useMemo(() => {
-    const extras = Object.entries(additionalActivities)
-      .filter(([, count]) => count > 0)
-      .map(([id]) => id)
-      .filter((id) => !freeActivities.includes(id));
-    return [...freeActivities, ...extras];
-  }, [additionalActivities, freeActivities]);
-
   const missingRequirements = useMemo(() => {
     const missing: string[] = [];
     if (!checkInDate) missing.push('Select check-in date');
     if (!checkOutDate) missing.push('Select check-out date');
-    if (freeActivities.length !== 2) missing.push('Select 2 complimentary activities');
+    if (!selectedMealPlanId) missing.push('Select a meal plan');
     return missing;
-  }, [checkInDate, checkOutDate, freeActivities.length]);
+  }, [checkInDate, checkOutDate, selectedMealPlanId]);
 
   const handleConfirmBooking = async () => {
     if (!selectedRoom) {
@@ -150,9 +144,8 @@ export function StayBooking({ }: StayBookingProps) {
           roomTypeId: selectedRoom,
           checkIn: new Date(checkInDate).toISOString(),
           checkOut: new Date(checkOutDate).toISOString(),
-          guests: numGuests,
-          activityIds: selectedActivityIds,
-          freeActivityIds: freeActivities,
+          guests: totalGuests,
+          mealPlanId: selectedMealPlanId,
         }),
       });
 
@@ -181,9 +174,8 @@ export function StayBooking({ }: StayBookingProps) {
           roomTypeId: selectedRoom,
           checkIn: new Date(checkInDate).toISOString(),
           checkOut: new Date(checkOutDate).toISOString(),
-          guests: numGuests,
-          activityIds: selectedActivityIds,
-          freeActivityIds: freeActivities,
+          guests: totalGuests,
+          mealPlanId: selectedMealPlanId,
         }),
       });
       const createJson = await createRes.json();
@@ -204,59 +196,44 @@ export function StayBooking({ }: StayBookingProps) {
   };
 
   const selectedRoomData = roomTypes.find(r => r.id === selectedRoom);
-  const selectedActivityKey = selectedActivityIds.join(',');
-  const freeActivityKey = freeActivities.join(',');
+  const baseOccupancy = selectedRoomData?.baseOccupancy || 1;
+  const maxOccupancy = selectedRoomData?.maxOccupancy || baseOccupancy;
+  const maxExtraGuests = Math.max(0, maxOccupancy - baseOccupancy);
+  const totalGuests = baseOccupancy + extraGuests;
 
   useEffect(() => {
     setAvailabilityChecked(false);
     setIsAvailable(false);
-  }, [selectedRoom, checkInDate, checkOutDate, numGuests, selectedActivityKey, freeActivityKey]);
+  }, [selectedRoom, checkInDate, checkOutDate, extraGuests, selectedMealPlanId]);
 
-  const toggleFreeActivity = (activityId: string) => {
-    if (freeActivities.includes(activityId)) {
-      setFreeActivities(freeActivities.filter(id => id !== activityId));
-    } else if (freeActivities.length < 2) {
-      setFreeActivities([...freeActivities, activityId]);
-    }
-  };
-
-  const updateAdditionalActivity = (activityId: string, change: number) => {
-    const current = additionalActivities[activityId] || 0;
-    const newValue = Math.max(0, current + change);
-    
-    if (newValue === 0) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [activityId]: _removed, ...rest } = additionalActivities;
-      setAdditionalActivities(rest);
-    } else {
-      setAdditionalActivities({ ...additionalActivities, [activityId]: newValue });
-    }
-  };
+  useEffect(() => {
+    setExtraGuests(0);
+  }, [selectedRoom]);
 
   const nights = checkInDate && checkOutDate ? Math.max(1, Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24))) : 0;
-  const occupancyLimit = selectedRoomData?.maxOccupancy || 6;
   const basePrice = selectedRoomData && nights ? selectedRoomData.basePrice * nights : 0;
-  const additionalActivitiesTotal = Object.entries(additionalActivities).reduce((sum, [activityId, count]) => {
-    const activity = activities.find(a => a.id === activityId);
-    return sum + (activity?.price || 0) * count;
-  }, 0);
-  const taxes = Math.floor((basePrice + additionalActivitiesTotal) * 0.05);
+  const extraGuestAmount = selectedRoomData && nights
+    ? extraGuests * selectedRoomData.extraPersonPrice * nights
+    : 0;
+  const selectedMealPlan = mealPlans.find((plan) => plan.id === selectedMealPlanId) || null;
+  const mealPlanAmount = selectedMealPlan && nights ? selectedMealPlan.pricePerPerson * totalGuests * nights : 0;
+  const taxes = Math.floor((basePrice + extraGuestAmount + mealPlanAmount) * 0.05);
   const serviceFee = 200;
-  const grandTotal = basePrice + additionalActivitiesTotal + taxes + serviceFee;
+  const grandTotal = basePrice + extraGuestAmount + mealPlanAmount + taxes + serviceFee;
   const bookingSteps = [
     { id: '1', label: 'Choose room' },
     { id: '2', label: 'Select dates & guests' },
-    { id: '3', label: 'Pick activities' },
+    { id: '3', label: 'Pick Meal Plan' },
     { id: '4', label: 'Review and pay' },
   ];
   const roomSkeletons = [1, 2, 3];
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40">
+    <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40 pt-10">
 
 
       {/* Hero Section */}
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-48 overflow-hidden ">
         <ImageWithFallback 
           src="https://images.unsplash.com/photo-1630823070635-5fe15b1a7c14?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqdW5nbGUlMjByZXNvcnR8ZW58MXx8fHwxNzYzNjk4MjE2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
           alt="Resort stay"
@@ -264,8 +241,9 @@ export function StayBooking({ }: StayBookingProps) {
           height={192}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0  bg-linear-to-r from-slate-900/80 via-slate-900/40 to-transparent">
-          <div className="max-w-7xl mx-auto ml-25 mt-5 px-6 h-full flex items-center">
+
+        <div className="absolute inset-0  bg-linear-to-r  from-slate-900/80 via-slate-900/40 to-transparent">
+          <div className="max-w-7xl mx-auto md:ml-25  px-6 h-full flex items-center ">
             <div>
               <button onClick={handleBack} className="flex items-center gap-2 text-white mb-2 hover:text-green-400 transition-colors">
                 <ArrowLeft className="w-5 h-5" />
@@ -276,7 +254,7 @@ export function StayBooking({ }: StayBookingProps) {
                 Nature stay booking
               </p>
               <h1 className="mt-2 text-white mb-2">Stay at Sumiran</h1>
-              <p className="text-sm text-white/85">Pick your room, dates, guests, and activities in one flow.</p>
+              <p className="text-sm text-white/85">Pick your room, dates, guests, and meal plan in one flow.</p>
             </div>
           </div>
         </div>
@@ -451,116 +429,76 @@ export function StayBooking({ }: StayBookingProps) {
                       <p className="text-gray-600">Guests</p>
                       <Users className="w-4 h-4 text-blue-700" />
                     </div>
-                    <p className="mt-2 text-2xl font-semibold text-gray-900">{numGuests}</p>
-                    <div className="mt-3 flex items-center gap-3">
+                    <p className="mt-2 text-sm text-gray-700">Included: {baseOccupancy} guests</p>
+                    <p className="mt-2 text-sm text-gray-600">Extra mattresses</p>
+                    <div className="mt-2 flex items-center gap-3">
                       <button
                         type="button"
-                        onClick={() => setNumGuests((prev) => Math.max(1, prev - 1))}
-                        className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100"
-                        aria-label="Decrease guests"
+                        onClick={() => setExtraGuests((prev) => Math.max(0, prev - 1))}
+                        className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
+                        aria-label="Decrease extra guests"
+                        disabled={extraGuests === 0}
                       >
                         -
                       </button>
                       <div className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-gray-700">
-                        {numGuests === 1 ? '1 guest' : `${numGuests} guests`}
+                        {extraGuests === 0 ? 'None' : `${extraGuests} extra`}
                       </div>
                       <button
                         type="button"
-                        onClick={() => setNumGuests((prev) => Math.min(occupancyLimit, prev + 1))}
-                        className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100"
-                        aria-label="Increase guests"
+                        onClick={() => setExtraGuests((prev) => Math.min(maxExtraGuests, prev + 1))}
+                        className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
+                        aria-label="Increase extra guests"
+                        disabled={extraGuests >= maxExtraGuests}
                       >
                         +
                       </button>
                     </div>
-                    <p className="mt-2 text-xs text-gray-500">Max {occupancyLimit} guests for this room</p>
+                    <p className="mt-2 text-xs text-gray-500">Max {maxOccupancy} guests for this room</p>
+                    <p className="text-xs text-gray-500">Extra ₹{selectedRoomData?.extraPersonPrice?.toLocaleString() || 0}/night per person</p>
+                    <p className="mt-2 text-sm font-semibold text-gray-900">Total guests: {totalGuests}</p>
                   </div>
                 </div>
                 </section>
 
-                {/* Free Activities */}
+                {/* Meal Plan */}
                 <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                  <h2 className="text-gray-900 mb-2 text-xl font-semibold">Select 2 Complimentary Activities</h2>
-                  <p className="text-gray-600 mb-4">
-                    Choose 2 activities included with your stay ({freeActivities.length}/2 selected)
-                  </p>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {activities.map((activity) => {
-                      const isSelected = freeActivities.includes(activity.id);
-                      const isDisabled = !isSelected && freeActivities.length >= 2;
-                      
+                  <h2 className="text-gray-900 mb-2 text-xl font-semibold">Meal Plan (Mandatory)</h2>
+                  <p className="text-gray-600 mb-4">Choose your meal plan for every guest.</p>
+                  <div className="grid gap-3 md:grid-cols-2">
+                    {mealPlans.map((plan) => {
+                      const isSelected = selectedMealPlanId === plan.id;
                       return (
-                        <div
-                          key={activity.id}
-                          onClick={() => !isDisabled && toggleFreeActivity(activity.id)}
-                          className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                        <button
+                          type="button"
+                          key={plan.id}
+                          onClick={() => setSelectedMealPlanId(plan.id)}
+                          className={`text-left rounded-xl border-2 p-4 transition-all ${
                             isSelected
                               ? 'border-green-600 bg-green-50'
-                              : isDisabled
-                              ? 'border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed'
                               : 'border-gray-200 hover:border-green-300'
                           }`}
                         >
-                          <div className="flex items-start justify-between mb-1">
-                            <p className="text-gray-900 text-sm">{activity.name}</p>
-                            {isSelected && (
-                              <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
-                            )}
-                          </div>
-                          <p className="text-gray-500 text-xs">{activity.duration}h</p>
-                          <p className="text-green-700 text-sm mt-1">Free</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </section>
-
-                {/* Additional Activities */}
-                <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                  <h2 className="text-gray-900 mb-2 text-xl font-semibold">Add More Activities</h2>
-                  <p className="text-gray-600 mb-4">
-                    Book additional activities for an extra charge
-                  </p>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {activities.map((activity) => {
-                      const count = additionalActivities[activity.id] || 0;
-                      const isFree = freeActivities.includes(activity.id);
-                      
-                      return (
-                        <div
-                          key={activity.id}
-                          className={`p-3 rounded-xl border-2 ${
-                            isFree ? 'border-gray-200 bg-gray-50 opacity-50' : 'border-gray-200'
-                          }`}
-                        >
-                          <p className="text-gray-900 text-sm mb-1">{activity.name}</p>
-                          <p className="text-gray-500 text-xs mb-1">{activity.duration}h</p>
-                          <p className="text-gray-900 text-sm mb-2">₹{activity.price}</p>
-                          
-                          {!isFree && (
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => updateAdditionalActivity(activity.id, -1)}
-                                className="p-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors disabled:opacity-50"
-                                disabled={count === 0}
-                              >
-                                <Minus className="w-3 h-3" />
-                              </button>
-                              <span className="flex-1 text-center text-sm">{count}</span>
-                              <button
-                                onClick={() => updateAdditionalActivity(activity.id, 1)}
-                                className="p-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-                              >
-                                <Plus className="w-3 h-3" />
-                              </button>
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <p className="text-gray-900 font-medium">{plan.name}</p>
+                              {plan.description && (
+                                <p className="mt-1 text-xs text-gray-600">{plan.description}</p>
+                              )}
                             </div>
-                          )}
-                          {isFree && (
-                            <p className="text-gray-500 text-xs text-center">Selected as free</p>
-                          )}
-                        </div>
+                            <div className="text-right">
+                              <p className="text-gray-900 font-semibold">₹{plan.pricePerPerson.toLocaleString('en-IN')}</p>
+                              <p className="text-xs text-gray-500">per person / night</p>
+                            </div>
+                          </div>
+                        </button>
                       );
                     })}
+                    {mealPlans.length === 0 && (
+                      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+                        Meal plan pricing is not configured yet. Please contact support.
+                      </div>
+                    )}
                   </div>
                 </section>
 
@@ -613,16 +551,18 @@ export function StayBooking({ }: StayBookingProps) {
                           <span>Room ({nights} {nights === 1 ? 'night' : 'nights'})</span>
                           <span>₹{basePrice.toLocaleString()}</span>
                         </div>
-                        {Object.entries(additionalActivities).map(([activityId, count]) => {
-                          const activity = activities.find(a => a.id === activityId);
-                          if (!activity || count === 0) return null;
-                          return (
-                            <div key={activityId} className="flex justify-between text-gray-700">
-                              <span>{activity.name} × {count}</span>
-                              <span>₹{(activity.price * count).toLocaleString()}</span>
-                            </div>
-                          );
-                        })}
+                        {mealPlanAmount > 0 && (
+                          <div className="flex justify-between text-gray-700">
+                            <span>Meal plan ({totalGuests} guests)</span>
+                            <span>₹{mealPlanAmount.toLocaleString()}</span>
+                          </div>
+                        )}
+                        {extraGuestAmount > 0 && (
+                          <div className="flex justify-between text-gray-700">
+                            <span>Extra mattresses ({extraGuests})</span>
+                            <span>₹{extraGuestAmount.toLocaleString()}</span>
+                          </div>
+                        )}
                         <div className="flex justify-between text-gray-700">
                           <span>Taxes (5%)</span>
                           <span>₹{taxes}</span>

@@ -406,7 +406,7 @@ export default function BookingDetailsPage() {
                 </div>
 
                 <div className="flex items-center justify-between text-slate-700">
-                  <span>Tax (18%)</span>
+                  <span>Tax (5%)</span>
                   <span>{formatInr(tax)}</span>
                 </div>
 

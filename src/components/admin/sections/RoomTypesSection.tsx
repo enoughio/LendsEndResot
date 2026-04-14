@@ -58,7 +58,8 @@ export function RoomTypesSection({
                 ))}
               </div>
               <div className="flex items-center justify-between text-xs border-t border-white/5 pt-3">
-                <span className="text-stone-500">Max {rt.maxOccupancy} guests</span>
+                <span className="text-stone-500">Base {rt.baseOccupancy} / Max {rt.maxOccupancy}</span>
+                <span className="text-stone-500">Extra ₹{rt.extraPersonPrice.toLocaleString('en-IN')}/night</span>
                 <span className="text-stone-500">{rtRooms.length} rooms assigned</span>
                 <span className="text-emerald-400">{rtRooms.filter(r => r.status === 'available').length} available</span>
               </div>

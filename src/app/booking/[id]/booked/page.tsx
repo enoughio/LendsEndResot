@@ -91,7 +91,7 @@ function BookedContent() {
           <div className="flex items-center gap-4 sm:gap-8">
             <Link href="/" className="flex items-center gap-2 text-white hover:text-green-400 transition-colors">
               <TreePine className="w-5 h-5 sm:w-6 sm:h-6" />
-              <h1 className="text-white text-sm sm:text-base">Sumiran Resort</h1>
+              <h1 className="text-white text-sm sm:text-base">Lend's End Resort</h1>
             </Link>
             <nav className="hidden sm:flex items-center gap-6">
               <Link href="/booking" className="text-white hover:text-green-400 transition-colors">Bookings</Link>

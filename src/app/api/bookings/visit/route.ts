@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { buildPriceBreakdown, parseDate, sumActivityPrice } from "@/lib/booking-utils";
+import { buildPriceBreakdown, parseDate } from "@/lib/booking-utils";
 
 export async function POST(request: Request) {
   try {
@@ -9,9 +9,7 @@ export async function POST(request: Request) {
     const visitDate = parseDate(body?.visitDate);
     const guests = Number(body?.guests || 0);
     const userId = body?.userId ? String(body.userId) : undefined;
-    const activityIds: string[] = Array.isArray(body?.activityIds)
-      ? body.activityIds.map((id: unknown) => String(id)).filter(Boolean)
-      : [];
+    const mealPlanId = body?.mealPlanId ? String(body.mealPlanId) : null;
 
     if (!visitPackageId || !visitDate || guests < 1) {
       return NextResponse.json(
@@ -20,18 +18,12 @@ export async function POST(request: Request) {
       );
     }
 
-    if (activityIds.length < 1) {
-      return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "At least one activity is required." } },
-        { status: 400 }
-      );
-    }
-    
-
-    // find activities and visit package  
-    const [visitPackage, activities] = await Promise.all([
+    // find visit package and active meal plan
+    const [visitPackage, mealPlan] = await Promise.all([
       prisma.visitPackage.findUnique({ where: { id: visitPackageId } }),
-      prisma.activity.findMany({ where: { id: { in: activityIds } } }),
+      mealPlanId
+        ? prisma.mealPlan.findUnique({ where: { id: mealPlanId } })
+        : prisma.mealPlan.findFirst({ where: { isActive: true }, orderBy: { createdAt: "desc" } }),
     ]);
 
 
@@ -42,17 +34,21 @@ export async function POST(request: Request) {
       );
     }
 
-    if (activities.length !== activityIds.length) {
+    if (!mealPlan || !mealPlan.isActive) {
       return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "One or more selected activities are invalid." } },
-        { status: 400 }
+        { error: { code: "NOT_FOUND", message: "Meal plan not available." } },
+        { status: 404 }
       );
     }
      
     // later add promocode and discount options
     const packageAmount = Math.round(Number(visitPackage.basePrice));
-    const activitiesAmount = sumActivityPrice(activities);
-    const { totalAmount, taxAmount } = buildPriceBreakdown(packageAmount, activitiesAmount);
+    const baseAmount = packageAmount * guests;
+    const { totalAmount, taxAmount } = buildPriceBreakdown({
+      baseAmount,
+      mealPlanAmount: 0,
+      extraGuestAmount: 0,
+    });
 
 
     // create a pending booking 
@@ -67,9 +63,9 @@ export async function POST(request: Request) {
         visitPackageId,
         totalAmount,
         currency: "INR",
-        bookingActivities: {
-          create: activityIds.map((activityId) => ({ activityId })),
-        },
+        mealPlanId: mealPlan.id,
+        mealPlanName: mealPlan.name,
+        mealPlanPrice: 0,
       },
     });
 

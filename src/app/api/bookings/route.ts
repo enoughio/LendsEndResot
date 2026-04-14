@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import type { Activity, RoomType, VisitPackage } from "@/generated/prisma/client";
+import type { RoomType, VisitPackage } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const [roomTypes, visitPackages, activities] = await Promise.all([
+    const [roomTypes, visitPackages, mealPlans] = await Promise.all([
       prisma.roomType.findMany({
         include: {
           _count: {
@@ -16,10 +16,8 @@ export async function GET() {
       prisma.visitPackage.findMany({
         orderBy: { createdAt: "desc" },
       }),
-      prisma.activity.findMany({
-        where : {
-          
-        },
+      prisma.mealPlan.findMany({
+        where: { isActive: true },
         orderBy: { createdAt: "desc" },
       }),
     ]);
@@ -33,6 +31,8 @@ export async function GET() {
           basePrice: Number(roomType.basePrice),
           capacity: roomType.capacity,
           maxOccupancy: roomType.capacity,
+          baseOccupancy: roomType.baseOccupancy,
+          extraPersonPrice: Number(roomType.extraPersonPrice),
           bedType: roomType.bedType,
           sizeSqft: roomType.size_sqft,
           amenities: roomType.amenities,
@@ -52,12 +52,12 @@ export async function GET() {
           includes: visitPackage.includes,
           image: visitPackage.image,
         })),
-        activities: activities.map((activity: Activity) => ({
-          id: activity.id,
-          name: activity.name,
-          duration: activity.duration,
-          price: Number(activity.price),
-          status: activity.status,
+        mealPlans: mealPlans.map((plan) => ({
+          id: plan.id,
+          name: plan.name,
+          description: plan.description,
+          pricePerPerson: Number(plan.pricePerPerson),
+          isActive: plan.isActive,
         })),
       },
     });

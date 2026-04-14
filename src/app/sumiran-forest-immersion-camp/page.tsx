@@ -123,7 +123,7 @@ export default function SumiranForestImmersionCampPage() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-14">
+      <section className="max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-0 ">
         <div className="grid lg:grid-cols-3 gap-6 ">
           <div className="rounded-2xl border border-emerald-100 bg-linear-to-br from-emerald-50/80 via-white to-sky-50/70 p-6 shadow-sm">
             <h2 className="text-xl md:text-2xl text-gray-900">About Sumiran</h2>

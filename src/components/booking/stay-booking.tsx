@@ -67,6 +67,7 @@ export function StayBooking({ }: StayBookingProps) {
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
+  const [baseGuests, setBaseGuests] = useState(1);
   const [extraGuests, setExtraGuests] = useState(0);
   const [selectedMealPlanId, setSelectedMealPlanId] = useState<string | null>(null);
   const [availabilityChecked, setAvailabilityChecked] = useState(false);
@@ -199,7 +200,8 @@ export function StayBooking({ }: StayBookingProps) {
   const baseOccupancy = selectedRoomData?.baseOccupancy || 1;
   const maxOccupancy = selectedRoomData?.maxOccupancy || baseOccupancy;
   const maxExtraGuests = Math.max(0, maxOccupancy - baseOccupancy);
-  const totalGuests = baseOccupancy + extraGuests;
+  const effectiveBaseGuests = Math.min(Math.max(1, baseGuests), baseOccupancy);
+  const totalGuests = effectiveBaseGuests + extraGuests;
 
   useEffect(() => {
     setAvailabilityChecked(false);
@@ -207,8 +209,15 @@ export function StayBooking({ }: StayBookingProps) {
   }, [selectedRoom, checkInDate, checkOutDate, extraGuests, selectedMealPlanId]);
 
   useEffect(() => {
+    setBaseGuests(1);
     setExtraGuests(0);
   }, [selectedRoom]);
+
+  useEffect(() => {
+    if (effectiveBaseGuests < baseOccupancy && extraGuests > 0) {
+      setExtraGuests(0);
+    }
+  }, [effectiveBaseGuests, baseOccupancy, extraGuests]);
 
   const nights = checkInDate && checkOutDate ? Math.max(1, Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24))) : 0;
   const basePrice = selectedRoomData && nights ? selectedRoomData.basePrice * nights : 0;
@@ -217,9 +226,7 @@ export function StayBooking({ }: StayBookingProps) {
     : 0;
   const selectedMealPlan = mealPlans.find((plan) => plan.id === selectedMealPlanId) || null;
   const mealPlanAmount = selectedMealPlan && nights ? selectedMealPlan.pricePerPerson * totalGuests * nights : 0;
-  const taxes = Math.floor((basePrice + extraGuestAmount + mealPlanAmount) * 0.05);
-  const serviceFee = 200;
-  const grandTotal = basePrice + extraGuestAmount + mealPlanAmount + taxes + serviceFee;
+  const grandTotal = basePrice + extraGuestAmount + mealPlanAmount;
   const bookingSteps = [
     { id: '1', label: 'Choose room' },
     { id: '2', label: 'Select dates & guests' },
@@ -346,7 +353,9 @@ export function StayBooking({ }: StayBookingProps) {
                               ))}
                             </div>
                             <div className="flex items-center justify-between">
-                              <span className="text-gray-600">Up to {room.maxOccupancy} guests</span>
+                              <span className="text-gray-600">
+                                Base occupancy {room.baseOccupancy} • Additional guests up to {Math.max(0, room.maxOccupancy - room.baseOccupancy)}
+                              </span>
                               <span className="text-gray-900 font-semibold">₹{room.basePrice.toLocaleString()}/night</span>
                             </div>
                           </div>
@@ -429,33 +438,62 @@ export function StayBooking({ }: StayBookingProps) {
                       <p className="text-gray-600">Guests</p>
                       <Users className="w-4 h-4 text-blue-700" />
                     </div>
-                    <p className="mt-2 text-sm text-gray-700">Included: {baseOccupancy} guests</p>
-                    <p className="mt-2 text-sm text-gray-600">Extra mattresses</p>
+                    <p className="mt-2 text-sm text-gray-700">Base guests included: {baseOccupancy}</p>
                     <div className="mt-2 flex items-center gap-3">
                       <button
                         type="button"
-                        onClick={() => setExtraGuests((prev) => Math.max(0, prev - 1))}
+                        onClick={() => setBaseGuests((prev) => Math.max(1, prev - 1))}
                         className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-                        aria-label="Decrease extra guests"
-                        disabled={extraGuests === 0}
+                        aria-label="Decrease guests"
+                        disabled={effectiveBaseGuests <= 1}
                       >
                         -
                       </button>
                       <div className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-gray-700">
-                        {extraGuests === 0 ? 'None' : `${extraGuests} extra`}
+                        {effectiveBaseGuests === 1 ? '1 guest' : `${effectiveBaseGuests} guests`}
                       </div>
                       <button
                         type="button"
-                        onClick={() => setExtraGuests((prev) => Math.min(maxExtraGuests, prev + 1))}
+                        onClick={() => setBaseGuests((prev) => Math.min(baseOccupancy, prev + 1))}
                         className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-                        aria-label="Increase extra guests"
-                        disabled={extraGuests >= maxExtraGuests}
+                        aria-label="Increase guests"
+                        disabled={effectiveBaseGuests >= baseOccupancy}
                       >
                         +
                       </button>
                     </div>
+
+                    {effectiveBaseGuests >= baseOccupancy && maxExtraGuests > 0 && (
+                      <>
+                        <p className="mt-3 text-sm text-gray-600">Extra mattresses</p>
+                        <div className="mt-2 flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setExtraGuests((prev) => Math.max(0, prev - 1))}
+                            className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
+                            aria-label="Decrease extra guests"
+                            disabled={extraGuests === 0}
+                          >
+                            -
+                          </button>
+                          <div className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-gray-700">
+                            {extraGuests === 0 ? 'None' : `${extraGuests} extra`}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setExtraGuests((prev) => Math.min(maxExtraGuests, prev + 1))}
+                            className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
+                            aria-label="Increase extra guests"
+                            disabled={extraGuests >= maxExtraGuests}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <p className="mt-2 text-xs text-gray-500">Extra ₹{selectedRoomData?.extraPersonPrice?.toLocaleString() || 0}/night per person</p>
+                      </>
+                    )}
+
                     <p className="mt-2 text-xs text-gray-500">Max {maxOccupancy} guests for this room</p>
-                    <p className="text-xs text-gray-500">Extra ₹{selectedRoomData?.extraPersonPrice?.toLocaleString() || 0}/night per person</p>
                     <p className="mt-2 text-sm font-semibold text-gray-900">Total guests: {totalGuests}</p>
                   </div>
                 </div>
@@ -501,12 +539,6 @@ export function StayBooking({ }: StayBookingProps) {
                     )}
                   </div>
                 </section>
-
-
-
-          
-
-
 
               </>
             )}
@@ -563,14 +595,6 @@ export function StayBooking({ }: StayBookingProps) {
                             <span>₹{extraGuestAmount.toLocaleString()}</span>
                           </div>
                         )}
-                        <div className="flex justify-between text-gray-700">
-                          <span>Taxes (5%)</span>
-                          <span>₹{taxes}</span>
-                        </div>
-                        <div className="flex justify-between text-gray-700">
-                          <span>Service Fee</span>
-                          <span>₹{serviceFee}</span>
-                        </div>
                       </div>
                     </div>
 

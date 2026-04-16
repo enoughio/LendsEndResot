@@ -483,12 +483,12 @@ export default function SumiranForestImmersionCampPage() {
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
-                href="https://landsend.storyretreat.in/sumiran-forest-immersion-camp"
+                href="https://rzp.io/rzp/fnnrvFkZ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800 transition-colors"
               >
-                Visit Registration Page
+                Register Now
               </Link>
               <Link
                 href="tel:+916268244196"

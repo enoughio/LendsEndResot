@@ -129,26 +129,31 @@ const facilitators = [
     name: "Mr Rajesh Gupta, (IPS)",
     role: "Chief Mentor and Programme Head",
     details: "ADG (Retd.), MP Police | Creator of Sumiran Forest",
+    image: "/events/rajeshGupta.png",
   },
   {
     name: "Dr Monika Gupta",
     role: "Chief Wellness Mentor",
     details: "MBBS | Professor | Certified Yoga Trainer | Holistic Health Practitioner",
+    image: "/events/monikaGupta.png",
   },
   {
     name: "Cmde Manoj Bhuraria (Retd.)",
     role: "Life Coach, Counsellor and Mentor",
     details: "Guides confidence building, reflection, and character development",
+    image: "/events/cmdeManojbhuraria.png",
   },
   {
     name: "Mrs Jyoti Pande",
     role: "Storyteller and Psychologist",
     details: "Leads expression, storytelling, and emotional learning",
+    image: "/events/jyotiPandey.png",
   },
   {
     name: "Mr Aviral Pawaar",
     role: "Camp Director and Programme Coordinator",
     details: "Leads execution, safety, and participant experience",
+    image: "/events/aviralPawar.png",
   },
 ];
 
@@ -439,10 +444,21 @@ export default function SumiranForestImmersionCampPage() {
           <h2 className="text-2xl md:text-3xl text-gray-900">Leadership and Facilitators</h2>
           <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {facilitators.map((person) => (
-              <article key={person.name} className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+              <article key={person.name} className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/80">
+                <div className="relative aspect-4/3 w-full bg-slate-100">
+                  <Image
+                    src={person.image}
+                    alt={person.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-contain"
+                  />
+                </div>
+                <div className="p-4">
                 <h3 className="text-base md:text-lg text-gray-900">{person.name}</h3>
                 <p className="mt-1 text-sm font-medium text-emerald-700">{person.role}</p>
                 <p className="mt-2 text-sm text-gray-600">{person.details}</p>
+                </div>
               </article>
             ))}
           </div>

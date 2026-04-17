@@ -452,6 +452,9 @@ export default function SumiranForestImmersionCampPage() {
       <section id="registration" className="max-w-7xl mx-auto px-4 md:px-6 pb-12">
         <div className="grid gap-6 lg:grid-cols-2">
           <article className="rounded-3xl border border-emerald-100 bg-linear-to-b from-emerald-700 to-emerald-800 p-6 md:p-8 text-white shadow-lg">
+                        <div className="mb-6 rounded-xl bg-white/10 px-4 py-3 text-sm text-emerald-50">
+              Inaugural offering: Designed at a value of INR 30,000+ and offered at a special fee of INR 9,900.
+            </div>
             <p className="text-xs font-semibold tracking-[0.16em] uppercase text-emerald-100">Programme Fee</p>
             <p className="mt-3 text-3xl md:text-4xl font-semibold">INR 9,900</p>
             <p className="mt-2 text-sm text-emerald-100">Per participant</p>
@@ -463,9 +466,7 @@ export default function SumiranForestImmersionCampPage() {
               <li>Certificate on successful completion</li>
               <li>Travel to and from Sumiran is not included</li>
             </ul>
-            <div className="mt-6 rounded-xl bg-white/10 px-4 py-3 text-sm text-emerald-50">
-              Inaugural offering: Designed at a value of INR 30,000+ and offered at a special fee of INR 9,900.
-            </div>
+
           </article>
 
           <article className="rounded-3xl border border-emerald-100 bg-linear-to-br from-emerald-50/85 via-white to-amber-50/60 p-6 md:p-8 shadow-sm">
@@ -478,7 +479,7 @@ export default function SumiranForestImmersionCampPage() {
               <p>Organised by: Land&apos;s End - The Last Resort</p>
               <p>In association with: Young Leaders&apos; Club</p>
               <p>Contact: Land&apos;s End Resort Team</p>
-              <p>Phone/WhatsApp: +91 6268244196</p>
+              <p>Phone/WhatsApp: +91 8871317382, 6268244196</p>
               <p>Email: landsend.sumiran@gmail.com</p>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">

@@ -3,6 +3,23 @@ import prisma from "@/lib/prisma";
 import { verifyRazorpaySignature } from "@/lib/payments";
 import { sendBookingConfirmationEmail } from "@/lib/booking-email";
 
+function normalizeGuestList(value: unknown): Array<{ name: string; phone: string }> | undefined {
+	if (!Array.isArray(value)) return undefined;
+
+	const guests = value
+		.map((item) => {
+			if (!item || typeof item !== "object") return null;
+			const maybeGuest = item as { name?: unknown; phone?: unknown };
+			const name = typeof maybeGuest.name === "string" ? maybeGuest.name.trim() : "";
+			const phone = typeof maybeGuest.phone === "string" ? maybeGuest.phone.trim() : "";
+			if (!name || !phone) return null;
+			return { name, phone };
+		})
+		.filter((guest): guest is { name: string; phone: string } => Boolean(guest));
+
+	return guests.length > 0 ? guests : undefined;
+}
+
 export async function POST(request: Request) {
 	try {
 		const body = await request.json();
@@ -99,6 +116,7 @@ export async function POST(request: Request) {
 		// Confirmation email is best-effort and must not fail the verified payment response.
 		if (booking.guestEmail) {
 			try {
+				const guestList = normalizeGuestList(booking.guestList);
 				await sendBookingConfirmationEmail({
 					to: booking.guestEmail,
 					guestName: booking.guestName || "Guest",
@@ -112,7 +130,7 @@ export async function POST(request: Request) {
 					checkOut: booking.checkOut,
 					visitDate: booking.visitDate,
 					roomsBooked: booking.roomsBooked,
-					guestList: Array.isArray(booking.guestList) ? booking.guestList : undefined,
+					guestList,
 				});
 			} catch (mailError) {
 				// Email failure should not block successful payment verification.
@@ -123,6 +141,7 @@ export async function POST(request: Request) {
 		const internalEmail = process.env.SMTP_TO;
 		if (internalEmail) {
 			try {
+				const guestList = normalizeGuestList(booking.guestList);
 				await sendBookingConfirmationEmail({
 					to: internalEmail,
 					guestName: booking.guestName || "Guest",
@@ -136,7 +155,7 @@ export async function POST(request: Request) {
 					checkOut: booking.checkOut,
 					visitDate: booking.visitDate,
 					roomsBooked: booking.roomsBooked,
-					guestList: Array.isArray(booking.guestList) ? booking.guestList : undefined,
+					guestList,
 					internalCopy: true,
 				});
 			} catch (mailError) {

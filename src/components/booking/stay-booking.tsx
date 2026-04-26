@@ -3,7 +3,7 @@
 // TODO : overfetching here in /api/booking 
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Calendar, Users, CheckCircle2, ShieldCheck, CreditCard, PhoneCall, Sparkles } from 'lucide-react';
+import { ArrowLeft, Calendar, Users, CheckCircle2, ShieldCheck, CreditCard, PhoneCall, Sparkles, CircleQuestionMark  } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { notifyError, notifyInfo, notifySuccess } from '@/lib/client-notify';
@@ -76,6 +76,7 @@ export function StayBooking({ }: StayBookingProps) {
   const [selectedMealPlanId, setSelectedMealPlanId] = useState<string | null>(null);
   const [availabilityChecked, setAvailabilityChecked] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
+  const [showGuestInfo, setShowGuestInfo] = useState(false);
 
   const handleBack = () => {
     router.push('/booking');
@@ -467,8 +468,43 @@ export function StayBooking({ }: StayBookingProps) {
                   <div className="col-span-2 md:col-span-1 rounded-xl border border-gray-200 bg-linear-to-br from-white to-blue-50 p-4 shadow-xs">
                     <div className="flex items-center justify-between">
                       <p className="text-gray-600">{isSingleOccupancy ? "Rooms" : "Guests"}</p>
-                      <Users className="w-4 h-4 text-blue-700" />
+                      
+                      <div className='relative'>
+
+                      
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setShowGuestInfo((prev) => !prev)}
+                          className="rounded-full bg-white p-1 text-yellow-500 transition hover:bg-blue-50"
+                          aria-label="Booking info"
+                          title="How room and guest pricing works"
+                        >
+                          <CircleQuestionMark  className="h-5 w-5" />
+                          {/* <span className='text-sm p-2'>?</span> */}
+                        </button>
+                        <Users className="w-4 h-4 text-blue-700" />
+                      </div>
                     </div>
+
+                    {showGuestInfo && (
+                      <div className="mt-3 rounded-lg border absolute border-blue-200 bg-white p-3 text-xs text-gray-700 space-y-1">
+                        <p><strong>Rooms:</strong> Number of physical rooms in this booking.</p>
+                        <p><strong>Guests:</strong> Total people staying.</p>
+                        <p><strong>Included guests:</strong> {isSingleOccupancy ? '1 per room.' : `${baseOccupancy} per room, included in room charge.`}</p>
+                        {!isSingleOccupancy && (
+                          <p><strong>Extra mattress:</strong> Used when guests exceed included guests. Charged per person per night.</p>
+                        )}
+                        <p><strong>Meal plan:</strong> Charged per guest per night.</p>
+                        <p><strong>Room charge:</strong> Room rate x nights x rooms.</p>
+                        {isSingleOccupancy && (
+                          <p><strong>Single occupancy rule:</strong> Each guest requires one room and extra mattress is not available.</p>
+                        )}
+                      </div>
+                    )}
+
+                    </div>
+
                     <p className="mt-2 text-sm text-gray-700">
                       {isSingleOccupancy
                         ? "Each guest books a separate room."

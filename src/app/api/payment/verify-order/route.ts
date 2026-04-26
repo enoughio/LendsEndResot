@@ -37,6 +37,8 @@ export async function POST(request: Request) {
 				checkIn: true,
 				checkOut: true,
 				visitDate: true,
+				roomsBooked: true,
+				guestList: true,
 				room: {
 					select: {
 						roomType: {
@@ -109,10 +111,36 @@ export async function POST(request: Request) {
 					checkIn: booking.checkIn,
 					checkOut: booking.checkOut,
 					visitDate: booking.visitDate,
+					roomsBooked: booking.roomsBooked,
+					guestList: Array.isArray(booking.guestList) ? booking.guestList : undefined,
 				});
 			} catch (mailError) {
 				// Email failure should not block successful payment verification.
 				console.error("Booking confirmation email failed", mailError);
+			}
+		}
+
+		const internalEmail = process.env.SMTP_TO;
+		if (internalEmail) {
+			try {
+				await sendBookingConfirmationEmail({
+					to: internalEmail,
+					guestName: booking.guestName || "Guest",
+					bookingId,
+					bookingType: booking.bookingType,
+					totalAmount: Number(booking.totalAmount),
+					currency: booking.currency || "INR",
+					roomTypeName: booking.room?.roomType?.name,
+					packageName: booking.visitPackage?.name,
+					checkIn: booking.checkIn,
+					checkOut: booking.checkOut,
+					visitDate: booking.visitDate,
+					roomsBooked: booking.roomsBooked,
+					guestList: Array.isArray(booking.guestList) ? booking.guestList : undefined,
+					internalCopy: true,
+				});
+			} catch (mailError) {
+				console.error("Internal booking email failed", mailError);
 			}
 		}
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 // import StayDetailsCard from '../StayDetailsCard'
 const Hero = () => {
@@ -55,17 +56,17 @@ const Hero = () => {
           Nature is Our <br /> Finest Luxury
         </p>
 
-        <p className="flex sm:hidden items-center font-semibold text-white sm:text-sm lg:text-xl 2xl:text-2xl z-200 absolute top-[25%]  max-w-[90%] px-6">
+        <p className="flex sm:hidden items-center font-semibold text-white sm:text-sm lg:text-xl 2xl:text-2xl z-10 absolute top-[25%]  max-w-[90%] px-6">
           &quot;Land’s End is a nature-rooted retreat where forests, silence, and stories bring people back to themselves.&quot;
         </p>
 
 
-        <p className="hidden sm:flex items-center font-semibold text-white sm:text-sm lg:text-xl 2xl:text-2xl z-20 absolute left-[10%] top-[36%] max-w-[20%] ">
+        <p className="hidden sm:flex items-center font-semibold text-white sm:text-sm lg:text-xl 2xl:text-2xl z-10 absolute left-[10%] top-[36%] max-w-[20%] ">
           &quot;Land’s End is a nature-rooted retreat where forests, silence, and stories bring people back to themselves.&quot;
         </p>
       </div>
         
-        <div className="w-[90%]  flex justify-center items-center absolute right-3 top-[60%]  h-[30%] z-10 ">
+        <div className="w-[90%] flex flex-col justify-center items-center absolute right-3 top-[60%] h-[30%] z-10">
           <Image 
             src={"/home/mobile-Home-text.svg"}
             alt=""
@@ -73,6 +74,18 @@ const Hero = () => {
             height={800}
             className="block sm:hidden object-contain"
           />
+          <div className="inline-block sm:hidden "> 
+
+          <Link
+            href="/booking"
+            className="mt-3  rounded-full border-2  border-green-400/80 px-12 py-2 text-md font-semibold text-white backdrop-blur-sm transition bg-green-400/50 hover:bg-green-400/10 shine-text"
+          >
+            <span className="">
+
+            Book an Experience Now
+            </span>
+          </Link>
+          </div>
         </div>
 
       <div className="hidden sm:block w-full h-[5vh] bg-black sm:h-[10vh] -mt-1" />

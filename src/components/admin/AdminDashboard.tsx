@@ -31,6 +31,7 @@ type RoomTypeApi = {
   extraPersonPrice: number;
   amenities: string[];
   totalRooms: number;
+  isSingleOccupancy?: boolean;
 };
 
 type RoomApi = {
@@ -204,6 +205,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
           extraPersonPrice: Number(item.extraPersonPrice || 0),
           amenities: item.amenities || [],
           totalRooms: Number(item.totalRooms || 0),
+          isSingleOccupancy: Boolean(item.isSingleOccupancy),
         }))
       );
 
@@ -322,6 +324,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
           extraPersonPrice: rt.extraPersonPrice,
           amenities: rt.amenities,
           totalRooms: rt.totalRooms,
+          isSingleOccupancy: rt.isSingleOccupancy,
         }),
       });
 

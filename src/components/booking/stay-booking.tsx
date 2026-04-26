@@ -38,6 +38,8 @@ type RoomTypeApi = {
   baseOccupancy: number;
   extraPersonPrice: number;
   amenities: string[];
+  totalRooms: number;
+  isSingleOccupancy?: boolean;
 };
 
 type MealPlanApi = {
@@ -67,8 +69,10 @@ export function StayBooking({ }: StayBookingProps) {
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [checkInDate, setCheckInDate] = useState('');
   const [checkOutDate, setCheckOutDate] = useState('');
+  const [roomsRequested, setRoomsRequested] = useState(1);
   const [baseGuests, setBaseGuests] = useState(1);
   const [extraGuests, setExtraGuests] = useState(0);
+  const [singleOccupancyGuests, setSingleOccupancyGuests] = useState(1);
   const [selectedMealPlanId, setSelectedMealPlanId] = useState<string | null>(null);
   const [availabilityChecked, setAvailabilityChecked] = useState(false);
   const [isAvailable, setIsAvailable] = useState(false);
@@ -146,6 +150,7 @@ export function StayBooking({ }: StayBookingProps) {
           checkIn: new Date(checkInDate).toISOString(),
           checkOut: new Date(checkOutDate).toISOString(),
           guests: totalGuests,
+          roomsRequested,
           mealPlanId: selectedMealPlanId,
         }),
       });
@@ -176,6 +181,7 @@ export function StayBooking({ }: StayBookingProps) {
           checkIn: new Date(checkInDate).toISOString(),
           checkOut: new Date(checkOutDate).toISOString(),
           guests: totalGuests,
+          roomsRequested,
           mealPlanId: selectedMealPlanId,
         }),
       });
@@ -197,31 +203,54 @@ export function StayBooking({ }: StayBookingProps) {
   };
 
   const selectedRoomData = roomTypes.find(r => r.id === selectedRoom);
+  const isSingleOccupancy = Boolean(selectedRoomData?.isSingleOccupancy);
   const baseOccupancy = selectedRoomData?.baseOccupancy || 1;
   const maxOccupancy = selectedRoomData?.maxOccupancy || baseOccupancy;
-  const maxExtraGuests = Math.max(0, maxOccupancy - baseOccupancy);
-  const effectiveBaseGuests = Math.min(Math.max(1, baseGuests), baseOccupancy);
-  const totalGuests = effectiveBaseGuests + extraGuests;
+  const maxRoomsForType = 20;
+  const effectiveRoomsRequested = isSingleOccupancy ? singleOccupancyGuests : Math.min(Math.max(1, roomsRequested), maxRoomsForType);
+  const includedBaseGuests = baseOccupancy * effectiveRoomsRequested;
+  const maxGuestsForRooms = maxOccupancy * effectiveRoomsRequested;
+  const maxExtraGuests = Math.max(0, maxGuestsForRooms - includedBaseGuests);
+  const effectiveBaseGuests = Math.min(Math.max(1, baseGuests), includedBaseGuests);
+  const maxSingleOccupancyGuests = maxRoomsForType;
+  const totalGuests = isSingleOccupancy ? singleOccupancyGuests : effectiveBaseGuests + extraGuests;
 
   useEffect(() => {
     setAvailabilityChecked(false);
     setIsAvailable(false);
-  }, [selectedRoom, checkInDate, checkOutDate, extraGuests, selectedMealPlanId]);
+  }, [selectedRoom, checkInDate, checkOutDate, extraGuests, selectedMealPlanId, singleOccupancyGuests, roomsRequested, baseGuests]);
 
   useEffect(() => {
+    setRoomsRequested(1);
     setBaseGuests(1);
     setExtraGuests(0);
+    setSingleOccupancyGuests(1);
   }, [selectedRoom]);
 
   useEffect(() => {
-    if (effectiveBaseGuests < baseOccupancy && extraGuests > 0) {
+    if (isSingleOccupancy) {
+      setExtraGuests(0);
+      setBaseGuests(1);
+    }
+  }, [isSingleOccupancy]);
+
+  useEffect(() => {
+    if (!isSingleOccupancy) {
+      setRoomsRequested((prev) => Math.min(Math.max(1, prev), maxRoomsForType));
+      setBaseGuests((prev) => Math.min(Math.max(1, prev), includedBaseGuests));
+    }
+  }, [isSingleOccupancy, maxRoomsForType, includedBaseGuests]);
+
+  useEffect(() => {
+    if (effectiveBaseGuests < includedBaseGuests && extraGuests > 0) {
       setExtraGuests(0);
     }
-  }, [effectiveBaseGuests, baseOccupancy, extraGuests]);
+  }, [effectiveBaseGuests, includedBaseGuests, extraGuests]);
 
   const nights = checkInDate && checkOutDate ? Math.max(1, Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24))) : 0;
-  const basePrice = selectedRoomData && nights ? selectedRoomData.basePrice * nights : 0;
-  const extraGuestAmount = selectedRoomData && nights
+  const roomsNeeded = isSingleOccupancy ? totalGuests : effectiveRoomsRequested;
+  const basePrice = selectedRoomData && nights ? selectedRoomData.basePrice * nights * roomsNeeded : 0;
+  const extraGuestAmount = selectedRoomData && nights && !isSingleOccupancy
     ? extraGuests * selectedRoomData.extraPersonPrice * nights
     : 0;
   const selectedMealPlan = mealPlans.find((plan) => plan.id === selectedMealPlanId) || null;
@@ -354,7 +383,9 @@ export function StayBooking({ }: StayBookingProps) {
                             </div>
                             <div className="flex items-center justify-between">
                               <span className="text-gray-600">
-                                Base occupancy {room.baseOccupancy} • Additional guests up to {Math.max(0, room.maxOccupancy - room.baseOccupancy)}
+                                {room.isSingleOccupancy
+                                  ? "Single occupancy room • book multiple rooms"
+                                  : `Base occupancy ${room.baseOccupancy} • Additional guests up to ${Math.max(0, room.maxOccupancy - room.baseOccupancy)}`}
                               </span>
                               <span className="text-gray-900 font-semibold">₹{room.basePrice.toLocaleString()}/night</span>
                             </div>
@@ -435,35 +466,83 @@ export function StayBooking({ }: StayBookingProps) {
 
                   <div className="col-span-2 md:col-span-1 rounded-xl border border-gray-200 bg-linear-to-br from-white to-blue-50 p-4 shadow-xs">
                     <div className="flex items-center justify-between">
-                      <p className="text-gray-600">Guests</p>
+                      <p className="text-gray-600">{isSingleOccupancy ? "Rooms" : "Guests"}</p>
                       <Users className="w-4 h-4 text-blue-700" />
                     </div>
-                    <p className="mt-2 text-sm text-gray-700">Base guests included: {baseOccupancy}</p>
+                    <p className="mt-2 text-sm text-gray-700">
+                      {isSingleOccupancy
+                        ? "Each guest books a separate room."
+                        : `Base guests included: ${includedBaseGuests} (${baseOccupancy} per room)`}
+                    </p>
+
+                    {!isSingleOccupancy && (
+                      <>
+                        <p className="mt-3 text-sm text-gray-600">Rooms</p>
+                        <div className="mt-2 flex items-center gap-3">
+                          <button
+                            type="button"
+                            onClick={() => setRoomsRequested((prev) => Math.max(1, prev - 1))}
+                            className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
+                            aria-label="Decrease rooms"
+                            disabled={effectiveRoomsRequested <= 1}
+                          >
+                            -
+                          </button>
+                          <div className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-gray-700">
+                            {effectiveRoomsRequested} {effectiveRoomsRequested === 1 ? 'room' : 'rooms'}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setRoomsRequested((prev) => Math.min(maxRoomsForType, prev + 1))}
+                            className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
+                            aria-label="Increase rooms"
+                            disabled={effectiveRoomsRequested >= maxRoomsForType}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <p className="mt-2 text-xs text-gray-500">Select required rooms. Availability will be verified for your dates.</p>
+                      </>
+                    )}
+
+                    {!isSingleOccupancy && <p className="mt-3 text-sm text-gray-600">Guests</p>}
                     <div className="mt-2 flex items-center gap-3">
                       <button
                         type="button"
-                        onClick={() => setBaseGuests((prev) => Math.max(1, prev - 1))}
+                        onClick={() =>
+                          isSingleOccupancy
+                            ? setSingleOccupancyGuests((prev) => Math.max(1, prev - 1))
+                            : setBaseGuests((prev) => Math.max(1, prev - 1))
+                        }
                         className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
                         aria-label="Decrease guests"
-                        disabled={effectiveBaseGuests <= 1}
+                        disabled={isSingleOccupancy ? singleOccupancyGuests <= 1 : effectiveBaseGuests <= 1}
                       >
                         -
                       </button>
                       <div className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-gray-700">
-                        {effectiveBaseGuests === 1 ? '1 guest' : `${effectiveBaseGuests} guests`}
+                        {isSingleOccupancy
+                          ? `${singleOccupancyGuests} ${singleOccupancyGuests === 1 ? "room" : "rooms"}`
+                          : effectiveBaseGuests === 1
+                          ? '1 guest'
+                          : `${effectiveBaseGuests} guests`}
                       </div>
                       <button
                         type="button"
-                        onClick={() => setBaseGuests((prev) => Math.min(baseOccupancy, prev + 1))}
+                        onClick={() =>
+                          isSingleOccupancy
+                            ? setSingleOccupancyGuests((prev) => Math.min(maxSingleOccupancyGuests, prev + 1))
+                            : setBaseGuests((prev) => Math.min(includedBaseGuests, prev + 1))
+                        }
                         className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
                         aria-label="Increase guests"
-                        disabled={effectiveBaseGuests >= baseOccupancy}
+                        disabled={isSingleOccupancy ? singleOccupancyGuests >= maxSingleOccupancyGuests : effectiveBaseGuests >= includedBaseGuests}
                       >
                         +
                       </button>
                     </div>
 
-                    {effectiveBaseGuests >= baseOccupancy && maxExtraGuests > 0 && (
+                    {!isSingleOccupancy && effectiveBaseGuests >= includedBaseGuests && maxExtraGuests > 0 && (
                       <>
                         <p className="mt-3 text-sm text-gray-600">Extra mattresses</p>
                         <div className="mt-2 flex items-center gap-3">
@@ -493,7 +572,9 @@ export function StayBooking({ }: StayBookingProps) {
                       </>
                     )}
 
-                    <p className="mt-2 text-xs text-gray-500">Max {maxOccupancy} guests for this room</p>
+                    {!isSingleOccupancy && (
+                      <p className="mt-2 text-xs text-gray-500">Max {maxGuestsForRooms} guests for {effectiveRoomsRequested} {effectiveRoomsRequested === 1 ? 'room' : 'rooms'}</p>
+                    )}
                     <p className="mt-2 text-sm font-semibold text-gray-900">Total guests: {totalGuests}</p>
                   </div>
                 </div>
@@ -580,7 +661,10 @@ export function StayBooking({ }: StayBookingProps) {
                       <h4 className="text-gray-900 mb-3">Price Details</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between text-gray-700">
-                          <span>Room ({nights} {nights === 1 ? 'night' : 'nights'})</span>
+                          <span>
+                            Room ({nights} {nights === 1 ? 'night' : 'nights'})
+                            {roomsNeeded > 1 ? ` x ${roomsNeeded}` : ''}
+                          </span>
                           <span>₹{basePrice.toLocaleString()}</span>
                         </div>
                         {mealPlanAmount > 0 && (

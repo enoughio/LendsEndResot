@@ -8,6 +8,7 @@ export type RoomType = {
   extraPersonPrice: number;
   amenities: string[];
   totalRooms: number;
+  isSingleOccupancy: boolean;
 };
 
 export type Room = {

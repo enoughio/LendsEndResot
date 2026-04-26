@@ -76,6 +76,12 @@ export default function BookingDetailsPage() {
 
   const [roomCharges, setRoomCharges] = useState(0);
   const [packageCharges, setPackageCharges] = useState(0);
+  const [mealPlanName, setMealPlanName] = useState<string | null>(null);
+  const [mealPlanAmount, setMealPlanAmount] = useState(0);
+  const [extraGuestAmount, setExtraGuestAmount] = useState(0);
+  const [guestsCount, setGuestsCount] = useState(1);
+  const [roomsBooked, setRoomsBooked] = useState(1);
+  const [guestDetails, setGuestDetails] = useState<Array<{ name: string; phone: string }>>([]);
   const [additionalActivities, setAdditionalActivities] = useState<
     Array<{ id: string; name: string; price: number }>
   >([]);
@@ -101,6 +107,11 @@ export default function BookingDetailsPage() {
         const bill = json?.data;
         setRoomCharges(Number(bill?.roomCharges || 0));
         setPackageCharges(Number(bill?.packageCharges || 0));
+        setMealPlanName(bill?.mealPlanName ?? null);
+        setMealPlanAmount(Number(bill?.mealPlanAmount || 0));
+        setExtraGuestAmount(Number(bill?.extraGuestAmount || 0));
+        setGuestsCount(Number(bill?.guests || 1));
+        setRoomsBooked(Number(bill?.roomsBooked || 1));
         setAdditionalActivities(
           (bill?.additionalActivities || []).map(
             (item: { id: string; name: string; price: number }) => ({
@@ -128,9 +139,23 @@ export default function BookingDetailsPage() {
     void loadBill();
   }, [bookingId]);
 
+  useEffect(() => {
+    setGuestDetails((prev) => {
+      const next = [...prev];
+      while (next.length < Math.max(guestsCount - 1, 0)) {
+        next.push({ name: "", phone: "" });
+      }
+      return next.slice(0, Math.max(guestsCount - 1, 0));
+    });
+  }, [guestsCount]);
+
+  const allGuestDetailsComplete = useMemo(() => {
+    return guestDetails.every((guest) => guest.name.trim() && guest.phone.trim());
+  }, [guestDetails]);
+
   const canPay = useMemo(() => {
-    return Boolean(fullName.trim() && email.trim() && phone.trim());
-  }, [fullName, email, phone]);
+    return Boolean(fullName.trim() && email.trim() && phone.trim() && allGuestDetailsComplete);
+  }, [fullName, email, phone, allGuestDetailsComplete]);
 
   // Step 1: Create Razorpay order from backend, Step 2: open checkout, Step 3: verify signature.
   const startCheckout = async () => {
@@ -149,6 +174,14 @@ export default function BookingDetailsPage() {
         .filter(Boolean)
         .join(" | ");
 
+      const guestList = [
+        { name: fullName.trim(), phone: phone.trim() },
+        ...guestDetails.map((guest) => ({
+          name: guest.name.trim(),
+          phone: guest.phone.trim(),
+        })),
+      ];
+
       const orderRes = await fetch(`/api/bookings/${bookingId}/pay`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -157,6 +190,7 @@ export default function BookingDetailsPage() {
           email,
           phone,
           specialRequest: finalSpecialRequest,
+          guestList,
         }),
       });
 
@@ -336,6 +370,77 @@ export default function BookingDetailsPage() {
                   className="min-h-24 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 outline-none transition-all focus:border-green-600 focus:ring-2 focus:ring-green-100"
                 />
               </div>
+
+              <div className="sm:col-span-2 rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-sm font-medium text-slate-800">Guest list</p>
+                  <p className="text-xs text-slate-600">
+                    {guestsCount} guests{roomsBooked > 1 ? ` • ${roomsBooked} rooms` : ""}
+                  </p>
+                </div>
+                <p className="mt-1 text-xs text-slate-600">
+                  Add the name and phone number for each guest traveling with you.
+                </p>
+
+                <div className="mt-4 space-y-3">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-xs text-slate-600">Guest 1 name</label>
+                      <input
+                        value={fullName}
+                        disabled
+                        className="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm text-slate-700"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1 block text-xs text-slate-600">Guest 1 phone</label>
+                      <input
+                        value={phone}
+                        disabled
+                        className="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm text-slate-700"
+                      />
+                    </div>
+                  </div>
+
+                  {guestDetails.map((guest, index) => {
+                    const guestIndex = index + 2;
+                    return (
+                      <div key={`guest-${guestIndex}`} className="grid gap-3 sm:grid-cols-2">
+                        <div>
+                          <label className="mb-1 block text-xs text-slate-600">Guest {guestIndex} name</label>
+                          <input
+                            value={guest.name}
+                            onChange={(e) =>
+                              setGuestDetails((prev) => {
+                                const next = [...prev];
+                                next[index] = { ...next[index], name: e.target.value };
+                                return next;
+                              })
+                            }
+                            placeholder="Enter guest name"
+                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition-all focus:border-green-600 focus:ring-2 focus:ring-green-100"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-xs text-slate-600">Guest {guestIndex} phone</label>
+                          <input
+                            value={guest.phone}
+                            onChange={(e) =>
+                              setGuestDetails((prev) => {
+                                const next = [...prev];
+                                next[index] = { ...next[index], phone: e.target.value };
+                                return next;
+                              })
+                            }
+                            placeholder="Enter phone number"
+                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition-all focus:border-green-600 focus:ring-2 focus:ring-green-100"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </section>
 
@@ -366,7 +471,9 @@ export default function BookingDetailsPage() {
                 )}
 
                 <div className="flex items-center justify-between text-slate-700">
-                  <span>Room Charges</span>
+                  <span>
+                    Room Charges{roomsBooked > 1 ? ` (${roomsBooked} rooms)` : ""}
+                  </span>
                   <span>{formatInr(roomCharges)}</span>
                 </div>
 
@@ -374,6 +481,20 @@ export default function BookingDetailsPage() {
                   <div className="flex items-center justify-between text-slate-700">
                     <span>Package Charges</span>
                     <span>{formatInr(packageCharges)}</span>
+                  </div>
+                )}
+
+                {mealPlanAmount > 0 && (
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Meal Plan{mealPlanName ? ` (${mealPlanName})` : ""}</span>
+                    <span>{formatInr(mealPlanAmount)}</span>
+                  </div>
+                )}
+
+                {extraGuestAmount > 0 && (
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Extra mattresses</span>
+                    <span>{formatInr(extraGuestAmount)}</span>
                   </div>
                 )}
 

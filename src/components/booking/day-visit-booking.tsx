@@ -141,7 +141,10 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
     }
   };
 
-  const totalPrice = basePrice * numGuests;
+  const selectedMealPlan = mealPlans.find((plan) => plan.id === selectedMealPlanId) || null;
+  const mealPlanAmount = selectedMealPlan ? selectedMealPlan.pricePerPerson * numGuests : 0;
+  const baseFare = basePrice * numGuests;
+  const totalPrice = baseFare + mealPlanAmount;
   const taxes = Math.floor(totalPrice * 0.05);
   const serviceFee = 100;
   const grandTotal = totalPrice + taxes + serviceFee;
@@ -283,7 +286,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
             {/* Meal Plan */}
             <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
               <h2 className="text-gray-900 mb-2 text-xl font-semibold">Meal Plan (Included)</h2>
-              <p className="text-gray-600 mb-4">Meal plan is mandatory and included in the visit package price.</p>
+              <p className="text-gray-600 mb-4">Meal plan is mandatory and added per guest.</p>
               <div className="grid gap-3 md:grid-cols-2">
                 {mealPlans.map((plan) => {
                   const isSelected = selectedMealPlanId === plan.id;
@@ -481,12 +484,12 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                 <div className="space-y-2">
                   <div className="flex justify-between text-gray-700">
                     <span>Base Fare ({numGuests} {numGuests === 1 ? 'guest' : 'guests'})</span>
-                    <span>₹{totalPrice.toLocaleString()}</span>
+                    <span>₹{baseFare.toLocaleString()}</span>
                   </div>
-                  {selectedMealPlanId && (
+                  {mealPlanAmount > 0 && (
                     <div className="flex justify-between text-gray-700">
-                      <span>Meal plan (included)</span>
-                      <span>₹0</span>
+                      <span>Meal plan</span>
+                      <span>₹{mealPlanAmount.toLocaleString()}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-gray-700">

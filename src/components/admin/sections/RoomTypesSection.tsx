@@ -35,6 +35,11 @@ export function RoomTypesSection({
                 <div>
                   <h3 className="text-white">{rt.name}</h3>
                   <p className="text-[#7bc67a] text-sm">₹{rt.basePrice.toLocaleString('en-IN')}<span className="text-stone-500">/night</span></p>
+                  {rt.isSingleOccupancy && (
+                    <span className="mt-2 inline-flex rounded-full bg-emerald-500/10 px-2 py-0.5 text-xs text-emerald-300">
+                      Single occupancy
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <button

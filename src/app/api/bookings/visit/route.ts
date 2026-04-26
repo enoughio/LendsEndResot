@@ -44,9 +44,10 @@ export async function POST(request: Request) {
     // later add promocode and discount options
     const packageAmount = Math.round(Number(visitPackage.basePrice));
     const baseAmount = packageAmount * guests;
+    const mealPlanAmount = Math.round(Number(mealPlan.pricePerPerson || 0) * guests);
     const { totalAmount, taxAmount } = buildPriceBreakdown({
       baseAmount,
-      mealPlanAmount: 0,
+      mealPlanAmount,
       extraGuestAmount: 0,
     });
 
@@ -65,7 +66,7 @@ export async function POST(request: Request) {
         currency: "INR",
         mealPlanId: mealPlan.id,
         mealPlanName: mealPlan.name,
-        mealPlanPrice: 0,
+        mealPlanPrice: Number(mealPlan.pricePerPerson || 0),
       },
     });
 

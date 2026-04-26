@@ -159,7 +159,7 @@ const facilitators = [
 
 export default function SumiranForestImmersionCampPage() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-100 via-amber-50 to-sky-100">
+    <div className="min-h-screen bg-linear-to-br from-emerald-100 via-amber-50 to-sky-100 ">
       <section className="relative overflow-hidden pt-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.25),transparent_60%)]" />
         <div className="absolute -top-24 left-6 h-48 w-48 rounded-full bg-amber-200/40 blur-3xl" />

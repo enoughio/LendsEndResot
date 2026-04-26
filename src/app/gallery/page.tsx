@@ -137,7 +137,7 @@ const COLLAGE_IMAGES: string[] = [
 // Tailwind classes rely on global config already in project.
 const CollagePage = () => {
   return (
-    <section className=" py-8 md:py-12 md:pb-0">
+    <section className=" py-8 pt-25 md:py-20 md:pb-0">
       <header className="mb-8 px-[3vw]">
         <h1 className="text-5xl md:text-6xl leading-tight">Gallery Collage</h1>
         <div className="mt-3 w-14 h-2 bg-[#067C0B]" />

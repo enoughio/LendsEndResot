@@ -42,6 +42,7 @@ export async function POST(request: Request) {
     const totalRooms = Number(body?.totalRooms ?? 0);
     const bedType = String(body?.bedType || "Standard").trim();
     const sizeSqft = String(body?.size_sqft || body?.sizeSqft || "N/A").trim();
+    const isSingleOccupancy = Boolean(body?.isSingleOccupancy);
 
     if (!name || !description || basePrice <= 0 || capacity <= 0 || amenities.length < 1) {
       return NextResponse.json(
@@ -50,25 +51,30 @@ export async function POST(request: Request) {
       );
     }
 
-    if (baseOccupancy < 1 || baseOccupancy > capacity) {
+    if (!isSingleOccupancy && (baseOccupancy < 1 || baseOccupancy > capacity)) {
       return NextResponse.json(
         { error: { code: "BAD_REQUEST", message: "baseOccupancy must be between 1 and capacity." } },
         { status: 400 }
       );
     }
 
+    const resolvedCapacity = isSingleOccupancy ? 1 : capacity;
+    const resolvedBaseOccupancy = isSingleOccupancy ? 1 : baseOccupancy;
+    const resolvedExtraPersonPrice = isSingleOccupancy ? 0 : Math.max(0, extraPersonPrice);
+
     const created = await prisma.roomType.create({
       data: {
         name,
         description,
         basePrice,
-        capacity,
-        baseOccupancy,
-        extraPersonPrice: Math.max(0, extraPersonPrice),
+        capacity: resolvedCapacity,
+        baseOccupancy: resolvedBaseOccupancy,
+        extraPersonPrice: resolvedExtraPersonPrice,
         amenities,
         totalRooms: Math.max(0, totalRooms),
         bedType,
         size_sqft: sizeSqft,
+        isSingleOccupancy,
       },
     });
 

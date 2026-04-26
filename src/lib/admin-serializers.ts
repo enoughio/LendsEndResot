@@ -23,6 +23,7 @@ export function toRoomTypeDto(roomType: RoomType, roomsCount?: number) {
     extraPersonPrice: Number(roomType.extraPersonPrice),
     amenities: roomType.amenities,
     totalRooms: typeof roomsCount === "number" ? roomsCount : roomType.totalRooms,
+    isSingleOccupancy: roomType.isSingleOccupancy,
   };
 }
 

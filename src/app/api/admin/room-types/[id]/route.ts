@@ -18,19 +18,34 @@ export async function PATCH(request: Request, { params }: Params) {
       return NextResponse.json({ error: { code: "NOT_FOUND", message: "Room type not found." } }, { status: 404 });
     }
 
+    const isSingleOccupancy = typeof body?.isSingleOccupancy === "boolean"
+      ? body.isSingleOccupancy
+      : existing.isSingleOccupancy;
+
+    const resolvedCapacity = isSingleOccupancy
+      ? 1
+      : body?.maxCapacity ?? body?.capacity ?? existing.capacity;
+    const resolvedBaseOccupancy = isSingleOccupancy
+      ? 1
+      : body?.baseOccupancy ?? body?.base_occupancy ?? existing.baseOccupancy;
+    const resolvedExtraPersonPrice = isSingleOccupancy
+      ? 0
+      : body?.extraPersonPrice ?? body?.extra_person_price ?? existing.extraPersonPrice;
+
     const updated = await prisma.roomType.update({
       where: { id },
       data: {
         name: body?.name ?? undefined,
         description: body?.description ?? undefined,
         basePrice: body?.basePrice ?? undefined,
-        capacity: body?.maxCapacity ?? body?.capacity ?? undefined,
-        baseOccupancy: body?.baseOccupancy ?? body?.base_occupancy ?? undefined,
-        extraPersonPrice: body?.extraPersonPrice ?? body?.extra_person_price ?? undefined,
+        capacity: resolvedCapacity,
+        baseOccupancy: resolvedBaseOccupancy,
+        extraPersonPrice: resolvedExtraPersonPrice,
         amenities: Array.isArray(body?.amenities) ? body.amenities : undefined,
         totalRooms: typeof body?.totalRooms === "number" ? body.totalRooms : undefined,
         bedType: body?.bedType ?? undefined,
         size_sqft: body?.size_sqft ?? body?.sizeSqft ?? undefined,
+        isSingleOccupancy,
       },
     });
 

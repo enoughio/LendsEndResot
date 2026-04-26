@@ -22,6 +22,7 @@ export function RoomTypeModal({
       extraPersonPrice: 0,
       amenities: [],
       totalRooms: 0,
+      isSingleOccupancy: false,
     }
   );
   const [amenityInput, setAmenityInput] = useState('');
@@ -83,6 +84,7 @@ export function RoomTypeModal({
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]"
                 value={form.maxOccupancy}
                 onChange={e => setForm(f => ({ ...f, maxOccupancy: Number(e.target.value) }))}
+                disabled={form.isSingleOccupancy}
               />
             </div>
             <div>
@@ -92,6 +94,7 @@ export function RoomTypeModal({
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]"
                 value={form.baseOccupancy}
                 onChange={e => setForm(f => ({ ...f, baseOccupancy: Number(e.target.value) }))}
+                disabled={form.isSingleOccupancy}
               />
             </div>
             <div>
@@ -101,8 +104,29 @@ export function RoomTypeModal({
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]"
                 value={form.extraPersonPrice}
                 onChange={e => setForm(f => ({ ...f, extraPersonPrice: Number(e.target.value) }))}
+                disabled={form.isSingleOccupancy}
               />
             </div>
+          </div>
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+            <label className="flex items-center justify-between gap-3 text-sm text-stone-200">
+              <span>Single-occupancy room (no extra mattresses)</span>
+              <input
+                type="checkbox"
+                checked={form.isSingleOccupancy}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    isSingleOccupancy: e.target.checked,
+                    maxOccupancy: e.target.checked ? 1 : prev.maxOccupancy,
+                    baseOccupancy: e.target.checked ? 1 : prev.baseOccupancy,
+                    extraPersonPrice: e.target.checked ? 0 : prev.extraPersonPrice,
+                  }))
+                }
+                className="h-4 w-4 accent-emerald-500"
+              />
+            </label>
+            <p className="mt-2 text-xs text-stone-400">If enabled, each guest books a separate room for this type.</p>
           </div>
           <div>
             <label className="text-stone-400 text-xs uppercase tracking-widest block mb-2">Amenities</label>

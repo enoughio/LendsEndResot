@@ -12,6 +12,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const roomTypeId = String(body?.roomTypeId || "").trim();
     const guests = Number(body?.guests || 0);
+    const roomsRequested = Math.max(1, Number(body?.roomsRequested || 1));
     const checkIn = parseDate(body?.checkIn);
     const checkOut = parseDate(body?.checkOut);
     const mealPlanId = body?.mealPlanId ? String(body.mealPlanId) : null;
@@ -51,7 +52,8 @@ export async function POST(request: Request) {
       );
     }
 
-    if (guests > roomType.capacity) {
+    const roomsNeeded = roomType.isSingleOccupancy ? guests : roomsRequested;
+    if (!roomType.isSingleOccupancy && guests > roomType.capacity * roomsNeeded) {
       return NextResponse.json(
         { error: { code: "BAD_REQUEST", message: "Guests exceed max occupancy for this room type." } },
         { status: 400 }
@@ -59,12 +61,33 @@ export async function POST(request: Request) {
     }
 
     const availableCount = await getAvailableRoomCount({ roomTypeId, checkIn, checkOut });
-    const available = availableCount > 0;
+    const available = availableCount >= roomsNeeded;
+
+    if (!available) {
+      return NextResponse.json(
+        {
+          error: {
+            code: "CONFLICT",
+            message: `Only ${availableCount} room(s) available for selected dates, but ${roomsNeeded} requested.`,
+          },
+          data: {
+            available: false,
+            availableCount,
+            roomsNeeded,
+          },
+        },
+        { status: 409 }
+      );
+    }
 
     const nights = calculateNights(checkIn, checkOut);
-    const roomBaseAmount = Math.round(Number(roomType.basePrice) * nights);
-    const extraGuestCount = Math.max(0, guests - Number(roomType.baseOccupancy || 0));
-    const extraGuestAmount = Math.round(Number(roomType.extraPersonPrice || 0) * extraGuestCount * nights);
+    const roomBaseAmount = Math.round(Number(roomType.basePrice) * nights * roomsNeeded);
+    const extraGuestCount = roomType.isSingleOccupancy
+      ? 0
+      : Math.max(0, guests - Number(roomType.baseOccupancy || 0) * roomsNeeded);
+    const extraGuestAmount = roomType.isSingleOccupancy
+      ? 0
+      : Math.round(Number(roomType.extraPersonPrice || 0) * extraGuestCount * nights);
     const mealPlanAmount = Math.round(Number(mealPlan.pricePerPerson || 0) * guests * nights);
     const priceBreakdown = buildPriceBreakdown({
       baseAmount: roomBaseAmount,
@@ -76,6 +99,7 @@ export async function POST(request: Request) {
       data: {
         available,
         availableCount,
+        roomsNeeded,
         priceBreakdown,
       },
     });

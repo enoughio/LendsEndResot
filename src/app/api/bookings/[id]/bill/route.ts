@@ -19,6 +19,12 @@ export async function GET(_req: Request, { params }: Params) {
                 bookingType: true,
                 checkIn: true,
                 checkOut: true,
+                guests: true,
+                roomsBooked: true,
+                mealPlanName: true,
+                mealPlanPrice: true,
+                extraGuestCount: true,
+                extraGuestPrice: true,
                 visitPackage: {
                     select: {
                         basePrice: true,
@@ -56,16 +62,25 @@ export async function GET(_req: Request, { params }: Params) {
             );
     }
 
-        const roomBasePrice = Number(booking.room?.roomType?.basePrice || 0);
-        const packageBasePrice = Number(booking.visitPackage?.basePrice || 0);
+                const roomBasePrice = Number(booking.room?.roomType?.basePrice || 0);
+                const packageBasePrice = Number(booking.visitPackage?.basePrice || 0);
+                const guests = Number(booking.guests || 1);
+                const roomsBooked = Number(booking.roomsBooked || 1);
+                const mealPlanRate = Number(booking.mealPlanPrice || 0);
 
         const nights =
             booking.bookingType === "STAY" && booking.checkIn && booking.checkOut
                 ? calculateNights(new Date(booking.checkIn), new Date(booking.checkOut))
                 : 0;
 
-        const roomCharges = booking.bookingType === "STAY" ? roomBasePrice * nights : 0;
-        const packageCharges = booking.bookingType === "VISIT" ? packageBasePrice : 0;
+                const roomCharges = booking.bookingType === "STAY" ? roomBasePrice * nights * roomsBooked : 0;
+                const packageCharges = booking.bookingType === "VISIT" ? packageBasePrice * guests : 0;
+                const mealPlanAmount = booking.bookingType === "STAY"
+                    ? mealPlanRate * guests * nights
+                    : mealPlanRate * guests;
+                const extraGuestAmount = booking.bookingType === "STAY"
+                    ? Number(booking.extraGuestCount || 0) * Number(booking.extraGuestPrice || 0) * nights
+                    : 0;
 
         const activityList = booking.bookingActivities.map((item) => ({
             id: item.activity.id,
@@ -78,13 +93,18 @@ export async function GET(_req: Request, { params }: Params) {
         const additionalActivities = activityList.filter((a) => a.type === "ADDITIONAL");
         const additionalActivitiesAmount = additionalActivities.reduce((sum, a) => sum + a.price, 0);
 
-        const subTotal = roomCharges + packageCharges + additionalActivitiesAmount;
+        const subTotal = roomCharges + packageCharges + mealPlanAmount + extraGuestAmount + additionalActivitiesAmount;
         const taxAmount = Math.round(subTotal * 0.05);
         const totalAmount = subTotal + taxAmount;
 
     const billData = {
             roomCharges,
             packageCharges,
+            roomsBooked,
+            guests,
+            mealPlanName: booking.mealPlanName,
+            mealPlanAmount,
+            extraGuestAmount,
             complimentaryActivityCount: complimentaryActivities.length,
             complimentaryActivities,
             additionalActivities,

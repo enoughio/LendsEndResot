@@ -94,6 +94,7 @@ model RoomType {
   size_sqft String
   amenities String[]
   totalRooms Int @default(0)
+  isSingleOccupancy Boolean @default(false)
     //opposite relation
   rooms Room[]
 }
@@ -176,6 +177,7 @@ model Booking {
   checkOut DateTime?
 
   guests Int @default(1)
+  roomsBooked Int @default(1)
   bookingType BookingType @default(STAY)
   status BookingStatus @default(PENDING)
   visitDate DateTime?
@@ -194,6 +196,7 @@ model Booking {
   mealPlanPrice Float @default(0)
   extraGuestCount Int @default(0)
   extraGuestPrice Float @default(0)
+  guestList Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

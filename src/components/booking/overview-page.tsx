@@ -23,6 +23,7 @@ type RoomTypeApi = {
   name: string;
   description: string;
   basePrice: number;
+  isSingleOccupancy?: boolean;
 };
 
 type ActivityApi = {
@@ -401,6 +402,11 @@ export function OverviewPage() {
                       {room.name}
                     </h5>
                     <p className="text-gray-600 mb-2">{room.description}</p>
+                    {room.isSingleOccupancy && (
+                      <span className="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700">
+                        Single occupancy
+                      </span>
+                    )}
                     <span className="text-gray-900">
                       ₹{room.basePrice.toLocaleString()}/night
                     </span>
@@ -490,7 +496,7 @@ export function OverviewPage() {
                 className="border-b border-gray-200 pb-6 last:border-b-0"
               >
                 <div className="flex items-start gap-3 sm:gap-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full shrink-0"></div>
+                  <div className="w-10 h-10 bg-linear-to-br from-gray-300 to-gray-400 rounded-full shrink-0"></div>
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
                       <h4 className="text-gray-900">{review.name}</h4>

@@ -13,6 +13,9 @@ type BookingConfirmationInput = {
   checkIn?: Date | null;
   checkOut?: Date | null;
   visitDate?: Date | null;
+  roomsBooked?: number | null;
+  guestList?: Array<{ name: string; phone: string }>;
+  internalCopy?: boolean;
 };
 
 function formatAmount(value: number, currency: string) {
@@ -71,7 +74,7 @@ export async function sendBookingConfirmationEmail(input: BookingConfirmationInp
 
   const bookingLine =
     input.bookingType === "STAY"
-      ? `Stay: ${input.roomTypeName || "Room"} (${formatDate(input.checkIn)} to ${formatDate(input.checkOut)})`
+      ? `Stay: ${input.roomTypeName || "Room"} (${formatDate(input.checkIn)} to ${formatDate(input.checkOut)})${input.roomsBooked && input.roomsBooked > 1 ? ` • ${input.roomsBooked} rooms` : ""}`
       : `Visit: ${input.packageName || "Package"} on ${formatDate(input.visitDate)}`;
 
   const baseUrl = getBaseUrl();
@@ -89,19 +92,31 @@ export async function sendBookingConfirmationEmail(input: BookingConfirmationInp
   const amountPaid = formatAmount(input.totalAmount, input.currency);
   const safeAmountPaid = escapeHtml(amountPaid);
   const bookingTypeLabel = input.bookingType === "STAY" ? "Stay" : "Visit";
+  const guestList = (input.guestList || []).filter((guest) => guest.name && guest.phone);
+  const guestListText = guestList.length
+    ? guestList.map((guest, index) => `${index + 1}. ${guest.name} (${guest.phone})`).join("\n")
+    : "";
+  const guestListHtml = guestList.length
+    ? guestList
+        .map((guest, index) => `<li style="margin:0 0 6px 0;">${escapeHtml(`${index + 1}. ${guest.name} (${guest.phone})`)}</li>`)
+        .join("")
+    : "";
+  const subjectPrefix = input.internalCopy ? "New Booking" : "Booking Confirmed";
+  const greetingName = input.internalCopy ? "Team" : safeGuestName;
 
   await transporter.sendMail({
     from: `Land's End Resort at Sumiran <${fromEmail}>`,
     replyTo: supportEmail,
     to: input.to,
-    subject: `Booking Confirmed - ${input.bookingId}`,
-    text: `Hi ${input.guestName},
+    subject: `${subjectPrefix} - ${input.bookingId}`,
+    text: `Hi ${input.internalCopy ? "Team" : input.guestName},
 
 Your booking has been confirmed.
 
 Booking Reference: ${input.bookingId}
 ${bookingTypeLabel} Details: ${bookingLine}
 Amount Paid: ${amountPaid}
+  ${guestListText ? `\nGuest List:\n${guestListText}\n` : ""}
 
 View booking details: ${bookingDetailsUrl}
 
@@ -132,9 +147,9 @@ Thank you for choosing Land's End Resort at Sumiran.
 
                 <tr>
                   <td style="padding:24px;">
-                    <p style="margin:0 0 14px 0;font-size:15px;line-height:1.6;">Hi ${safeGuestName},</p>
+                    <p style="margin:0 0 14px 0;font-size:15px;line-height:1.6;">Hi ${greetingName},</p>
                     <p style="margin:0 0 18px 0;font-size:15px;line-height:1.6;color:#334155;">
-                      Thank you for choosing <strong>Land's End Resort at Sumiran</strong>. Your booking has been successfully confirmed.
+                      ${input.internalCopy ? "A new booking has been confirmed." : "Thank you for choosing <strong>Land's End Resort at Sumiran</strong>. Your booking has been successfully confirmed."}
                     </p>
 
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#f8fafc;margin-bottom:18px;">
@@ -152,6 +167,18 @@ Thank you for choosing Land's End Resort at Sumiran.
                       </tr>
                     </table>
 
+                    ${guestListHtml ? `
+                      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#ffffff;margin-bottom:18px;">
+                        <tr>
+                          <td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;font-weight:600;">Guest List</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:12px 16px;font-size:14px;line-height:1.7;color:#334155;">
+                            <ul style="margin:0;padding-left:18px;">${guestListHtml}</ul>
+                          </td>
+                        </tr>
+                      </table>
+                    ` : ""}
                     <p style="margin:0 0 18px 0;">
                       <a href="${bookingDetailsUrl}" style="display:inline-block;background:#16a34a;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:600;font-size:14px;">View Booking Details</a>
                     </p>

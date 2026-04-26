@@ -58,12 +58,11 @@ export async function getAvailableRoomCount({ roomTypeId, checkIn, checkOut }: S
     },
   });
 
-  const overlappingBookedRooms = await prisma.booking.count({
+  const overlappingBookedRooms = await prisma.booking.aggregate({
     where: {
       deletedAt: null,  // active  rooms only
       bookingType: "STAY",
       status: "CONFIRMED",
-      roomId: { not: null },  // valid booking
       room: {
         roomTypeId : roomTypeId,
       },
@@ -74,7 +73,9 @@ export async function getAvailableRoomCount({ roomTypeId, checkIn, checkOut }: S
         ],
       },
     },
+    _sum: { roomsBooked: true },
   });
 
-  return Math.max(0, totalRooms - overlappingBookedRooms);
+  const bookedCount = Number(overlappingBookedRooms._sum.roomsBooked || 0);
+  return Math.max(0, totalRooms - bookedCount);
 }

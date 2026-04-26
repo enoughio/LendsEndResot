@@ -14,6 +14,7 @@ const NavBaR = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavVisible, setIsNavVisible] = useState(true);
   const lastScrollYRef = useRef(0);
+  const menuId = "primary-navigation";
 
   useEffect(() => {
     const onScroll = () => {
@@ -45,7 +46,7 @@ const NavBaR = () => {
 
   return (
     <nav
-      className={`max-w-[99vw] h-12 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 justify-between ml-auto sm:justify-end items-center text-white bg-black/20 backdrop-blur-sm shadow-md transition-transform duration-300 ${
+      className={`max-w-[99vw] h-16 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 justify-between ml-auto sm:justify-end items-center text-white bg-black/20 backdrop-blur-sm shadow-md transition-transform duration-300 ${
         isNavVisible || isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -67,6 +68,8 @@ const NavBaR = () => {
           onClick={() => setIsMobileMenuOpen(true)}
           className="ml-auto cursor-pointer block sm:hidden z-[1100]"
           aria-label="Open menu"
+          aria-expanded={isMobileMenuOpen}
+          aria-controls={menuId}
         >
           <Image
             src="/icons/menuicon.svg"
@@ -87,25 +90,28 @@ const NavBaR = () => {
 
         {/* Sidebar / Links */}
         <div
-          className="
+          id={menuId}
+          aria-hidden={!isMobileMenuOpen}
+          className={`
             links-container
-            fixed top-0 right-0 z-[1000]
+            fixed top-0 right-0 z-[1000000]
             h-screen sm:h-17
             w-[75%] sm:w-full sm:max-w-none
             sm:bg-transparent
-            bg-black/90            
+            bg-black           
             shadow-2xl rounded-l-2xl
             p-3 sm:p-0 sm:pr-7
+
 
             flex flex-col sm:flex-row sm:gap-14
             items-start sm:items-center
             justify-start sm:justify-between
 
             transform transition-transform duration-300 ease-in-out
-            translate-x-full
-            sm:translate-x-0 sm:static sm:rounded-none 
-          "
-          style={{ transform: isMobileMenuOpen ? "translateX(0)" : undefined }}
+            sm:translate-x-0 sm:static sm:rounded-none
+            sm:pointer-events-auto
+            ${isMobileMenuOpen ? "translate-x-0 pointer-events-auto" : "translate-x-full pointer-events-none"}
+          `}
         >
           {/* Close icon */}
           <button
@@ -167,14 +173,14 @@ const NavBaR = () => {
             <Link
               href="/booking"
               onClick={closeMobileMenu}
-              className="border-2 border-green-300 p-3 rounded-full bg00 text-white px-6 cursor-pointer hover:bg-green-500 transition w-full sm:w-auto text-center"
+              className="rounded-full border-2  border-green-400/80 px-10 py-2 text-md font-semibold text-white backdrop-blur-sm transition bg-green-400/50 hover:bg-green-400/10 shine-text"
             >
               Book Now
             </Link>
             <Link
               href="/contact"
               onClick={closeMobileMenu}
-              className="border-2 border-gray-200 p-3 rounded-full bg-white text-black px-6 cursor-pointer hover:bg-gray-200 transition w-full sm:w-auto text-center"
+              className="border-2 border-gray-200 px-10 py-2 rounded-full bg-white text-black cursor-pointer hover:bg-gray-200 transition w-full sm:w-auto text-center"
             >
               Contact Us
             </Link>

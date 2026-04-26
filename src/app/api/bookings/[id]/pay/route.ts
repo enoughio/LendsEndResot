@@ -16,6 +16,7 @@ export async function POST(request: Request, { params }: Params) {
     const phone = String(body?.phone || "").trim();
     const email = String(body?.email || "").trim();
     const specialRequest = String(body?.specialRequest || "").trim();
+    const guestListInput = Array.isArray(body?.guestList) ? body.guestList : [];
 
     if (!name || !email || !phone) {
       return NextResponse.json(
@@ -29,6 +30,20 @@ export async function POST(request: Request, { params }: Params) {
       return NextResponse.json(
         { error: { code: "NOT_FOUND", message: "Booking not found." } },
         { status: 404 }
+      );
+    }
+
+    const guestList = guestListInput
+      .map((guest: { name?: string; phone?: string }) => ({
+        name: String(guest?.name || "").trim(),
+        phone: String(guest?.phone || "").trim(),
+      }))
+      .filter((guest: { name: string; phone: string }) => guest.name && guest.phone);
+
+    if (guestList.length !== Math.max(1, Number(existing.guests || 1))) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: "Guest list must include each guest name and phone." } },
+        { status: 400 }
       );
     }
 
@@ -53,6 +68,7 @@ export async function POST(request: Request, { params }: Params) {
         guestEmail: email,
         guestPhone: phone,
         specialRequest,
+        guestList,
         razorPayOrderId: order.id,
       },
     });

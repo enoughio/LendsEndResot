@@ -250,6 +250,8 @@ Whether you're a beginner or a passionate sky-watcher, this experience offers a 
   time: "Weekend Retreat",
   location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
   price: "Contact for details",
+  registrationLink: "https://rzp.io/rzp/c7GlaAb",
+  contact: ["landsend.sumiran@gmail.com", "+91 6268244196", "+91 8871317382"],
   includes: [
     "Guided stargazing with telescopes",
     "Storytelling sessions",
@@ -270,7 +272,7 @@ Whether you're a beginner or a passionate sky-watcher, this experience offers a 
 Set in the peaceful environment of Sumiran Forest, this workshop introduces the core principles of Reiki — energy healing, balance, and self-awareness.
 
 Participants will gain practical knowledge, attunement, and a deeper connection with their own healing capabilities.`,
-  images: ["/gallery/workshop1.jpg", "/gallery/healing.jpg"],
+  images: ["/gallery/mediation.jpeg", "/gallery/lake_View.jpeg"],
   startDate: "2026-05-09",
   endDate: "2026-05-10",
   time: "09:00 AM — 05:00 PM",
@@ -296,7 +298,7 @@ Participants will gain practical knowledge, attunement, and a deeper connection 
 Through breathwork, yoga, mindfulness, and nature therapy, participants will learn how to reduce dependency on medication and build a sustainable, healthy lifestyle.
 
 This retreat is ideal for those dealing with stress, lifestyle conditions, or seeking a deeper connection with their body and mind.`,
-  images: ["/gallery/yoga.jpg", "/gallery/kids.jpeg"],
+  images: ["/gallery/yoga.jpeg", "/gallery/kids.jpeg"],
   startDate: "2026-05-20",
   endDate: "2026-05-24",
   time: "5 Days / 4 Nights",

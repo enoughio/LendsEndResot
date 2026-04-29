@@ -125,6 +125,10 @@ const venueFacts = [
   { icon: "🌲", label: "Setting", val: "Forest property with open-air spaces for dining & stargazing" },
 ];
 
+const paymentLink = "https://rzp.io/rzp/c7GlaAb";
+const contactEmail = "landsend.sumiran@gmail.com";
+const contactPhones = ["+91 6268244196", "+91 8871317382"];
+
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function StarryNights() {
   const [stickyVisible, setStickyVisible] = useState(false);
@@ -292,12 +296,14 @@ export default function StarryNights() {
         <div id="book" className="payment-box">
           <div className="section-label" style={{ justifyContent: "center", marginBottom: 16 }}>Payment</div>
           <p className="payment-desc">To confirm your booking, complete payment below or write to us directly.</p>
-          <a href="PAYMENT_LINK_HERE" className="btn-primary" style={{ display: "inline-block" }}>Proceed to Payment →</a>
+          <a href={paymentLink} className="btn-primary" style={{ display: "inline-block" }} target="_blank" rel="noreferrer">Proceed to Payment →</a>
           <p className="payment-contact">
             Queries? Write to{" "}
-            <a href="mailto:CONTACT@EMAIL.COM">CONTACT@EMAIL.COM</a>
+            <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
             {" · "}
-            <a href="tel:+91XXXXXXXXXX">+91-XXXXXXXXXX</a>
+            <a href={`tel:${contactPhones[0].replace(/\s+/g, "")}`}>{contactPhones[0]}</a>
+            {" · "}
+            <a href={`tel:${contactPhones[1].replace(/\s+/g, "")}`}>{contactPhones[1]}</a>
           </p>
         </div>
       </section>
@@ -352,9 +358,11 @@ export default function StarryNights() {
         <div className="footer-sub">2–3 May 2026 · Land&apos;s End, Sumiran Forest</div>
         <div className="footer-contact">
           Questions? Write to{" "}
-          <a href="mailto:CONTACT@EMAIL.COM">CONTACT@EMAIL.COM</a>
+          <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
           &nbsp;·&nbsp;
-          Call <a href="tel:+91XXXXXXXXXX">+91-XXXXXXXXXX</a>
+          Call <a href={`tel:${contactPhones[0].replace(/\s+/g, "")}`}>{contactPhones[0]}</a>
+          &nbsp;·&nbsp;
+          <a href={`tel:${contactPhones[1].replace(/\s+/g, "")}`}>{contactPhones[1]}</a>
         </div>
         <div className="footer-bottom">© 2026 Bharat Storytellers Foundation &amp; Astrophiles India Club · All rights reserved</div>
         <div className="footer-credit">Hero image: <em>The Starry Night</em> (1889) by Vincent van Gogh · Public Domain · Museum of Modern Art, New York</div>

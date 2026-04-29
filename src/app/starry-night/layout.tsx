@@ -9,7 +9,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata = {
-  title: "Test — Starry Nights",
+  title: "Starry Nights - A night of stars and Storytelling",
 };
 
 export default function RootLayout({

@@ -13,6 +13,9 @@ export default function EventRibbon() {
     "/events/sumiran-forest-immersion-camp-2026",
   ];
 
+  // Only show ribbon on the main pages
+  const allowedPaths = ["/", "/about", "/gallery"];
+
   useEffect(() => {
     setIsVisible(true);
   }, []);
@@ -21,7 +24,9 @@ export default function EventRibbon() {
     setIsVisible(false);
   };
 
-  if (!isVisible || hiddenPaths.includes(pathname)) return null;
+  if (!isVisible) return null;
+  if (!pathname) return null;
+  if (!allowedPaths.includes(pathname) || hiddenPaths.includes(pathname)) return null;
 
   return (
     <div className="fixed top-12 sm:top-17 left-0 right-0 z-20 flex justify-between md:justify-center px-1">

@@ -46,7 +46,7 @@ const NavBaR = () => {
 
   return (
     <nav
-      className={`max-w-[99vw] h-16 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 justify-between ml-auto sm:justify-end items-center text-white bg-black/20 backdrop-blur-sm shadow-md transition-transform duration-300 ${
+      className={`max-w-[99vw] h-16 sm:h-17 w-full fixed rounded-b-3xl z-30 flex px-3 py-1 justify-between ml-auto sm:justify-end items-center text-white bg-black/20 backdrop-blur-sm shadow-md transition-transform duration-300 ${
         isNavVisible || isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
       }`}
     >

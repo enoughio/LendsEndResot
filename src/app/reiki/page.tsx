@@ -66,9 +66,7 @@ export default function ReikiWorkshopPage() {
 
   return (
     <div className={`${fontVars} bg-[#f5ede0] text-[#2c1f0e] overflow-x-hidden`}>
-
-
-
+      
       {/* HERO */}
       <div className="relative min-h-screen bg-[#0d2014] flex flex-col items-center justify-center overflow-hidden">
 
@@ -98,6 +96,7 @@ export default function ReikiWorkshopPage() {
             heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
+
           {/* Venue */}
           <p className="font-cinzel text-[13px] tracking-[5px] text-[#b89b4e] uppercase mb-7">
             Land&apos;s End – The Last Resort&nbsp;&nbsp;·&nbsp;&nbsp;Sumiran Forest&nbsp;&nbsp;·&nbsp;&nbsp;1 hr from Bhopal
@@ -110,6 +109,7 @@ export default function ReikiWorkshopPage() {
           >
             REIKI
           </h1>
+
           <p
             className="font-cinzel text-[rgba(232,213,160,0.6)] tracking-[12px] mb-5"
             style={{ fontSize: "clamp(13px,2.5vw,22px)" }}

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Fotter from "@/components/Fotter";
 import { events } from "@/data/events";
 
@@ -19,6 +19,11 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
   const p = (await params) as { slug: string };
   const event = events.find((e) => e.slug === p.slug);
   if (!event) return notFound();
+
+  // Redirect to custom page if event has one
+  if (event.customPagePath) {
+    redirect(event.customPagePath);
+  }
 
   return (
     <div className="min-h-screen bg-white">

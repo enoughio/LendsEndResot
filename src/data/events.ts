@@ -20,6 +20,7 @@ export type Event = {
   excludes?: string[];
   whoFor?: string[];
   sections?: { title: string; paragraphs?: string[]; bullets?: string[] }[];
+  customPagePath?: string;
 };
 
 export const events: Event[] = [
@@ -113,6 +114,7 @@ export const events: Event[] = [
   {
     id: "4",
     slug: "sumiran-forest-immersion-camp-2026",
+    customPagePath: "/sumiran-forest-immersion-camp",
     title: "Sumiran Forest Residential Camp",
     shortDescription:
       "Residential summer camp (ages 10-16) with adventure, learning, and nature immersion in Sumiran Forest.",
@@ -235,6 +237,7 @@ The camp blends adventure, hands-on learning, creative expression, and community
   {
   id: "5",
   slug: "starry-nights-retreat-2026",
+  customPagePath: "/starry-night",
   title: "Starry Nights: Stargazing & Storytelling Retreat",
   shortDescription:
     "A weekend retreat of stargazing, storytelling, and forest immersion under the night sky.",
@@ -263,6 +266,8 @@ Whether you're a beginner or a passionate sky-watcher, this experience offers a 
 {
   id: "6",
   slug: "reiki-level-1-workshop-2026",
+  registrationLink: "https://rzp.io/rzp/8AloDe1",
+  customPagePath: "/reiki",
   title: "Reiki Level 1 Workshop",
   shortDescription:
     "Learn the foundations of Reiki healing with international Reiki Master Paula Horan.",

@@ -130,7 +130,7 @@ const contactEmail = "landsend.sumiran@gmail.com";
 const contactPhones = ["+91 6268244196", "+91 8871317382"];
 
 // ─── Main component ───────────────────────────────────────────────────────────
-export default function StarryNights() {
+export default function StarryNight() {
   const [stickyVisible, setStickyVisible] = useState(false);
 
   // Load Google Fonts
@@ -169,7 +169,7 @@ export default function StarryNights() {
             Astrophiles India Club
             <span className="dot" />
           </div>
-          <h1 className="hero-title"><em>Starry</em> Nights</h1>
+          <h1 className="hero-title"><em>Starry</em> Night</h1>
           <p className="hero-sub">Telescopic Stargazing &amp; Storytelling Retreat</p>
           <div className="hero-meta">
             <div className="meta-item">
@@ -354,7 +354,7 @@ export default function StarryNights() {
       {/* ── FOOTER ── */}
       <footer>
         <StarField count={40} className="section-stars" />
-        <div className="footer-title"><em>Starry Nights</em> Retreat</div>
+        <div className="footer-title"><em>Starry Night</em> Retreat</div>
         <div className="footer-sub">2–3 May 2026 · Land&apos;s End, Sumiran Forest</div>
         <div className="footer-contact">
           Questions? Write to{" "}

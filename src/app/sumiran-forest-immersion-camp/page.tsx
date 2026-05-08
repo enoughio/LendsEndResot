@@ -12,8 +12,8 @@ const GROUP_PHONE = '8871317382';
 
 const BATCHES = [
   { num: 'Batch 1 · Limited', dates: '14 – 17 May 2026', tag: '⚡ 15 Seats Only', tag2 : "Filling fast", hot: true },
-  { num: 'Batch 2', dates: '28 – 31 May 2026', tag: '20–25 Seats', tag2 : "Filling fast" , hot: false },
-  { num: 'Batch 3', dates: '4 – 7 June 2026', tag: '20–25 Seats', tag3 : "Booking Closed", hot: false },
+  { num: 'Batch 2', dates: '28 – 31 May 2026', tag: '20–25 Seats', tag3 : "Booking Closed", hot: false },
+  { num: 'Batch 3', dates: '4 – 7 June 2026', tag: '20–25 Seats', tag2 : "Filling fast", hot: false },
 ];
 
 const EXPERIENCES = [

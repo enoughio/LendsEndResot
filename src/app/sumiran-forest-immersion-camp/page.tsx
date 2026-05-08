@@ -4,6 +4,7 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import StatusBadge from '@/components/StatusBadge';
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const REG_LINK = 'https://rzp.io/rzp/fnnrvFkZ';
@@ -12,7 +13,7 @@ const GROUP_PHONE = '8871317382';
 const BATCHES = [
   { num: 'Batch 1 · Limited', dates: '14 – 17 May 2026', tag: '⚡ 15 Seats Only', tag2 : "Filling fast", hot: true },
   { num: 'Batch 2', dates: '28 – 31 May 2026', tag: '20–25 Seats', tag2 : "Filling fast" , hot: false },
-  { num: 'Batch 3', dates: '4 – 7 June 2026', tag: '20–25 Seats', tag2 : "Filling fast", hot: false },
+  { num: 'Batch 3', dates: '4 – 7 June 2026', tag: '20–25 Seats', tag3 : "Booking Closed", hot: false },
 ];
 
 const EXPERIENCES = [
@@ -395,7 +396,12 @@ export default function SumiranCampPage() {
               </div>
               
               <span className="batch-tag">{b.tag}</span>
-              <span className="batch-status">{b.tag2}</span>
+              {
+                b.tag2 && <span className="batch-status">{b.tag2}</span>
+              }
+              {
+                b.tag3 && <StatusBadge text={b.tag3} type="closed" animated />
+              }
             </div>
           ))}
         </div>

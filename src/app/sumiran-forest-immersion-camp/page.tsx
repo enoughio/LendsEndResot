@@ -11,9 +11,9 @@ const REG_LINK = 'https://rzp.io/rzp/fnnrvFkZ';
 const GROUP_PHONE = '8871317382';
 
 const BATCHES = [
-  { num: 'Batch 1 · Limited', dates: '14 – 17 May 2026', tag: '⚡ 15 Seats ', tag3 : "Booking Closed", hot: true },
-  { num: 'Batch 2', dates: '28 – 31 May 2026', tag: '20–25 Seats', tag3 : "Booking Closed", hot: false },
-  { num: 'Batch 3', dates: '4 – 7 June 2026', tag: '20–25 Seats', tag2 : "Filling fast", hot: false },
+  // { num: 'Batch 1 · Limited', dates: '14 – 17 May 2026', tag: '⚡ 15 Seats ', tag3 : "Booking Closed", hot: true },
+  // { num: 'Batch 2', dates: '28 – 31 May 2026', tag: '20–25 Seats', tag3 : "Booking Closed", hot: false },
+  { num: 'Camp Dates', dates: '4 – 7 June 2026', tag: 'Limited Seats Available' , hot: true },
 ];
 
 const EXPERIENCES = [
@@ -186,12 +186,12 @@ export default function SumiranCampPage() {
         .batch-item.hot:hover { background: #3a2200; }
         .batch-num { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green-light); margin-bottom: 0.4rem; }
         .batch-item.hot .batch-num { color: var(--gold-light); }
-        .batch-dates { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; color: var(--white); line-height: 1.1; }
+        .batch-dates { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--white); line-height: 1.1; }
         .batch-tag { display: inline-block; font-size: 0.7rem; font-weight: 600; margin-top: 0.5rem; padding: 0.25rem 0.8rem; border-radius: 2rem; background: rgba(82,183,136,0.2); color: var(--green-light); border: 1px solid rgba(82,183,136,0.3); }
         .batch-item.hot .batch-tag { background: rgba(201,149,58,0.2); color: var(--gold-light); border-color: rgba(201,149,58,0.4); }
         .batch-status { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.65rem; padding: 0.3rem 0.9rem; border-radius: 999px; background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(201,149,58,0.18)); border: 1px solid rgba(255,255,255,0.22); color: var(--white); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
         .batch-status::before { content: ''; width: 0.45rem; height: 0.45rem; border-radius: 999px; background: #ffd166; box-shadow: 0 0 0 4px rgba(255,209,102,0.18); flex-shrink: 0; }
-        .batch-item.hot .batch-status { background: linear-gradient(135deg, rgba(201,149,58,0.28), rgba(255,255,255,0.12)); border-color: rgba(201,149,58,0.45); color: #fff4d6; }
+        .batch-item.hot .batch-status { background: linear-gradient(135deg, rgba(1,1,1,0.28), rgba(0,0,0,12)); border-color: rgba(201,149,58,0.45); color: #fff4d6; }
 
         /* ABOUT */
         .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; padding: 6rem 1.5rem; max-width: 1200px; margin: 0 auto; }
@@ -372,9 +372,28 @@ export default function SumiranCampPage() {
               <span key={p} className="pill">{p}</span>
             ))}
           </div>
-          <Link href={REG_LINK} className="hero-cta" target="_blank" rel="noopener noreferrer">
+    
+
+
+          <div className="flex flex-col items-center gap-1 mb-4 ">
+          {BATCHES.map((b, i) => (
+            <div key={(b.num || i) + String(i)} className={` bg-black-50/30 p-2 rounded-2xl ${b.hot ? ' hot' : ''}`}>
+              <div className="batch-num">{b.num || `Batch ${i + 1}`}</div>
+              <div className="batch-dates">
+                {b.dates.replace(' 2026', '')}
+                <div style={{ fontSize: '0.8rem', fontWeight: 600, marginTop: '0.25rem', opacity: 0.9 }}>2026</div>
+              </div>
+              {b.tag && <div className="batch-tag">{b.tag}</div>}
+              <br />
+               {/* {b.tag2 && <div className="batch-status">{b.tag2}</div>} */}
+              {/* {b.tag3 && <StatusBadge text={b.tag3} type="closed" animated />}  */}
+            </div>
+          ))}
+
+                <Link href={REG_LINK} className="hero-cta" target="_blank" rel="noopener noreferrer">
             Book Now ↓
           </Link>
+        </div>
         </div>
         <div className="hero-scroll">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -385,27 +404,23 @@ export default function SumiranCampPage() {
       </section>
 
       {/* ── BATCH STRIP ───────────────────────────────────────────────────── */}
-      <div className="batch-strip">
-        <div className="batch-inner">
-          {BATCHES.map((b) => (
-            <div key={b.num} className={`batch-item${b.hot ? ' hot' : ''}`}>
-              <div className="batch-num">{b.num}</div>
-              <div className="batch-dates">{b.dates.replace(' 2026', '')}<br />2026 
-              
-
+      {/* <div className="batch-strip">
+        <div className="flex flex-col items-center gap-1 mb-4 ">
+          {BATCHES.map((b, i) => (
+            <div key={(b.num || i) + String(i)} className={`batch-item rounded-2xl ${b.hot ? ' hot' : ''}`}>
+              <div className="batch-num">{b.num || `Batch ${i + 1}`}</div>
+              <div className="batch-dates">
+                {b.dates.replace(' 2026', '')}
+                <div style={{ fontSize: '0.8rem', fontWeight: 600, marginTop: '0.25rem', opacity: 0.9 }}>2026</div>
               </div>
-              
-              <span className="batch-tag">{b.tag}</span>
-              {
-                b.tag2 && <span className="batch-status">{b.tag2}</span>
-              }
-              {
-                b.tag3 && <StatusBadge text={b.tag3} type="closed" animated />
-              }
+              {b.tag && <div className="batch-tag">{b.tag}</div>}
+              <br />
+               {b.tag2 && <div className="batch-status">{b.tag2}</div>}
+              {/* {b.tag3 && <StatusBadge text={b.tag3} type="closed" animated />}  
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* ── ABOUT ─────────────────────────────────────────────────────────── */}
       <div className="about-grid reveal">
@@ -550,14 +565,16 @@ export default function SumiranCampPage() {
           <div className="price-label">Programme Fee</div>
           <h2 className="price-title">Exceptional Value. All-Inclusive.</h2>
           <p className="price-subtitle">Designed at a value of ₹30,000+ · Offered at a special inaugural fee</p>
-          <div className="price-cards">
-            <div className="price-card featured">
+          <div className="flex  items-center w-full justify-center gap-4 mb-10 ">
+
+            {/* <div className="price-card featured">
               <div className="price-cat">Early Bird — Register by 8 May</div>
               <div className="price-amount">₹8,500</div>
               <div className="price-note">per participant · all batches</div>
-            </div>
+            </div> */}
+            
             <div className="price-card">
-              <div className="price-cat">Regular Fee — After 8 May</div>
+              <div className="price-cat">Camp Fee </div>
               <div className="price-amount">₹9,900</div>
               <div className="price-note">per participant · all batches</div>
             </div>
@@ -597,9 +614,9 @@ export default function SumiranCampPage() {
         <div className="cta-content reveal">
           <h2 className="cta-title">Register Today.</h2>
           <p className="cta-sub">Before the seats are gone.</p>
-          <p className="cta-note">
-            Batch 1 · 14–17 May · 15 seats only · Early bird ₹8,500 closes 8 May
-          </p>
+          {/* <p className="cta-note">
+            Batch 1 · 14–17 May · 15 
+          </p> */}
           <p className="cta-group">
             For group bookings, call{' '}
             <a href={`tel:${GROUP_PHONE}`}>{GROUP_PHONE.replace(/(\d{5})(\d{5})/, '$1 $2')}</a>

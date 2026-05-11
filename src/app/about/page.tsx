@@ -15,11 +15,11 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Land's End | About Us",
   description:
-    "Learn about Land's End Resort at Sumiran Forest - our story, mission, and commitment to conservation. 600 acres of protected forest, 300 acres of woodland, 90 acres of water bodies, and 100 acres of organic farms.",
+    "Learn about Land's End Resort at Sumiran Forest - our story, mission, and commitment to conservation. 300 acres of protected forest, 300 acres of woodland, 90 acres of water bodies, and 100 acres of organic farms.",
   openGraph: {
     title: "About Land's End Resort | Sumiran Forest Conservation",
     description:
-      "Discover our story, mission, and commitment to protecting 600 acres of pristine forest near Bhopal with community-led conservation.",
+      "Discover our story, mission, and commitment to protecting 300 acres of pristine forest near Bhopal with community-led conservation.",
     images: ["/about/aboutHero.png"],
   },
 };
@@ -530,7 +530,7 @@ export default function AboutPage() {
                 </h3>
                 <p className="text-gray-700 leading-relaxed mb-3 md:mb-4 text-md md:text-base">
                   Located near Bhopal, Madhya Pradesh, Sumiran Forest is a
-                  living ecological landscape spanning over 600 acres. Our
+                  living ecological landscape spanning over 300 acres. Our
                   community-conserved space includes 300 acres of forest, 90
                   acres of natural water bodies, 100 acres of organic farms, and
                   110+ acres of green forest cover.
@@ -565,7 +565,7 @@ export default function AboutPage() {
               <h3 className="text-gray-900 text-lg font-semibold">Where is Land&apos;s End Resort located?</h3>
               <p className="mt-2 text-gray-700 text-sm md:text-base">
                 Land&apos;s End Resort is located in Sumiran Forest near Bhopal, Madhya Pradesh, surrounded by protected
-                woodland, water bodies, and organic farms across 600 acres.
+                woodland, water bodies, and organic farms across 300 acres.
               </p>
             </div>
 

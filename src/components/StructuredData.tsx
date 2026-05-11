@@ -4,7 +4,7 @@ export default function StructuredData() {
     '@type': 'Resort',
     name: "Land's End Resort",
     alternateName: 'Sumiran Forest Resort',
-    description: 'Eco resort in Sumiran Forest, Bhopal with 600 acres of pristine nature, AQI <10, and sustainable living.',
+    description: 'Eco resort in Sumiran Forest, Bhopal with 300 acres of pristine nature, AQI <10, and sustainable living.',
     url: 'https://landsend.bharatstorytellers.com',
     telephone: '+91-8871317382',
     email: 'landsend.sumiran@gmail.com',

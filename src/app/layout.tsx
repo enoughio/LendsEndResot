@@ -27,7 +27,7 @@ const baseMetadata: Metadata = {
     shortcut: '/lendsend.ico',
     apple: '/lendsend.ico',
   },
-  description: "Experience nature at Land's End Resort in Sumiran Forest, Bhopal. 600 acres of pristine forest, AQI <10, naturally alkaline water. Book your eco-friendly stay today.",
+  description: "Experience nature at Land's End Resort in Sumiran Forest, Bhopal. 300 acres of pristine forest, AQI <10, naturally alkaline water. Book your eco-friendly stay today.",
   keywords: ["eco resort", "Bhopal resort", "nature resort", "Sumiran Forest", "Land's End Resort", "sustainable tourism", "forest resort", "wildlife resort", "eco-friendly accommodation", "Madhya Pradesh resort"],
   authors: [{ name: "Land's End Resort" }],
   creator: "Land's End Resort",
@@ -38,8 +38,8 @@ const baseMetadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: "Land's End Resort | Sumiran Forest - Eco Resort Near Bhopal",
-    description: "Experience nature at its finest. 600 acres of pristine forest with AQI <10, naturally alkaline water, and sustainable living.",
+    title: "Land's End Resort | Sumiran Forest - Eco Retreat Near Bhopal",
+    description: "Experience nature at its finest. 300 acres of pristine forest with AQI <10, naturally alkaline water, and sustainable living.",
     siteName: "Land's End Resort",
     images: [
       {
@@ -55,7 +55,7 @@ const baseMetadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: "Land's End Resort | Sumiran Forest",
-    description: "Experience nature at its finest. 600 acres of pristine forest with AQI <10 near Bhopal, Madhya Pradesh.",
+    description: "Experience nature at its finest. 300 acres of pristine forest with AQI <10 near Bhopal, Madhya Pradesh.",
     images: ['/gallery/room1.jpeg'],
   },
   robots: {

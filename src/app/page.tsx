@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description: "Discover Land's End Resort at Sumiran Forest - A 600-acre eco resort near Bhopal with pristine nature, clean air (AQI <10), and sustainable living. Experience forest walks, bird watching, organic dining, and more.",
   openGraph: {
     title: "Land's End Resort | Sumiran Forest - Eco Resort Near Bhopal",
-    description: "Discover 600 acres of pristine forest with activities like bird watching, forest walks, stargazing, and organic dining.",
+    description: "Discover 300 acres of pristine forest with activities like bird watching, forest walks, stargazing, and organic dining.",
     images: ['/gallery/room1.jpeg'],
   },
 };

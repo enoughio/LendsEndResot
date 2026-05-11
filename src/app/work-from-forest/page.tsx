@@ -134,6 +134,7 @@ const DAY_PASS_INCLUDES = [
   "Lunch",
   "High tea",
   "1 complimentary coffee",
+  "⏱️  8 hours  ·  10:00 am – 6:00 pm",
   "AC workspace",
   "Forest work zones",
 ];
@@ -422,7 +423,10 @@ const Hero: React.FC = () => (
         <p className="wff-stat-label">Staycation at a glance</p>
         <div className="wff-stat-row">
           <span className="wff-stat-name">Day Pass</span>
-          <span className="wff-stat-val">₹999<span className="wff-stat-disc">Day</span></span>
+          <span className="wff-stat-val">
+            ₹999
+            <span className="wff-stat-disc">Day</span>
+        </span>
         </div>
         {PACKAGES.map((pkg) => (
           <div key={pkg.nights} className="wff-stat-row">

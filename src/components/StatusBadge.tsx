@@ -26,7 +26,7 @@ export default function StatusBadge({
     info: 'bg-blue-50 text-blue-700 border border-blue-200 shadow-sm hover:bg-blue-100 hover:shadow-md',
   };
 
-  const pulseClass = animated && type === 'closed' ? 'animate-pulse' : '';
+  // const pulseClass = animated && type === 'closed' ? 'animate-pulse' : '';
 
   const iconMap = {
     closed: '🔒',

@@ -378,7 +378,7 @@ const LeafSVG: React.FC<{ style?: React.CSSProperties }> = ({ style }) => (
 const Nav: React.FC = () => (
   <nav className="wff-nav">
     <Link className="wff-nav-brand" href="/">
-      <span>Land's End</span> — The Last Resort
+      <span>Land&apos;s End</span> — The Last Resort
     </Link>
     <ul className="wff-nav-links">
       <li><Link href="#packages">Packages</Link></li>
@@ -548,7 +548,7 @@ const Amenities: React.FC = () => (
     <div className="wff-amenities-inner">
       <div className="wff-amenities-header">
         <h2 className="wff-amenities-h2">
-          What awaits you<br />at Land's End
+          What awaits you<br />at Land&apos;s End
         </h2>
         <p className="wff-amenities-desc">
           Sumiran Forest is not a backdrop — it is the experience. Every element of your stay
@@ -598,7 +598,7 @@ const Footer: React.FC = () => (
   <footer className="wff-footer">
     <div className="wff-footer-brand">
       <small>Sumiran Forest, Near Bhopal, Madhya Pradesh</small>
-      Land's End — The Last Resort
+      Land&apos;s End — The Last Resort
     </div>
     <ul className="wff-footer-links">
       {["About", "Packages", "Day Pass"].map((link) => (
@@ -607,7 +607,7 @@ const Footer: React.FC = () => (
     ))}
     <li key="contact"><Link href="/contact">CONTACT</Link ></li>
     </ul>
-    <p className="wff-footer-copy">© {new Date().getFullYear()} Land's End. All rights reserved.</p>
+    <p className="wff-footer-copy">© {new Date().getFullYear()} Land&apos;s End. All rights reserved.</p>
   </footer>
 );
 

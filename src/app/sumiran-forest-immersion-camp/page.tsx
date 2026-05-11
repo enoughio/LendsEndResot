@@ -4,7 +4,8 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import StatusBadge from '@/components/StatusBadge';
+// import StatusBadge from '@/components/StatusBadge';
+import Image from 'next/image';
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const REG_LINK = 'https://rzp.io/rzp/fnnrvFkZ';
@@ -425,8 +426,8 @@ export default function SumiranCampPage() {
       {/* ── ABOUT ─────────────────────────────────────────────────────────── */}
       <div className="about-grid reveal">
         <div className="about-images">
-          <img className="about-img-main" src="/gallery/garden.jpg" alt="Sumiran Forest garden pathway" />
-          <img className="about-img-accent" src="/gallery/kids.jpeg" alt="Children at Sumiran Forest" />
+          <Image className="about-img-main" src="/gallery/garden.jpg" alt="Sumiran Forest garden pathway" />
+          <Image className="about-img-accent" src="/gallery/kids.jpeg" alt="Children at Sumiran Forest" />
         </div>
         <div>
           <div className="section-label">About Sumiran</div>
@@ -464,7 +465,7 @@ export default function SumiranCampPage() {
               { src: '/gallery/lake_sumiran2.jpeg', alt: 'Natural Lake at sumiran', caption: 'Natural Lake at sumiran' },
             ].map((img) => (
               <div key={img.src} className="gallery-item">
-                <img src={img.src} alt={img.alt} />
+                <Image src={img.src} alt={img.alt} />
                 <div className="gallery-caption">{img.caption}</div>
               </div>
             ))}

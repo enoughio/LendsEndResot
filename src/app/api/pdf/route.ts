@@ -4,7 +4,7 @@ import path from 'path'
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url)
-    const filename = url.searchParams.get('file') ?? "Land'sEnd-Sumiran.pdf"
+    const filename = url.searchParams.get('file') ?? 'LandsEnd-Sumiran.pdf'
     const download = url.searchParams.get('download') === '1'
 
     const filePath = path.join(process.cwd(), 'public', 'pdfs', filename)

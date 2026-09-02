@@ -1,7 +1,7 @@
 // Return a computed bill for a particular booking.
 
 import prisma from "@/lib/prisma";
-import { calculateNights } from "@/lib/booking-utils";
+import { calculateConvenienceFee, calculateNights } from "@/lib/booking-utils";
 import { NextResponse } from "next/server";
 
 type Params = { params: Promise<{ id: string }> };
@@ -95,7 +95,8 @@ export async function GET(_req: Request, { params }: Params) {
 
         const subTotal = roomCharges + packageCharges + mealPlanAmount + extraGuestAmount + additionalActivitiesAmount;
         const taxAmount = Math.round(subTotal * 0.05);
-        const totalAmount = subTotal + taxAmount;
+        const convenienceFeeAmount = calculateConvenienceFee(subTotal);
+        const totalAmount = subTotal + taxAmount + convenienceFeeAmount;
 
     const billData = {
             roomCharges,
@@ -111,6 +112,7 @@ export async function GET(_req: Request, { params }: Params) {
             additionalActivitiesAmount,
             subTotal,
             taxAmount,
+            convenienceFeeAmount,
             totalAmount,
             currency: "INR",
         };

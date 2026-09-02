@@ -10,7 +10,7 @@ import Location from "@/components/home/Location";
 import Testimonials from "@/components/home/Testimonials";
 
 import "reflect-metadata";
-
+  
 
 export const metadata: Metadata = {
   title: "Land's End | Home",

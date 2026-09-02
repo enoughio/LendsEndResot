@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Script from "next/script";
-import { Sparkles, ShieldCheck, CreditCard, ReceiptText } from "lucide-react";
+import { Sparkles, ShieldCheck, CreditCard, ReceiptText, AlertCircle } from "lucide-react";
 
 function formatInr(value: number) {
   return new Intl.NumberFormat("en-IN", {
@@ -88,6 +88,7 @@ export default function BookingDetailsPage() {
   const [additionalActivitiesTotal, setAdditionalActivitiesTotal] = useState(0);
   const [subTotal, setSubTotal] = useState(0);
   const [tax, setTax] = useState(0);
+  const [convenienceFee, setConvenienceFee] = useState(0);
   const [finalTotal, setFinalTotal] = useState(0);
 
   useEffect(() => {
@@ -126,6 +127,7 @@ export default function BookingDetailsPage() {
         );
         setSubTotal(Number(bill?.subTotal || 0));
         setTax(Number(bill?.taxAmount || 0));
+        setConvenienceFee(Number(bill?.convenienceFeeAmount || 0));
         setFinalTotal(Number(bill?.totalAmount || 0));
       } catch (error) {
         setBillError(
@@ -156,6 +158,21 @@ export default function BookingDetailsPage() {
   const canPay = useMemo(() => {
     return Boolean(fullName.trim() && email.trim() && phone.trim() && allGuestDetailsComplete);
   }, [fullName, email, phone, allGuestDetailsComplete]);
+
+  const missingPaymentDetails = useMemo(() => {
+    const missing: string[] = [];
+    if (!fullName.trim()) missing.push("your full name");
+    if (!email.trim()) missing.push("your email");
+    if (!phone.trim()) missing.push("your phone number");
+
+    guestDetails.forEach((guest, index) => {
+      const guestNumber = index + 2;
+      if (!guest.name.trim()) missing.push(`Guest ${guestNumber} name`);
+      if (!guest.phone.trim()) missing.push(`Guest ${guestNumber} phone number`);
+    });
+
+    return missing;
+  }, [fullName, email, phone, guestDetails]);
 
   // Step 1: Create Razorpay order from backend, Step 2: open checkout, Step 3: verify signature.
   const startCheckout = async () => {
@@ -493,7 +510,7 @@ export default function BookingDetailsPage() {
 
                 {extraGuestAmount > 0 && (
                   <div className="flex items-center justify-between text-slate-700">
-                    <span>Extra mattresses</span>
+                    <span>Extra mattresses/Bed</span>
                     <span>{formatInr(extraGuestAmount)}</span>
                   </div>
                 )}
@@ -527,14 +544,30 @@ export default function BookingDetailsPage() {
                 </div>
 
                 <div className="flex items-center justify-between text-slate-700">
-                  <span>Tax (5%)</span>
+                  <span>GST(5%)</span>
                   <span>{formatInr(tax)}</span>
+                </div>
+
+                <div className="flex items-center justify-between text-slate-700">
+                  <span>Convenience Fee (3%)</span>
+                  <span>{formatInr(convenienceFee)}</span>
                 </div>
 
                 <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3 text-lg font-semibold text-slate-900">
                   <span>Total</span>
                   <span>{formatInr(finalTotal)}</span>
                 </div>
+
+                {!canPay && (
+                  <div
+                    className="mt-4 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800"
+                    role="alert"
+                    aria-live="polite"
+                  >
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                    <p>Please complete {missingPaymentDetails.join(", ")} before making the payment.</p>
+                  </div>
+                )}
 
                 <button
                   type="button"

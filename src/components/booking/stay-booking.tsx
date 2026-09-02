@@ -3,13 +3,86 @@
 // TODO : overfetching here in /api/booking 
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Calendar, Users, CheckCircle2, ShieldCheck, CreditCard, PhoneCall, Sparkles, CircleQuestionMark  } from 'lucide-react';
+import { ArrowLeft, Calendar, Users, CheckCircle2, ShieldCheck, CreditCard, PhoneCall, Sparkles, CircleQuestionMark, ChevronLeft, ChevronRight, X, Images } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { notifyError, notifyInfo, notifySuccess } from '@/lib/client-notify';
+import { roomImages } from '@/lib/rooms-images';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface StayBookingProps {}
+
+const DEFAULT_ROOM_IMAGE = '/gallery/default.jpeg';
+
+function getRoomImages(roomName: string) {
+  const normalizedName = roomName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const roomKey = Object.keys(roomImages).find((key) => normalizedName.includes(key));
+  return roomKey ? roomImages[roomKey] : [DEFAULT_ROOM_IMAGE];
+}
+
+function RoomImageGallery({ roomName, compact = false }: { roomName: string; compact?: boolean }) {
+  const images = getRoomImages(roomName);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const activeImage = images[activeIndex] || DEFAULT_ROOM_IMAGE;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'ArrowLeft') setActiveIndex((index) => (index - 1 + images.length) % images.length);
+      if (event.key === 'ArrowRight') setActiveIndex((index) => (index + 1) % images.length);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [images.length, isOpen]);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          setIsOpen(true);
+        }}
+        className={`group relative shrink-0 overflow-hidden rounded-lg ${compact ? 'h-32 w-full' : 'h-28 w-36 sm:h-32 sm:w-40'}`}
+        aria-label={`View photos of ${roomName}`}
+      >
+        <Image src={activeImage} alt={`${roomName} room`} fill sizes={compact ? '(max-width: 1024px) 100vw, 400px' : '160px'} className="object-cover transition-transform group-hover:scale-105" />
+        <span className="absolute bottom-2 right-2 rounded-full bg-black/65 p-1.5 text-white">
+          <Images className="h-4 w-4" aria-hidden="true" />
+        </span>
+      </button>
+
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${roomName} photos`}
+          onClick={() => setIsOpen(false)}
+        >
+          <div className="relative flex max-h-[90vh] w-full max-w-5xl items-center justify-center" onClick={(event) => event.stopPropagation()}>
+            <Image src={activeImage} alt={`${roomName} room, image ${activeIndex + 1}`} width={1600} height={1000} className="max-h-[80vh] w-auto max-w-full rounded-lg object-contain" />
+            <button type="button" onClick={() => setIsOpen(false)} className="absolute right-2 top-2 rounded-full bg-black/65 p-2 text-white hover:bg-black/85" aria-label="Close room photos">
+              <X className="h-5 w-5" />
+            </button>
+            {images.length > 1 && (
+              <>
+                <button type="button" onClick={() => setActiveIndex((index) => (index - 1 + images.length) % images.length)} className="absolute left-2 rounded-full bg-black/65 p-2 text-white hover:bg-black/85" aria-label="Previous room photo">
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button type="button" onClick={() => setActiveIndex((index) => (index + 1) % images.length)} className="absolute right-2 rounded-full bg-black/65 p-2 text-white hover:bg-black/85" aria-label="Next room photo">
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 
 // Simple image component with error handling
 function ImageWithFallback({ src, alt, className, width, height }: { src: string; alt: string; className?: string; width?: number; height?: number }) {
@@ -23,7 +96,7 @@ function ImageWithFallback({ src, alt, className, width, height }: { src: string
       height={height || 300}
       className={className}
       onError={() => {
-        setImgSrc('/night sky.png');
+        setImgSrc(DEFAULT_ROOM_IMAGE);
       }}
     />
   );
@@ -38,6 +111,7 @@ type RoomTypeApi = {
   baseOccupancy: number;
   extraPersonPrice: number;
   amenities: string[];
+
   totalRooms: number;
   isSingleOccupancy?: boolean;
 };
@@ -276,6 +350,7 @@ export function StayBooking({ }: StayBookingProps) {
           alt="Resort stay"
           width={1920}
           height={192}
+          
           className="w-full h-full object-cover"
         />
 
@@ -357,13 +432,7 @@ export function StayBooking({ }: StayBookingProps) {
                         }`}
                       >
                         <div className="flex items-start gap-4">
-                          <ImageWithFallback 
-                            src="https://images.unsplash.com/photo-1614506660579-c6c478e2f349?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjByZXNvcnQlMjByb29tfGVufDF8fHx8MTc2MzU3NTU1M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                            alt={room.name}
-                            width={80}
-                            height={80}
-                            className="rounded object-cover"
-                          />
+                          <RoomImageGallery roomName={room.name} />
                           <div className="flex-1">
                             <div className="flex items-start justify-between mb-2 gap-3">
                               <h3 className="text-gray-900 font-semibold">{room.name}</h3>
@@ -666,13 +735,7 @@ export function StayBooking({ }: StayBookingProps) {
             <div className="lg:col-span-1">
               <div className="sticky top-4 rounded-2xl border border-blue-200 bg-linear-to-b from-blue-50 to-white p-6 shadow-sm">
                 <div className="mb-4">
-                  <ImageWithFallback 
-                    src="https://images.unsplash.com/photo-1630823070635-5fe15b1a7c14?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqdW5nbGUlMjByZXNvcnR8ZW58MXx8fHwxNzYzNjk4MjE2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                    alt="Stay"
-                    width={400}
-                    height={128}
-                    className="w-full h-32 object-cover rounded-lg mb-3"
-                  />
+                  <RoomImageGallery roomName={selectedRoomData?.name || 'Room'} compact />
                   <h3 className="text-gray-900 mb-1">{selectedRoomData?.name}</h3>
                   <p className="text-gray-600">Land&apos;s End The Last Resort</p>
                   {checkInDate && checkOutDate && (
@@ -711,7 +774,7 @@ export function StayBooking({ }: StayBookingProps) {
                         )}
                         {extraGuestAmount > 0 && (
                           <div className="flex justify-between text-gray-700">
-                            <span>Extra mattresses ({extraGuests})</span>
+                            <span>Extra mattresses/Bed ({extraGuests})</span>
                             <span>₹{extraGuestAmount.toLocaleString()}</span>
                           </div>
                         )}

@@ -23,6 +23,10 @@ export function sumActivityPrice(activities: Activity[]): number {
   return activities.reduce((sum, activity) => sum + Number(activity.price || 0), 0);
 }
 
+export function calculateConvenienceFee(subTotal: number): number {
+  return Math.round(subTotal * 0.03);
+}
+
 export function buildPriceBreakdown({
   baseAmount,
   mealPlanAmount = 0,
@@ -34,13 +38,15 @@ export function buildPriceBreakdown({
 }) {
   const subTotal = baseAmount + mealPlanAmount + extraGuestAmount;
   const taxAmount = Math.round(subTotal * 0.05);
-  const totalAmount = subTotal + taxAmount;
+  const convenienceFeeAmount = calculateConvenienceFee(subTotal);
+  const totalAmount = subTotal + taxAmount + convenienceFeeAmount;
 
   return {
     roomBaseAmount: baseAmount,
     mealPlanAmount,
     extraGuestAmount,
     taxAmount,
+    convenienceFeeAmount,
     totalAmount,
     currency: "INR",
   };

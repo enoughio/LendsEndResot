@@ -110,7 +110,7 @@ export function RoomTypeModal({
           </div>
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">
             <label className="flex items-center justify-between gap-3 text-sm text-stone-200">
-              <span>Single-occupancy room (no extra mattresses)</span>
+              <span>Single-occupancy room (no extra mattresses/Bed)</span>
               <input
                 type="checkbox"
                 checked={form.isSingleOccupancy}

@@ -13,6 +13,7 @@ type RoomTypeSeed = {
   size_sqft: string;
   amenities: string[];
   totalRooms: number;
+  isDormRoom: boolean;
 };
 
 type MealPlanSeed = {
@@ -35,6 +36,7 @@ const roomTypes: RoomTypeSeed[] = [
     size_sqft: "320",
     amenities: ["Queen Bed", "Private Bathroom", "AC", "Balcony"],
     totalRooms: 0,
+    isDormRoom: false,
   },
   {
     name: "Executive Rooms",
@@ -47,6 +49,7 @@ const roomTypes: RoomTypeSeed[] = [
     size_sqft: "460",
     amenities: ["King Bed", "Living Area", "Jacuzzi", "Mini Bar", "Terrace"],
     totalRooms: 0,
+    isDormRoom: false,
   },
   {
     name: "Tower Room",
@@ -59,6 +62,7 @@ const roomTypes: RoomTypeSeed[] = [
     size_sqft: "700",
     amenities: ["2 Bedrooms", "Private Pool", "Kitchen", "Dining Area", "Garden"],
     totalRooms: 0,
+    isDormRoom: false,
   },
   {
     name: "Dorm Bed",
@@ -71,6 +75,7 @@ const roomTypes: RoomTypeSeed[] = [
     size_sqft: "1100",
     amenities: ["3 Bedrooms", "Private Pool", "Butler Service", "Home Theater", "BBQ Area"],
     totalRooms: 0,
+    isDormRoom: true,
   },
 ];
 

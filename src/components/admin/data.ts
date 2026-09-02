@@ -85,6 +85,7 @@ export const initialRoomTypes: RoomType[] = [
     amenities: ['AC', 'Wi-Fi', 'Forest View', 'Balcony', 'Mini Bar', 'Room Service'],
     totalRooms: 8,
     isSingleOccupancy: false,
+    isDormRoom: false,
   },
   {
     id: 'rt2',
@@ -97,6 +98,7 @@ export const initialRoomTypes: RoomType[] = [
     amenities: ['AC', 'Wi-Fi', 'Panoramic View', 'Living Area', 'Jacuzzi', 'Butler Service', 'Mini Bar'],
     totalRooms: 5,
     isSingleOccupancy: false,
+    isDormRoom: false,
   },
   {
     id: 'rt3',
@@ -109,6 +111,7 @@ export const initialRoomTypes: RoomType[] = [
     amenities: ['AC', 'Wi-Fi', 'Private Pool', 'Outdoor Shower', 'Bonfire Area', 'Butler Service', 'Kitchenette'],
     totalRooms: 4,
     isSingleOccupancy: false,
+    isDormRoom: false,
   },
   {
     id: 'rt4',
@@ -121,6 +124,7 @@ export const initialRoomTypes: RoomType[] = [
     amenities: ['AC', 'Wi-Fi', 'Private Garden', 'Plunge Pool', 'Dining Pavilion', 'Personal Chef', 'Concierge'],
     totalRooms: 2,
     isSingleOccupancy: false,
+    isDormRoom: false,
   },
 ];
 

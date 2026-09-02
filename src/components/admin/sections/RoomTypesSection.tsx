@@ -40,6 +40,11 @@ export function RoomTypesSection({
                       Single occupancy
                     </span>
                   )}
+                  {rt.isDormRoom && (
+                    <span className="mt-2 ml-2 inline-flex rounded-full bg-sky-500/10 px-2 py-0.5 text-xs text-sky-300">
+                      Shared AC dorm
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <button

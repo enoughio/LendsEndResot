@@ -21,14 +21,18 @@ export async function PATCH(request: Request, { params }: Params) {
     const isSingleOccupancy = typeof body?.isSingleOccupancy === "boolean"
       ? body.isSingleOccupancy
       : existing.isSingleOccupancy;
+    const isDormRoom = typeof body?.isDormRoom === "boolean"
+      ? body.isDormRoom
+      : existing.isDormRoom;
+    const resolvedIsSingleOccupancy = isDormRoom ? false : isSingleOccupancy;
 
-    const resolvedCapacity = isSingleOccupancy
+    const resolvedCapacity = resolvedIsSingleOccupancy
       ? 1
       : body?.maxCapacity ?? body?.capacity ?? existing.capacity;
-    const resolvedBaseOccupancy = isSingleOccupancy
+    const resolvedBaseOccupancy = resolvedIsSingleOccupancy
       ? 1
       : body?.baseOccupancy ?? body?.base_occupancy ?? existing.baseOccupancy;
-    const resolvedExtraPersonPrice = isSingleOccupancy
+    const resolvedExtraPersonPrice = resolvedIsSingleOccupancy
       ? 0
       : body?.extraPersonPrice ?? body?.extra_person_price ?? existing.extraPersonPrice;
 
@@ -45,7 +49,8 @@ export async function PATCH(request: Request, { params }: Params) {
         totalRooms: typeof body?.totalRooms === "number" ? body.totalRooms : undefined,
         bedType: body?.bedType ?? undefined,
         size_sqft: body?.size_sqft ?? body?.sizeSqft ?? undefined,
-        isSingleOccupancy,
+        isSingleOccupancy: resolvedIsSingleOccupancy,
+        isDormRoom,
       },
     });
 

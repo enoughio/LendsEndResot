@@ -95,6 +95,7 @@ model RoomType {
   amenities String[]
   totalRooms Int @default(0)
   isSingleOccupancy Boolean @default(false)
+  isDormRoom Boolean @default(false)
     //opposite relation
   rooms Room[]
 }

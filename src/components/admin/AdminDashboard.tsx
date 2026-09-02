@@ -32,6 +32,7 @@ type RoomTypeApi = {
   amenities: string[];
   totalRooms: number;
   isSingleOccupancy?: boolean;
+  isDormRoom?: boolean;
 };
 
 type RoomApi = {
@@ -206,6 +207,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
           amenities: item.amenities || [],
           totalRooms: Number(item.totalRooms || 0),
           isSingleOccupancy: Boolean(item.isSingleOccupancy),
+          isDormRoom: Boolean(item.isDormRoom),
         }))
       );
 
@@ -325,6 +327,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
           amenities: rt.amenities,
           totalRooms: rt.totalRooms,
           isSingleOccupancy: rt.isSingleOccupancy,
+          isDormRoom: rt.isDormRoom,
         }),
       });
 

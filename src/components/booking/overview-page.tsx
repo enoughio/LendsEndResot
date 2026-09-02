@@ -24,6 +24,7 @@ type RoomTypeApi = {
   description: string;
   basePrice: number;
   isSingleOccupancy?: boolean;
+  isDormRoom?: boolean;
 };
 
 type ActivityApi = {
@@ -393,7 +394,7 @@ export function OverviewPage() {
                         basePrice: 7999,
                       },
                     ]
-                ).map((room) => (
+                  ).sort((firstRoom, secondRoom) => secondRoom.basePrice - firstRoom.basePrice).map((room) => (
                   <div
                     key={room.id}
                     className="p-4 bg-gray-50 rounded-xl border border-gray-100"
@@ -405,6 +406,11 @@ export function OverviewPage() {
                     {room.isSingleOccupancy && (
                       <span className="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700">
                         Single occupancy
+                      </span>
+                    )}
+                    {room.isDormRoom && (
+                      <span className="ml-2 inline-flex rounded-full bg-sky-100 px-2 py-0.5 text-xs text-sky-700">
+                        Shared AC dorm
                       </span>
                     )}
                     <span className="text-gray-900">

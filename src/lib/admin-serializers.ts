@@ -24,6 +24,7 @@ export function toRoomTypeDto(roomType: RoomType, roomsCount?: number) {
     amenities: roomType.amenities,
     totalRooms: typeof roomsCount === "number" ? roomsCount : roomType.totalRooms,
     isSingleOccupancy: roomType.isSingleOccupancy,
+    isDormRoom: roomType.isDormRoom,
   };
 }
 

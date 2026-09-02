@@ -9,6 +9,7 @@ export type RoomType = {
   amenities: string[];
   totalRooms: number;
   isSingleOccupancy: boolean;
+  isDormRoom: boolean;
 };
 
 export type Room = {

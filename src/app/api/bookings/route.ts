@@ -38,6 +38,7 @@ export async function GET() {
           amenities: roomType.amenities,
           totalRooms: roomType._count.rooms,
           isSingleOccupancy: roomType.isSingleOccupancy,
+          isDormRoom: roomType.isDormRoom,
         })),
         visitPackages: visitPackages.map((visitPackage: VisitPackage) => ({
           id: visitPackage.id,

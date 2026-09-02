@@ -23,6 +23,7 @@ export function RoomTypeModal({
       amenities: [],
       totalRooms: 0,
       isSingleOccupancy: false,
+      isDormRoom: false,
     }
   );
   const [amenityInput, setAmenityInput] = useState('');
@@ -118,6 +119,7 @@ export function RoomTypeModal({
                   setForm((prev) => ({
                     ...prev,
                     isSingleOccupancy: e.target.checked,
+                    isDormRoom: e.target.checked ? false : prev.isDormRoom,
                     maxOccupancy: e.target.checked ? 1 : prev.maxOccupancy,
                     baseOccupancy: e.target.checked ? 1 : prev.baseOccupancy,
                     extraPersonPrice: e.target.checked ? 0 : prev.extraPersonPrice,
@@ -127,6 +129,22 @@ export function RoomTypeModal({
               />
             </label>
             <p className="mt-2 text-xs text-stone-400">If enabled, each guest books a separate room for this type.</p>
+          </div>
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+            <label className="flex items-center justify-between gap-3 text-sm text-stone-200">
+              <span>Dorm room (shared AC accommodation)</span>
+              <input
+                type="checkbox"
+                checked={form.isDormRoom}
+                onChange={(e) => setForm((prev) => ({
+                  ...prev,
+                  isDormRoom: e.target.checked,
+                  isSingleOccupancy: e.target.checked ? false : prev.isSingleOccupancy,
+                }))}
+                className="h-4 w-4 accent-emerald-500"
+              />
+            </label>
+            <p className="mt-2 text-xs text-stone-400">Guests share this room according to its occupancy.</p>
           </div>
           <div>
             <label className="text-stone-400 text-xs uppercase tracking-widest block mb-2">Amenities</label>

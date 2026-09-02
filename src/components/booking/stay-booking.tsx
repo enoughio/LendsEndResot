@@ -114,6 +114,7 @@ type RoomTypeApi = {
 
   totalRooms: number;
   isSingleOccupancy?: boolean;
+  isDormRoom?: boolean;
 };
 
 type MealPlanApi = {
@@ -418,7 +419,7 @@ export function StayBooking({ }: StayBookingProps) {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {roomTypes.map((room) => {
+                  {[...roomTypes].sort((firstRoom, secondRoom) => secondRoom.basePrice - firstRoom.basePrice).map((room) => {
                     const isSelected = selectedRoom === room.id;
                     
                     return (
@@ -453,7 +454,9 @@ export function StayBooking({ }: StayBookingProps) {
                             </div>
                             <div className="flex items-center justify-between">
                               <span className="text-gray-600">
-                                {room.isSingleOccupancy
+                                {room.isDormRoom
+                                  ? "Shared AC dorm accommodation"
+                                  : room.isSingleOccupancy
                                   ? "Single occupancy room • book multiple rooms"
                                   : `Base occupancy ${room.baseOccupancy} • Additional guests up to ${Math.max(0, room.maxOccupancy - room.baseOccupancy)}`}
                               </span>

@@ -371,7 +371,7 @@ export function OverviewPage() {
                     </li>
                     <li className="flex items-center gap-2">
                       <div className="w-1.5 h-1.5 bg-green-600 rounded-full"></div>
-                      Access to all resort amenities
+                      Access to Sumiran Forest
                     </li>
                   </ul>
                 </div>

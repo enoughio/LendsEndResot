@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type EventCardProps = {
   image: string;
@@ -13,6 +16,7 @@ type EventCardProps = {
   earlyPrice?: string;
   regularPrice?: string;
   href?: string;
+  openInNewTab?: boolean;
   registrationLink?: string;
   seats?: number;
   earlyBirdDeadline?: string;
@@ -51,14 +55,43 @@ export default function EventCard({
   earlyPrice,
   regularPrice,
   href = "#",
+  openInNewTab = false,
   registrationLink,
   seats,
   earlyBirdDeadline,
 }: EventCardProps) {
+  const router = useRouter();
   const isMulti = !!endDate && endDate !== startDate;
 
+  const openEvent = () => {
+    if (openInNewTab) {
+      window.open(href, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    router.push(href);
+  };
+
+  const handleCardClick = (event: React.MouseEvent<HTMLElement>) => {
+    if ((event.target as HTMLElement).closest("a, button")) return;
+    openEvent();
+  };
+
+  const handleCardKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openEvent();
+    }
+  };
+
   return (
-    <article className="group flex flex-col md:flex-row rounded-3xl border border-green-200 bg-white overflow-hidden shadow-[0_15px_40px_-30px_rgba(0,0,0,0.65)] hover:shadow-[0_28px_50px_-30px_rgba(15,23,42,0.5)] transition-all duration-300">
+    <article
+      role="link"
+      tabIndex={0}
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      className="group flex flex-col md:flex-row rounded-3xl border border-green-200 bg-white overflow-hidden shadow-[0_15px_40px_-30px_rgba(0,0,0,0.65)] hover:shadow-[0_28px_50px_-30px_rgba(15,23,42,0.5)] transition-all duration-300 cursor-pointer"
+    >
       <div className="relative w-full md:w-[40%] h-80 md:h-auto shrink-0">
         <Image
           src={image}
@@ -121,7 +154,12 @@ export default function EventCard({
 
         <div className="mt-5 md:mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-green-100 pt-4">
           <div className="flex items-center gap-3">
-            <Link href={href} className="inline-block bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-2xl text-sm font-medium transition-colors">
+            <Link
+              href={href}
+              target={openInNewTab ? "_blank" : undefined}
+              rel={openInNewTab ? "noopener noreferrer" : undefined}
+              className="inline-block bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-2xl text-sm font-medium transition-colors"
+            >
               View details
             </Link>
             {registrationLink ? (

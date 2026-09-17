@@ -84,7 +84,8 @@ export default function EventsPage() {
                 registrationLink={e.registrationLink}
                 seats={e.seats}
                 earlyBirdDeadline={e.earlyBirdDeadline}
-                href={`/events/${e.slug}`}
+                href={e.customPagePath ?? e.pdfUrl ?? `/events/${e.slug}`}
+                openInNewTab={Boolean(!e.customPagePath && e.pdfUrl)}
               />
             ))}
           </div>

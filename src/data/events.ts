@@ -21,6 +21,7 @@ export type Event = {
   whoFor?: string[];
   sections?: { title: string; paragraphs?: string[]; bullets?: string[] }[];
   customPagePath?: string;
+  pdfUrl?: string;
 };
 
 export const events: Event[] = [
@@ -111,189 +112,191 @@ export const events: Event[] = [
 //     ],
 //   },
 
-  {
-    id: "4",
-    slug: "sumiran-forest-immersion-camp-2026",
-    customPagePath: "/sumiran-forest-immersion-camp",
-    title: "Sumiran Forest Residential Camp",
-    shortDescription:
-      "Residential summer camp (ages 10-16) with adventure, learning, and nature immersion in Sumiran Forest.",
-    description:
-      `A three-day, three-night residential camp designed for children to learn, explore, and grow in a living forest ecosystem.
+//   {
+//     id: "4",
+//     slug: "sumiran-forest-immersion-camp-2026",
+//     customPagePath: "/sumiran-forest-immersion-camp",
+//     title: "Sumiran Forest Residential Camp",
+//     shortDescription:
+//       "Residential summer camp (ages 10-16) with adventure, learning, and nature immersion in Sumiran Forest.",
+//     description:
+//       `A three-day, three-night residential camp designed for children to learn, explore, and grow in a living forest ecosystem.
 
-Sumiran is a 300-acre man-made, living forest created with care and respect for nature. It is a learning ecosystem where children experience nature up close, sustainable living practices, and a slower, mindful way of life.
+// Sumiran is a 300-acre man-made, living forest created with care and respect for nature. It is a learning ecosystem where children experience nature up close, sustainable living practices, and a slower, mindful way of life.
 
-The camp blends adventure, hands-on learning, creative expression, and community living to build confidence, character, and connection with nature.`,
-    images: ["/about/aboutHero.png", "/gallery/kids.jpeg", "/gallery/stargazing.jpeg"],
-    startDate: "2026-05-04",
-    endDate: "2026-05-07",
-    time: "3 days, 3 nights (multiple batches)",
-    location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
-    price: "INR 9,900 per participant",
-    registrationLink: "https://rzp.io/rzp/fnnrvFkZ",
-    contact: ["+91 6268244196 ", "landsend.sumiran@gmail.com"],
-    includes: [
-      "Stay (air-conditioned shared dormitories)",
-      "Food",
-      "Expert sessions and workshops",
-      "Adventure activities and group experiences",
-    ],
-    excludes: ["Travel to and from Sumiran Forest"],
-    whoFor: [
-      "Children ages 10-16",
-      "Students seeking confidence, creativity, and nature connection",
-      "Families looking for safe, supervised summer learning experiences",
-    ],
-    sections: [
-      {
-        title: "Why This Camp",
-        paragraphs: [
-          "In a fast-paced, screen-driven world, children often miss real-life experiences, confidence in expression, connection with nature, and opportunities to build character.",
-          "This camp helps children become more aware, confident, creative, independent, and responsible.",
-        ],
-      },
-      {
-        title: "Adventure, Fun, and Play",
-        bullets: [
-          "Zipline (Day 1)",
-          "Shooting activities (Day 2)",
-          "Archery (Day 2)",
-          "Mud baths (Day 2)",
-          "Rural games and traditional sports (Day 3)",
-          "Strategy games, team-building exercises, creative challenges",
-          "Music, dance, open jamming, stargazing and storytelling",
-        ],
-      },
-      {
-        title: "Learning Experience",
-        bullets: [
-          "Public speaking and storytelling (evenings)",
-          "Debates, podcasts, and live sessions",
-          "Logical thinking and problem-solving",
-          "Organic farming, forest development, and water conservation",
-          "Gaushala and biogas production",
-          "Yoga, meditation, and mindful living",
-        ],
-      },
-      {
-        title: "Nature Immersion",
-        bullets: [
-          "Guided forest walks and bird watching",
-          "Understanding ecosystems and biodiversity",
-          "Learning coexistence with wildlife",
-          "Practical sustainability exposure and stargazing",
-        ],
-      },
-      {
-        title: "Hands-On Creation",
-        paragraphs: [
-          "Each participant will collect plant samples, learn about them, and create a personal herbarium as a meaningful takeaway.",
-        ],
-      },
-      {
-        title: "Stay and Living Experience",
-        bullets: [
-          "Air-conditioned shared dormitories",
-          "Safe and supervised environment",
-          "Community living that builds responsibility and independence",
-        ],
-      },
-      {
-        title: "Daily Routine Snapshot",
-        bullets: [
-          "Morning yoga, meditation, and nature walk",
-          "Hands-on learning and farm activities",
-          "Expert sessions and workshops",
-          "Adventure sports and games",
-          "Evening storytelling, music, and reflection",
-        ],
-      },
-      {
-        title: "Camp Dates (3 Days, 3 Nights)",
-        bullets: [
-          "4-7 May 2026",
-          "7-10 May 2026",
-          "11-14 May 2026",
-          "14-17 May 2026",
-          "25-28 May 2026",
-          "28-31 May 2026",
-          "1-4 June 2026",
-          "4-7 June 2026",
-        ],
-      },
-      {
-        title: "Important Information",
-        bullets: [
-          "Parents/guardians drop participants on Day 1",
-          "Pick-up on Day 4",
-          "Limited seats per batch",
-          "Registration link will be shared soon",
-        ],
-      },
-    ],
-  },
+// The camp blends adventure, hands-on learning, creative expression, and community living to build confidence, character, and connection with nature.`,
+//     images: ["/about/aboutHero.png", "/gallery/kids.jpeg", "/gallery/stargazing.jpeg"],
+//     startDate: "2026-05-04",
+//     endDate: "2026-05-07",
+//     time: "3 days, 3 nights (multiple batches)",
+//     location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
+//     price: "INR 9,900 per participant",
+//     registrationLink: "https://rzp.io/rzp/fnnrvFkZ",
+//     contact: ["+91 6268244196 ", "landsend.sumiran@gmail.com"],
+//     includes: [
+//       "Stay (air-conditioned shared dormitories)",
+//       "Food",
+//       "Expert sessions and workshops",
+//       "Adventure activities and group experiences",
+//     ],
+//     excludes: ["Travel to and from Sumiran Forest"],
+//     whoFor: [
+//       "Children ages 10-16",
+//       "Students seeking confidence, creativity, and nature connection",
+//       "Families looking for safe, supervised summer learning experiences",
+//     ],
+//     sections: [
+//       {
+//         title: "Why This Camp",
+//         paragraphs: [
+//           "In a fast-paced, screen-driven world, children often miss real-life experiences, confidence in expression, connection with nature, and opportunities to build character.",
+//           "This camp helps children become more aware, confident, creative, independent, and responsible.",
+//         ],
+//       },
+//       {
+//         title: "Adventure, Fun, and Play",
+//         bullets: [
+//           "Zipline (Day 1)",
+//           "Shooting activities (Day 2)",
+//           "Archery (Day 2)",
+//           "Mud baths (Day 2)",
+//           "Rural games and traditional sports (Day 3)",
+//           "Strategy games, team-building exercises, creative challenges",
+//           "Music, dance, open jamming, stargazing and storytelling",
+//         ],
+//       },
+//       {
+//         title: "Learning Experience",
+//         bullets: [
+//           "Public speaking and storytelling (evenings)",
+//           "Debates, podcasts, and live sessions",
+//           "Logical thinking and problem-solving",
+//           "Organic farming, forest development, and water conservation",
+//           "Gaushala and biogas production",
+//           "Yoga, meditation, and mindful living",
+//         ],
+//       },
+//       {
+//         title: "Nature Immersion",
+//         bullets: [
+//           "Guided forest walks and bird watching",
+//           "Understanding ecosystems and biodiversity",
+//           "Learning coexistence with wildlife",
+//           "Practical sustainability exposure and stargazing",
+//         ],
+//       },
+//       {
+//         title: "Hands-On Creation",
+//         paragraphs: [
+//           "Each participant will collect plant samples, learn about them, and create a personal herbarium as a meaningful takeaway.",
+//         ],
+//       },
+//       {
+//         title: "Stay and Living Experience",
+//         bullets: [
+//           "Air-conditioned shared dormitories",
+//           "Safe and supervised environment",
+//           "Community living that builds responsibility and independence",
+//         ],
+//       },
+//       {
+//         title: "Daily Routine Snapshot",
+//         bullets: [
+//           "Morning yoga, meditation, and nature walk",
+//           "Hands-on learning and farm activities",
+//           "Expert sessions and workshops",
+//           "Adventure sports and games",
+//           "Evening storytelling, music, and reflection",
+//         ],
+//       },
+//       {
+//         title: "Camp Dates (3 Days, 3 Nights)",
+//         bullets: [
+//           "4-7 May 2026",
+//           "7-10 May 2026",
+//           "11-14 May 2026",
+//           "14-17 May 2026",
+//           "25-28 May 2026",
+//           "28-31 May 2026",
+//           "1-4 June 2026",
+//           "4-7 June 2026",
+//         ],
+//       },
+//       {
+//         title: "Important Information",
+//         bullets: [
+//           "Parents/guardians drop participants on Day 1",
+//           "Pick-up on Day 4",
+//           "Limited seats per batch",
+//           "Registration link will be shared soon",
+//         ],
+//       },
+//     ],
+//   },
 
 
-  {
-  id: "5",
-  slug: "starry-nights-retreat-2026",
-  customPagePath: "/starry-night",
-  title: "Starry Nights: Stargazing & Storytelling Retreat",
-  shortDescription:
-    "A weekend retreat of stargazing, storytelling, and forest immersion under the night sky.",
-  description:
-    `Step away from city lights and into a universe of stories and stars at Sumiran Forest.
+//   {
+//   id: "5",
+//   slug: "starry-nights-retreat-2026",
+//   customPagePath: "/starry-night",
+//   title: "Starry Nights: Stargazing & Storytelling Retreat",
+//   shortDescription:
+//     "A weekend retreat of stargazing, storytelling, and forest immersion under the night sky.",
+//   description:
+//     `Step away from city lights and into a universe of stories and stars at Sumiran Forest.
 
-This two-day retreat brings together the wonder of astronomy and the art of storytelling. Evenings are spent under open skies with expert stargazers from Astrophiles India Club, while days feature immersive storytelling sessions curated by Bharat Storytellers.
+// This two-day retreat brings together the wonder of astronomy and the art of storytelling. Evenings are spent under open skies with expert stargazers from Astrophiles India Club, while days feature immersive storytelling sessions curated by Bharat Storytellers.
 
-Whether you're a beginner or a passionate sky-watcher, this experience offers a rare chance to slow down, connect, and explore the cosmos in a deeply human way.`,
-  images: ["/gallery/stargazing.jpeg", "/gallery/campfire.jpg"],
-  startDate: "2026-05-02",
-  endDate: "2026-05-03",
-  time: "Weekend Retreat",
-  location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
-  price: "Contact for details",
-  registrationLink: "https://rzp.io/rzp/c7GlaAb",
-  contact: ["landsend.sumiran@gmail.com", "+91 6268244196", "+91 8871317382"],
-  includes: [
-    "Guided stargazing with telescopes",
-    "Storytelling sessions",
-    "Stay and meals",
-    "Forest experience",
-  ],
-}, 
+// Whether you're a beginner or a passionate sky-watcher, this experience offers a rare chance to slow down, connect, and explore the cosmos in a deeply human way.`,
+//   images: ["/gallery/stargazing.jpeg", "/gallery/campfire.jpg"],
+//   startDate: "2026-05-02",
+//   endDate: "2026-05-03",
+//   time: "Weekend Retreat",
+//   location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
+//   price: "Contact for details",
+//   registrationLink: "https://rzp.io/rzp/c7GlaAb",
+//   contact: ["landsend.sumiran@gmail.com", "+91 6268244196", "+91 8871317382"],
+//   includes: [
+//     "Guided stargazing with telescopes",
+//     "Storytelling sessions",
+//     "Stay and meals",
+//     "Forest experience",
+//   ],
+// }, 
 
-{
-  id: "6",
-  slug: "reiki-level-1-workshop-2026",
-  registrationLink: "https://rzp.io/rzp/8AloDe1",
-  customPagePath: "/reiki",
-  title: "Reiki Level 1 Workshop",
-  shortDescription:
-    "Learn the foundations of Reiki healing with international Reiki Master Paula Horan.",
-  description:
-    `Join an intimate Level 1 Reiki certification workshop guided by internationally renowned Reiki Master Paula Horan.
+// {
+//   id: "6",
+//   slug: "reiki-level-1-workshop-2026",
+//   registrationLink: "https://rzp.io/rzp/8AloDe1",
+//   customPagePath: "/reiki",
+//   title: "Reiki Level 1 Workshop",
+//   shortDescription:
+//     "Learn the foundations of Reiki healing with international Reiki Master Paula Horan.",
+//   description:
+//     `Join an intimate Level 1 Reiki certification workshop guided by internationally renowned Reiki Master Paula Horan.
 
-Set in the peaceful environment of Sumiran Forest, this workshop introduces the core principles of Reiki — energy healing, balance, and self-awareness.
+// Set in the peaceful environment of Sumiran Forest, this workshop introduces the core principles of Reiki — energy healing, balance, and self-awareness.
 
-Participants will gain practical knowledge, attunement, and a deeper connection with their own healing capabilities.`,
-  images: ["/gallery/mediation.jpeg", "/gallery/lake_View.jpeg"],
-  startDate: "2026-05-09",
-  endDate: "2026-05-10",
-  time: "09:00 AM — 05:00 PM",
-  location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
-  price: "Contact for details",
-  includes: [
-    "Level 1 Reiki certification",
-    "Guided sessions by Paula Horan",
-    "Stay and meals",
-    "Workshop materials",
-  ],
-}, 
+// Participants will gain practical knowledge, attunement, and a deeper connection with their own healing capabilities.`,
+//   images: ["/gallery/mediation.jpeg", "/gallery/lake_View.jpeg"],
+//   startDate: "2026-05-09",
+//   endDate: "2026-05-10",
+//   time: "09:00 AM — 05:00 PM",
+//   location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
+//   price: "Contact for details",
+//   includes: [
+//     "Level 1 Reiki certification",
+//     "Guided sessions by Paula Horan",
+//     "Stay and meals",
+//     "Workshop materials",
+//   ],
+// }, 
 
 {
   id: "7",
   slug: "life-without-medicine-retreat-2026",
+  pdfUrl: "/pdfs/Life-Without-Medicine.pdf",
+  // customPagePath: "/life-without-medicine-retreat",
   title: "Life Without Medicine Retreat",
   shortDescription:
     "A 5-day holistic wellness retreat focused on natural healing and lifestyle transformation.",
@@ -317,68 +320,38 @@ This retreat is ideal for those dealing with stress, lifestyle conditions, or se
   ],
 }, 
 
-{
-  id: "8",
-  slug: "summer-camp-batch-1-2026",
-  title: "Sumiran Forest Residential Summer Camp — Batch 1",
-  shortDescription:
-    "4-day residential forest camp for children (ages 10–16) with adventure, learning, and nature immersion.",
-  description:
-    `A transformative residential camp where children explore nature, build confidence, and develop life skills in a safe, immersive environment.
-
-Set in a 300-acre living forest, this camp blends adventure activities, storytelling, creativity, and hands-on learning with sustainable living practices.
-
-Children experience community living, outdoor exploration, and personal growth away from screens and city life.`,
-  images: ["/gallery/kids.jpeg", "/gallery/campfire.jpg"],
-  startDate: "2026-05-14",
-  endDate: "2026-05-17",
-  time: "4 Days / 3 Nights",
-  location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
-  price: "INR 9,900 per participant",
-  includes: [
-    "Stay (shared dormitories)",
-    "Nutritious meals",
-    "Adventure and learning activities",
-    "Workshops and expert sessions",
-  ],
-  whoFor: [
-    "Children aged 10–16",
-    "Students interested in creativity, confidence, and nature",
-  ],
-}, 
-
-{
-  id: "9",
-  slug: "summer-camp-batch-2-2026",
-  title: "Sumiran Forest Residential Summer Camp — Batch 2",
-  shortDescription:
-    "5-day residential forest camp for children (ages 10–16) with adventure and learning.",
-  description:
-    "Same program as Batch 1 with extended duration and immersive activities in Sumiran Forest.",
-  images: ["/gallery/kids.jpeg"],
-  startDate: "2026-05-27",
-  endDate: "2026-05-31",
-  time: "5 Days / 4 Nights",
-  location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
-  price: "INR 9,900 per participant",
-}, 
+// {
+//   id: "9",
+//   slug: "summer-camp-batch-2-2026",
+//   title: "Sumiran Forest Residential Summer Camp — Batch 2",
+//   shortDescription:
+//     "5-day residential forest camp for children (ages 10–16) with adventure and learning.",
+//   description:
+//     "Same program as Batch 1 with extended duration and immersive activities in Sumiran Forest.",
+//   images: ["/gallery/kids.jpeg"],
+//   startDate: "2026-05-27",
+//   endDate: "2026-05-31",
+//   time: "5 Days / 4 Nights",
+//   location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
+//   price: "INR 9,900 per participant",
+// }, 
 
 
-{
-  id: "10",
-  slug: "summer-camp-batch-3-2026",
-  title: "Sumiran Forest Residential Summer Camp — Batch 3",
-  shortDescription:
-    "4-day residential forest camp for children (ages 10–16).",
-  description:
-    "Same program as previous batches with a focus on nature immersion, creativity, and life skills.",
-  images: ["/gallery/kids.jpeg"],
-  startDate: "2026-06-04",
-  endDate: "2026-06-07",
-  time: "4 Days / 3 Nights",
-  location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
-  price: "INR 9,900 per participant",
-}
+// {
+//   id: "10",
+//   slug: "summer-camp-batch-3-2026",
+//   title: "Sumiran Forest Residential Summer Camp — Batch 3",
+//   shortDescription:
+//     "4-day residential forest camp for children (ages 10–16).",
+//   description:
+//     "Same program as previous batches with a focus on nature immersion, creativity, and life skills.",
+//   images: ["/gallery/kids.jpeg"],
+//   startDate: "2026-06-04",
+//   endDate: "2026-06-07",
+//   time: "4 Days / 3 Nights",
+//   location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
+//   price: "INR 9,900 per participant",
+// }
 
 
 ];

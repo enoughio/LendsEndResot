@@ -309,7 +309,7 @@ This retreat is ideal for those dealing with stress, lifestyle conditions, or se
   images: ["/gallery/yoga.jpeg", "/gallery/kids.jpeg"],
   startDate: "2026-09-23",
   endDate: "2026-09-26",
-  time: "5 Days / 4 Nights",
+  time: "4 Days / 3 Nights",
   location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
   price: "Contact for details",
   includes: [

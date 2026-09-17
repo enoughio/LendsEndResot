@@ -307,8 +307,8 @@ Through breathwork, yoga, mindfulness, and nature therapy, participants will lea
 
 This retreat is ideal for those dealing with stress, lifestyle conditions, or seeking a deeper connection with their body and mind.`,
   images: ["/gallery/yoga.jpeg", "/gallery/kids.jpeg"],
-  startDate: "2026-05-20",
-  endDate: "2026-05-24",
+  startDate: "2026-09-23",
+  endDate: "2026-09-26",
   time: "5 Days / 4 Nights",
   location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
   price: "Contact for details",

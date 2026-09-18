@@ -296,27 +296,33 @@ export const events: Event[] = [
   id: "7",
   slug: "life-without-medicine-retreat-2026",
   pdfUrl: "/pdfs/Life-Without-Medicine.pdf",
-  // customPagePath: "/life-without-medicine-retreat",
+  customPagePath: "/life-without-medicine-retreat",
   title: "Life Without Medicine Retreat",
   shortDescription:
-    "A 5-day holistic wellness retreat focused on natural healing and lifestyle transformation.",
+    "A 4-day experiential health and wellness retreat focused on restoring balance through nature, movement, nutrition and rest.",
   description:
-    `Explore a natural and holistic approach to health at this immersive 5-day retreat in Sumiran Forest.
+    `Explore a natural and holistic approach to health at this immersive 4-day retreat in Sumiran Forest.
 
-Through breathwork, yoga, mindfulness, and nature therapy, participants will learn how to reduce dependency on medication and build a sustainable, healthy lifestyle.
+Through guided sessions, organic food, nature immersion, movement and rest, participants will learn practical ways to build a sustainable, healthy lifestyle.
 
-This retreat is ideal for those dealing with stress, lifestyle conditions, or seeking a deeper connection with their body and mind.`,
-  images: ["/gallery/yoga.jpeg", "/gallery/kids.jpeg"],
-  startDate: "2026-09-23",
-  endDate: "2026-09-26",
+This retreat is designed for anyone seeking a deeper connection with their body, mind and the natural world.`,
+  images: [
+    "/events/life-without-medicine/WhatsApp%20Image%202026-09-17%20at%207.27.54%20PM.jpeg",
+    "/events/life-without-medicine/WhatsApp%20Image%202026-09-17%20at%207.34.18%20PM.jpeg",
+    "/events/life-without-medicine/WhatsApp%20Image%202026-09-17%20at%207.35.00%20PM.jpeg",
+  ],
+  startDate: "2026-10-23",
+  endDate: "2026-10-26",
   time: "4 Days / 3 Nights",
   location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
-  price: "Contact for details",
+  price: "From INR 23,000 per person",
+  registrationLink: "https://forms.gle/PGXA6w6dJYWZ6WX88",
+  contact: ["+91 8698283671", "+91 8770673594", "lifewithoutmedicine.sumiran@gmail.com"],
   includes: [
-    "Holistic health sessions",
-    "Yoga, breathwork, and meditation",
-    "Nature therapy and forest walks",
-    "Stay and therapeutic meals",
+    "Shared accommodation",
+    "All meals and guided sessions",
+    "Nature walks and experiential activities",
+    "A fully residential forest immersion",
   ],
 }, 
 

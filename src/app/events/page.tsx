@@ -35,12 +35,14 @@ export default function EventsPage() {
               Step into curated experiences rooted in nature, storytelling and conservation at Land&apos;s End.
             </p>
             <div className="mt-6 flex flex-wrap gap-3 text-xs md:text-sm">
-              <span className="rounded-full bg-white/15 border border-white/30 px-3 py-1.5">{upcomingCount} upcoming retreat{upcomingCount === 1 ? "" : "s"}</span>
-              {nextEvent ? (
+              <span className="rounded-full bg-white/15 border border-white/30 px-3 py-1.5">{upcomingCount} Retreat{upcomingCount === 1 ? "" : "s"}</span>
+
+                 {/* {nextEvent ? (
                 <span className="rounded-full bg-white/15 border border-white/30 px-3 py-1.5">
                   Next: {new Date(nextEvent.startDate).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                 </span>
-              ) : null}
+              ) : null} */}
+           
             </div>
           </div>
         </div>
@@ -51,7 +53,8 @@ export default function EventsPage() {
 
         <section className="rounded-3xl border border-green-200/80 bg-white/90 p-5 md:p-8 shadow-[0_20px_45px_-30px_rgba(0,0,0,0.35)] backdrop-blur-sm">
           <div className="mb-6">
-            <h2 className="text-gray-900 text-2xl md:text-3xl font-semibold">Upcoming Events</h2>
+            <h2 className="text-gray-900 text-2xl md:text-3xl font-semibold">Events</h2>
+            {/* <h2 className="text-gray-900 text-2xl md:text-3xl font-semibold">Upcoming Events</h2> */}
             <div className="w-16 h-1 bg-linear-to-r from-green-600 to-amber-500 mt-2 rounded-full"></div>
           </div>
 

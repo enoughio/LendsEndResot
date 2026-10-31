@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
-import { Urbanist } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next"
 import NavBaR from "@/components/NavBaR";
 import StructuredData from "@/components/StructuredData";
 import ToastProvider from "@/components/ToastProvider";
 import { headers } from "next/headers";
-
-const urbanist = Urbanist({
-  subsets: ["latin"],
-  weight: ["300","400","600","700"], // whenever tailwind class "font-semibold" or "font-bold" is used they will pick the nearest downloaded font weight text from this provided options array. By default tailwind uses font weights normal -> "400", semibold -> "600", bold -> "700". And that is why i provided the exact matching font weight texts.
-  display: "swap",
-});
 
 const defaultSiteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://landsend.storyretreat.in";
@@ -113,7 +105,7 @@ export default function RootLayout({
         <meta name="google-site-verification" content="uhe6IQP9A2nK8QftgqSXA03aFExfUX-O7Z_h3kmhYpE" />
         <StructuredData />
       </head>
-      <body className={`${urbanist.className} relative`}>
+      <body className="relative">
         <Analytics />
         <NavBaR />
         

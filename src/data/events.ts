@@ -25,6 +25,28 @@ export type Event = {
 };
 
 export const events: Event[] = [
+
+  
+  {
+    id: "1",
+    slug: "van-deepotsav-2026",
+    customPagePath: "/van-deepotsav",
+    title: "Van Deepotsav — A Forest Diwali",
+    shortDescription:
+      "Celebrate a cracker-free, noise-free Diwali with diyas, Laxmi Pujan, forest walks, bonfire, stargazing and adventure.",
+    description:
+      "Spend 8–9 November 2026 inside Sumiran Forest for a slower, more connected Diwali surrounded by nature.",
+    images: ["/events/van-deepotsav/ForestandDia.png"],
+    startDate: "2026-11-08",
+    endDate: "2026-11-09",
+    time: "One night in the forest",
+    location: "Land's End — The Last Resort, Sumiran Forest, Near Bhopal",
+    price: "Starts at INR 2,100 per person",
+    registrationLink: "https://rzp.io/rzp/0YLr5Dx",
+    contact: [ "+91 88713 17382", "+91 81096 69604", "landsend.sumiran@gmail.com" ],
+  },
+  
+
   {
     id: "8",
     slug: "the-forest-table-2026",
@@ -76,7 +98,6 @@ Seats are limited. Register and complete the payment to confirm your place. Over
     ],
   },
   
-
   // {
   //   id: "1",
   //   slug: "sunrise-walk-2026",

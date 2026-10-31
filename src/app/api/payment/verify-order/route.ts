@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { verifyRazorpaySignature } from "@/lib/payments";
 import { sendBookingConfirmationEmail } from "@/lib/booking-email";
+import {
+  ONLINE_BOOKING_ENABLED,
+  ONLINE_BOOKING_UNAVAILABLE_MESSAGE,
+} from "@/lib/service-status";
 
 function normalizeGuestList(value: unknown): Array<{ name: string; phone: string }> | undefined {
 	if (!Array.isArray(value)) return undefined;
@@ -22,6 +26,13 @@ function normalizeGuestList(value: unknown): Array<{ name: string; phone: string
 
 export async function POST(request: Request) {
 	try {
+		if (!ONLINE_BOOKING_ENABLED) {
+			return NextResponse.json(
+				{ error: { code: "SERVICE_UNAVAILABLE", message: ONLINE_BOOKING_UNAVAILABLE_MESSAGE } },
+				{ status: 503 },
+			);
+		}
+
 		const body = await request.json();
 
 		// Values returned by Razorpay checkout handler on successful payment.
@@ -174,4 +185,3 @@ export async function POST(request: Request) {
 		);
 	}
 }
-

@@ -37,14 +37,14 @@ export const events: Event[] = [
 The Forest Table brings business owners from Bhopal together for an afternoon inside Sumiran Forest. Share lunch from the farm, exchange ideas and experiences around the round table, walk into the forest, and gather for tea as the light softens.
 
 Seats are limited. Register and complete the payment to confirm your place. Overnight stay can be requested separately and is strictly subject to availability.`,
-    images: [ "/events/forest-table.jpeg" , "/gallery/forestView.jpeg", "/gallery/forestwalk.jpeg", "/gallery/food_sumiran.jpeg"],
+    images: [ "/events/forest-table.jpeg", "/gallery/forestView.jpeg", "/gallery/forestwalk.jpeg", "/gallery/food_sumiran.jpeg"],
     startDate: "2026-10-10",
     time: "Afternoon gathering",
     location: "Land's End — The Last Resort, Sumiran Forest",
     price: "INR 999 per participant",
     registrationLink: "https://forms.gle/3NHqw9qBtXNRWQXb7",
     contact: ["+91 88713 17382", "landsend.sumiran@gmail.com"],
-    includes: [
+    includes: [ 
       "Lunch from the farm",
       "Round-table business conversations",
       "Guided walk into the forest",
@@ -75,6 +75,7 @@ Seats are limited. Register and complete the payment to confirm your place. Over
       },
     ],
   },
+  
 
   // {
   //   id: "1",

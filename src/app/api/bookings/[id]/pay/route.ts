@@ -4,11 +4,22 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { createRazorpayOrder, getRazorpayKeys } from "@/lib/payments";
+import {
+  ONLINE_BOOKING_ENABLED,
+  ONLINE_BOOKING_UNAVAILABLE_MESSAGE,
+} from "@/lib/service-status";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function POST(request: Request, { params }: Params) {
   try {
+    if (!ONLINE_BOOKING_ENABLED) {
+      return NextResponse.json(
+        { error: { code: "SERVICE_UNAVAILABLE", message: ONLINE_BOOKING_UNAVAILABLE_MESSAGE } },
+        { status: 503 },
+      );
+    }
+
     const body = await request.json();
     const { id } = await params;
 

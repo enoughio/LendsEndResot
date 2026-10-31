@@ -1,9 +1,20 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { buildPriceBreakdown, parseDate } from "@/lib/booking-utils";
+import {
+  ONLINE_BOOKING_ENABLED,
+  ONLINE_BOOKING_UNAVAILABLE_MESSAGE,
+} from "@/lib/service-status";
 
 export async function POST(request: Request) {
   try {
+    if (!ONLINE_BOOKING_ENABLED) {
+      return NextResponse.json(
+        { error: { code: "SERVICE_UNAVAILABLE", message: ONLINE_BOOKING_UNAVAILABLE_MESSAGE } },
+        { status: 503 },
+      );
+    }
+
     const body = await request.json();
     const visitPackageId = String(body?.visitPackageId || "").trim();
     const visitDate = parseDate(body?.visitDate);

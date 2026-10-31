@@ -1,5 +1,9 @@
 import "server-only";
 import nodemailer from "nodemailer";
+import {
+  EMAIL_SERVICE_ENABLED,
+  EMAIL_SERVICE_UNAVAILABLE_MESSAGE,
+} from "@/lib/service-status";
 
 type BookingConfirmationInput = {
   to: string;
@@ -54,6 +58,10 @@ function getBaseUrl() {
 }
 
 export async function sendBookingConfirmationEmail(input: BookingConfirmationInput) {
+  if (!EMAIL_SERVICE_ENABLED) {
+    throw new Error(EMAIL_SERVICE_UNAVAILABLE_MESSAGE);
+  }
+
   const host = process.env.SMTP_HOST;
   const port = Number(process.env.SMTP_PORT || 587);
   const user = process.env.SMTP_USER;

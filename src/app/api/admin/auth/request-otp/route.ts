@@ -6,6 +6,10 @@ import {
   getOtpTtlSeconds,
   isAdminEmail,
 } from "@/lib/admin-auth";
+import {
+  EMAIL_SERVICE_ENABLED,
+  EMAIL_SERVICE_UNAVAILABLE_MESSAGE,
+} from "@/lib/service-status";
 
 function generateOtp() {
   return String(Math.floor(100000 + Math.random() * 900000));
@@ -21,6 +25,13 @@ function getBaseUrl() {
 
 export async function POST(request: Request) {
   try {
+    if (!EMAIL_SERVICE_ENABLED) {
+      return NextResponse.json(
+        { error: { code: "SERVICE_UNAVAILABLE", message: EMAIL_SERVICE_UNAVAILABLE_MESSAGE } },
+        { status: 503 },
+      );
+    }
+
     const body = await request.json();
     const email = String(body?.email || "").trim().toLowerCase();
 

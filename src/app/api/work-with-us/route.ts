@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import {
+  EMAIL_SERVICE_ENABLED,
+  EMAIL_SERVICE_UNAVAILABLE_MESSAGE,
+} from "@/lib/service-status";
 
 const missingConfigResponse = NextResponse.json(
   { error: "Email service is not configured." },
@@ -8,6 +12,13 @@ const missingConfigResponse = NextResponse.json(
 
 export async function POST(request: Request) {
   try {
+    if (!EMAIL_SERVICE_ENABLED) {
+      return NextResponse.json(
+        { error: { code: "SERVICE_UNAVAILABLE", message: EMAIL_SERVICE_UNAVAILABLE_MESSAGE } },
+        { status: 503 },
+      );
+    }
+
     const body = await request.json();
     const name = (body?.name || "").trim();
     const email = (body?.email || "").trim();

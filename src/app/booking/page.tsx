@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { OverviewPage } from '@/components/booking/overview-page'
+import { OnlineBookingUnavailable } from "@/components/booking/online-booking-unavailable";
 
 export const metadata: Metadata = {
   title: "Land's End | Book Your Stay",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const Page = () => {
   return (
-    <OverviewPage />
+    <OnlineBookingUnavailable />
   )
 }
 

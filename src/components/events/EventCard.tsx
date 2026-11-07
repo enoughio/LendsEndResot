@@ -23,6 +23,7 @@ type EventCardProps = {
 };
 
 const formatDate = (iso: string) => {
+  if (iso.toLowerCase() === "year-round") return "Year-round";
   try {
     const d = new Date(iso);
     return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
@@ -32,11 +33,13 @@ const formatDate = (iso: string) => {
 };
 
 const formatDay = (iso: string) => {
+  if (iso.toLowerCase() === "year-round") return "ALL";
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? "--" : d.getDate().toString().padStart(2, "0");
 };
 
 const formatMonth = (iso: string) => {
+  if (iso.toLowerCase() === "year-round") return "OPEN";
   const d = new Date(iso);
   return Number.isNaN(d.getTime())
     ? "Date"

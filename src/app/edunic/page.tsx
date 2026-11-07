@@ -12,6 +12,13 @@
 // styling lives in the <style> block at the bottom. No Tailwind or UI library needed.
 
 import React from "react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "EDUNIC — Learning in the Wild | Land's End",
+  description:
+    "A nature, adventure and storytelling program for school students in Classes 4 to 10 at Sumiran Forest near Bhopal.",
+};
 
 /* ------------------------------------------------------------------ */
 /*  IMAGE PATHS — replace with your own hosted photos                  */

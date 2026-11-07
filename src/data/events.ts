@@ -45,7 +45,29 @@ export const events: Event[] = [
     registrationLink: "https://rzp.io/rzp/0YLr5Dx",
     contact: [ "+91 88713 17382", "+91 81096 69604", "landsend.sumiran@gmail.com" ],
   },
-  
+
+  {
+    id: "9",
+    slug: "edunic-learning-in-the-wild",
+    customPagePath: "/edunic#contact",
+    title: "EDUNIC — Learning in the Wild",
+    shortDescription:
+      "A nature, adventure and storytelling program for school students from Classes 4 to 10, set inside Sumiran Forest near Bhopal.",
+    description:
+      "EDUNIC brings structured, hands-on learning into a living forest. Students explore nature, take part in adventure and creative activities, and build observation, storytelling and teamwork skills with experienced facilitators.",
+    images: ["/about/aboutHero.png"],
+    startDate: "year-round",
+    time: "Flexible school programs",
+    location: "Land's End — The Last Resort, Sumiran Forest, Near Bhopal",
+    contact: ["+91 88713 17382", "+91 81096 69604", "landsend.sumiran@gmail.com"],
+    includes: [
+      "Nature trails and forest learning",
+      "Adventure sports and team challenges",
+      "Hands-on farming and craft activities",
+      "Storytelling, nature journaling and reflection",
+      "NEP 2020-aligned school documentation",
+    ],
+  },
 
   {
     id: "8",
@@ -97,7 +119,7 @@ Seats are limited. Register and complete the payment to confirm your place. Over
       },
     ],
   },
-  
+
   // {
   //   id: "1",
   //   slug: "sunrise-walk-2026",

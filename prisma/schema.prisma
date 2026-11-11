@@ -91,6 +91,9 @@ model RoomType {
   description String
   basePrice Float
   extraPersonPrice Float @default(0)
+  breakfastOnlyPrice Float @default(0)
+  breakfastPlusMealPrice Float @default(0)
+  allMealsPrice Float @default(0)
   size_sqft String
   amenities String[]
   totalRooms Int @default(0)
@@ -138,6 +141,7 @@ model VisitPackage {
   basePrice Float
   maxActivity Int @default(1)
   maxGroupSize Int @default(1)
+  minGroupSize Int @default(4)
   timing String?
   includes String[]
   status PackageStatus @default(ACTIVE)
@@ -198,6 +202,11 @@ model Booking {
   extraGuestCount Int @default(0)
   extraGuestPrice Float @default(0)
   guestList Json?
+  quotedRoomAmount Float?
+  quotedMealAmount Float?
+  quotedExtraGuestAmount Float?
+
+  consent HouseRulesConsent?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -240,6 +249,50 @@ model BookingActivity {
   @@unique([bookingId, activityId])
   @@index([bookingId])
   @@index([activityId])
+}
+
+model BookingEnquiry {
+  id String @id @default(cuid())
+  kind String
+  contactName String
+  email String
+  phone String
+  preferredDate DateTime
+  natureOfRetreat String?
+  expectedParticipants Int?
+  groupType String?
+  organization String?
+  status String @default("NEW")
+  emailSent Boolean @default(false)
+
+  consent HouseRulesConsent?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([kind])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model HouseRulesConsent {
+  id String @id @default(cuid())
+  signerName String
+  signatureData String @db.Text
+  acceptedRuleIds String[]
+  exitPolicyAccepted Boolean
+  purpose String
+
+  bookingId String? @unique
+  booking Booking? @relation(fields: [bookingId], references: [id])
+
+  enquiryId String? @unique
+  enquiry BookingEnquiry? @relation(fields: [enquiryId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([purpose])
+  @@index([createdAt])
 }
 
 model Event {

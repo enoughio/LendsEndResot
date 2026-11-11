@@ -1,4 +1,4 @@
-export const ONLINE_BOOKING_ENABLED = false;
+export const ONLINE_BOOKING_ENABLED = true;
 export const EMAIL_SERVICE_ENABLED = false;
 
 export const ONLINE_BOOKING_UNAVAILABLE_MESSAGE =

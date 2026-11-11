@@ -1,11 +1,11 @@
 
 
-import { OnlineBookingUnavailable } from "@/components/booking/online-booking-unavailable";
+import { StayBooking } from "@/components/booking/stay-booking"
  
 const Page = () => {
   return (
-    <div>
-      <OnlineBookingUnavailable />
+    <div className="min-h-screen bg-[#f6f1e6]">
+      <StayBooking />
     </div>
   )
 }

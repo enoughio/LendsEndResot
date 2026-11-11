@@ -1,18 +1,23 @@
 'use client'
 
-// TODO : overfetching here in /api/booking 
+// TODO : overfetching here in /api/booking
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, Calendar, Users, CheckCircle2, ShieldCheck, CreditCard, PhoneCall, Sparkles, CircleQuestionMark, ChevronLeft, ChevronRight, X, Images } from 'lucide-react';
+import { Calendar, Users, ShieldCheck, CreditCard, PhoneCall, CircleQuestionMark, ChevronLeft, ChevronRight, X, Images } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { notifyError, notifyInfo, notifySuccess } from '@/lib/client-notify';
 import { roomImages } from '@/lib/rooms-images';
+import { CANCELLATION_POLICY } from '@/lib/house-rules';
+import { calculateNights, formatIndiaDate, indiaDateKey, parseDate, todayIndiaInput } from '@/lib/india-date';
+import { ASK_ON_ARRIVAL_NOTE, CHECK_IN_LABEL, CHECK_OUT_LABEL, RESORT_EMAIL, RESORT_PHONE_DISPLAY, RESORT_PHONE_TEL, STAY_ADDONS, STAY_INCLUSIONS } from '@/lib/resort-copy';
+import { MEAL_TIERS, buildPriceBreakdown, mealTierLabel, nightlyRateForTier, quoteStay, stayOccupancyError, type MealTier } from '@/lib/stay-pricing';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface StayBookingProps {}
 
 const DEFAULT_ROOM_IMAGE = '/gallery/default.jpeg';
+const MAX_ROOMS = 20;
 
 function getRoomImages(roomName: string) {
   const normalizedName = roomName.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -20,7 +25,7 @@ function getRoomImages(roomName: string) {
   return roomKey ? roomImages[roomKey] : [DEFAULT_ROOM_IMAGE];
 }
 
-function RoomImageGallery({ roomName, compact = false }: { roomName: string; compact?: boolean }) {
+function RoomImageGallery({ roomName, compact = false, onOpen }: { roomName: string; compact?: boolean; onOpen?: () => void }) {
   const images = getRoomImages(roomName);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -43,9 +48,10 @@ function RoomImageGallery({ roomName, compact = false }: { roomName: string; com
         type="button"
         onClick={(event) => {
           event.stopPropagation();
+          onOpen?.();
           setIsOpen(true);
         }}
-        className={`group relative shrink-0 overflow-hidden rounded-lg ${compact ? 'h-32 w-full' : 'h-28 w-36 sm:h-32 sm:w-40'}`}
+        className={`group relative shrink-0 overflow-hidden ${compact ? 'h-32 w-full' : 'h-28 w-36 sm:h-32 sm:w-40'}`}
         aria-label={`View photos of ${roomName}`}
       >
         <Image src={activeImage} alt={`${roomName} room`} fill sizes={compact ? '(max-width: 1024px) 100vw, 400px' : '160px'} className="object-cover transition-transform group-hover:scale-105" />
@@ -84,34 +90,18 @@ function RoomImageGallery({ roomName, compact = false }: { roomName: string; com
   );
 }
 
-// Simple image component with error handling
-function ImageWithFallback({ src, alt, className, width, height }: { src: string; alt: string; className?: string; width?: number; height?: number }) {
-  const [imgSrc, setImgSrc] = useState(src);
-  
-  return (
-    <Image 
-      src={imgSrc} 
-      alt={alt} 
-      width={width || 400}
-      height={height || 300}
-      className={className}
-      onError={() => {
-        setImgSrc(DEFAULT_ROOM_IMAGE);
-      }}
-    />
-  );
-}
-
 type RoomTypeApi = {
   id: string;
   name: string;
   description: string;
   basePrice: number;
+  breakfastOnlyPrice?: number;
+  breakfastPlusMealPrice?: number;
+  allMealsPrice?: number;
   maxOccupancy: number;
   baseOccupancy: number;
   extraPersonPrice: number;
   amenities: string[];
-
   totalRooms: number;
   isSingleOccupancy?: boolean;
   isDormRoom?: boolean;
@@ -132,10 +122,190 @@ type BookingCatalogResponse = {
   };
 };
 
-export function StayBooking({ }: StayBookingProps) {
+type AvailabilitySnapshot = {
+  key: string;
+  counts: Record<string, number>;
+  failed: boolean;
+};
+
+type FittedParty = {
+  roomsRequested: number;
+  baseGuests: number;
+  extraGuests: number;
+  singleOccupancyGuests: number;
+  dormGuests: number;
+};
+
+function openDatePicker(input: HTMLInputElement | null) {
+  if (!input) return;
+  input.focus();
+  try {
+    (input as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
+  } catch {
+    // The focused date input still accepts a date when showPicker is blocked.
+  }
+}
+
+function shiftIndiaDate(value: string, days: number) {
+  const parsed = parseDate(value);
+  if (!parsed) return todayIndiaInput();
+  const [year, month, day] = indiaDateKey(parsed).split('-').map(Number);
+  const shifted = new Date(Date.UTC(year, month - 1, day + days));
+  const nextYear = shifted.getUTCFullYear();
+  const nextMonth = String(shifted.getUTCMonth() + 1).padStart(2, '0');
+  const nextDay = String(shifted.getUTCDate()).padStart(2, '0');
+  return `${nextYear}-${nextMonth}-${nextDay}`;
+}
+
+function stayRangeIsValid(checkIn: string, checkOut: string) {
+  const start = parseDate(checkIn);
+  const end = parseDate(checkOut);
+  if (!start || !end) return false;
+  return indiaDateKey(end) > indiaDateKey(start);
+}
+
+function planMatchesTier(name: string, tier: MealTier) {
+  const value = name.trim().toLowerCase();
+  if (tier === 'all-meals') return value.includes('all meal');
+  if (tier === 'breakfast-plus-one') {
+    return value.includes('one meal') || value.includes('breakfast +') || value.includes('breakfast plus') || value.includes('+ one');
+  }
+  return value.includes('breakfast') && !value.includes('one meal') && !value.includes('all meal') && !value.includes('+');
+}
+
+function mealPlanIdForTier(plans: MealPlanApi[], tier: MealTier) {
+  const label = mealTierLabel(tier).toLowerCase();
+  return (
+    plans.find((plan) => plan.name.trim().toLowerCase() === label)?.id ??
+    plans.find((plan) => planMatchesTier(plan.name, tier))?.id ??
+    null
+  );
+}
+
+// Meal prices are nested packages, so checkout keeps the fullest one still selected.
+function fullestMealTier(tiers: readonly MealTier[]): MealTier | null {
+  for (let index = MEAL_TIERS.length - 1; index >= 0; index -= 1) {
+    const tier = MEAL_TIERS[index].id;
+    if (tiers.includes(tier)) return tier;
+  }
+  return null;
+}
+
+function fitPartyToRoom(room: RoomTypeApi, people: number): FittedParty {
+  const party = Math.max(1, people);
+  if (room.isDormRoom) {
+    const cap = Math.max(1, room.maxOccupancy || 1);
+    return {
+      roomsRequested: 1,
+      baseGuests: 1,
+      extraGuests: 0,
+      singleOccupancyGuests: 1,
+      dormGuests: Math.min(party, cap),
+    };
+  }
+  if (room.isSingleOccupancy) {
+    return {
+      roomsRequested: 1,
+      baseGuests: 1,
+      extraGuests: 0,
+      singleOccupancyGuests: Math.min(party, MAX_ROOMS),
+      dormGuests: 1,
+    };
+  }
+  const baseOccupancy = Math.max(1, room.baseOccupancy || 1);
+  const maxOccupancy = Math.max(baseOccupancy, room.maxOccupancy || baseOccupancy);
+  const roomsRequested = Math.min(MAX_ROOMS, Math.max(1, Math.ceil(party / maxOccupancy)));
+  const included = baseOccupancy * roomsRequested;
+  const capped = Math.min(party, maxOccupancy * roomsRequested);
+  const baseGuests = Math.min(capped, included);
+  const extraGuests = baseGuests >= included ? Math.max(0, capped - included) : 0;
+  return {
+    roomsRequested,
+    baseGuests,
+    extraGuests,
+    singleOccupancyGuests: 1,
+    dormGuests: 1,
+  };
+}
+
+function isAbortError(error: unknown) {
+  return error instanceof Error && error.name === 'AbortError';
+}
+
+async function checkRoomAvailability(roomId: string, checkIn: string, checkOut: string, signal: AbortSignal) {
+  try {
+    const response = await fetch('/api/availability/stay', {
+      method: 'POST',
+      signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        roomTypeId: roomId,
+        checkIn,
+        checkOut,
+        guests: 1,
+        roomsRequested: 1,
+        mealPlanName: mealTierLabel('breakfast-only'),
+      }),
+    });
+    const json = (await response.json().catch(() => null)) as { data?: { availableCount?: unknown } } | null;
+    const availableCount = Number(json?.data?.availableCount);
+    if ((response.ok || response.status === 409) && Number.isFinite(availableCount)) {
+      return { id: roomId, ok: true as const, count: availableCount };
+    }
+    return { id: roomId, ok: false as const, count: 0 };
+  } catch (error) {
+    if (signal.aborted || isAbortError(error)) throw error;
+    return { id: roomId, ok: false as const, count: 0 };
+  }
+}
+
+function CountControl({
+  valueLabel,
+  onDecrease,
+  onIncrease,
+  decreaseDisabled,
+  increaseDisabled,
+  decreaseLabel,
+  increaseLabel,
+}: {
+  valueLabel: string;
+  onDecrease: () => void;
+  onIncrease: () => void;
+  decreaseDisabled?: boolean;
+  increaseDisabled?: boolean;
+  decreaseLabel: string;
+  increaseLabel: string;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={onDecrease}
+        disabled={decreaseDisabled}
+        aria-label={decreaseLabel}
+        className="h-9 w-9 shrink-0 border border-[#cbbfa8] text-lg leading-none text-stone-800 hover:border-[#1f3d2e] disabled:opacity-40"
+      >
+        -
+      </button>
+      <div className="min-w-0 flex-1 border border-[#e4d7c3] bg-white px-2 py-1.5 text-center text-sm text-stone-800">{valueLabel}</div>
+      <button
+        type="button"
+        onClick={onIncrease}
+        disabled={increaseDisabled}
+        aria-label={increaseLabel}
+        className="h-9 w-9 shrink-0 border border-[#cbbfa8] text-lg leading-none text-stone-800 hover:border-[#1f3d2e] disabled:opacity-40"
+      >
+        +
+      </button>
+    </div>
+  );
+}
+
+export function StayBooking({}: StayBookingProps) {
   const router = useRouter();
   const checkInInputRef = useRef<HTMLInputElement>(null);
   const checkOutInputRef = useRef<HTMLInputElement>(null);
+  const guestIntentRef = useRef(1);
   const [roomTypes, setRoomTypes] = useState<RoomTypeApi[]>([]);
   const [mealPlans, setMealPlans] = useState<MealPlanApi[]>([]);
   const [loading, setLoading] = useState(true);
@@ -148,33 +318,21 @@ export function StayBooking({ }: StayBookingProps) {
   const [baseGuests, setBaseGuests] = useState(1);
   const [extraGuests, setExtraGuests] = useState(0);
   const [singleOccupancyGuests, setSingleOccupancyGuests] = useState(1);
-  const [selectedMealPlanId, setSelectedMealPlanId] = useState<string | null>(null);
-  const [availabilityChecked, setAvailabilityChecked] = useState(false);
-  const [isAvailable, setIsAvailable] = useState(false);
+  const [selectedMeals, setSelectedMeals] = useState<MealTier[]>([]);
+  const [dormGuests, setDormGuests] = useState(1);
+  const [desiredGuests, setDesiredGuests] = useState(1);
   const [showGuestInfo, setShowGuestInfo] = useState(false);
+  const [availability, setAvailability] = useState<AvailabilitySnapshot | null>(null);
+  const [availabilityLoading, setAvailabilityLoading] = useState(false);
+  const [availabilityError, setAvailabilityError] = useState<string | null>(null);
+  const [availabilityAttempt, setAvailabilityAttempt] = useState(0);
 
   const handleBack = () => {
     router.push('/booking');
   };
 
-  const openCheckInPicker = () => {
-    const input = checkInInputRef.current;
-    if (!input) return;
-    input.focus();
-    (input as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
-  };
-
-  const openCheckOutPicker = () => {
-    const input = checkOutInputRef.current;
-    if (!input) return;
-    input.focus();
-    (input as HTMLInputElement & { showPicker?: () => void }).showPicker?.();
-  };
-
-
-  // get all rooms information
   useEffect(() => {
-    const loadCatalog = async () => {  
+    const loadCatalog = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -182,9 +340,7 @@ export function StayBooking({ }: StayBookingProps) {
         if (!res.ok) throw new Error('Failed to load booking data');
         const json = (await res.json()) as BookingCatalogResponse;
         setRoomTypes(json.data.rooms || []);
-        const plans = json.data.mealPlans || [];
-        setMealPlans(plans);
-        setSelectedMealPlanId((prev) => prev || plans[0]?.id || null);
+        setMealPlans(json.data.mealPlans || []);
       } catch (err) {
         const message = notifyError(err, 'Failed to load booking data');
         setError(message);
@@ -195,22 +351,185 @@ export function StayBooking({ }: StayBookingProps) {
     void loadCatalog();
   }, []);
 
-  const missingRequirements = useMemo(() => {
-    const missing: string[] = [];
-    if (!checkInDate) missing.push('Select check-in date');
-    if (!checkOutDate) missing.push('Select check-out date');
-    if (!selectedMealPlanId) missing.push('Select a meal plan');
-    return missing;
-  }, [checkInDate, checkOutDate, selectedMealPlanId]);
+  const selectedRoomData = roomTypes.find((room) => room.id === selectedRoom);
+  const isDorm = Boolean(selectedRoomData?.isDormRoom);
+  const isSingleOccupancy = Boolean(selectedRoomData?.isSingleOccupancy) && !isDorm;
+  const baseOccupancy = selectedRoomData?.baseOccupancy || 1;
+  const maxOccupancy = selectedRoomData?.maxOccupancy || baseOccupancy;
+  const effectiveRoomsRequested = isSingleOccupancy ? singleOccupancyGuests : Math.min(Math.max(1, roomsRequested), MAX_ROOMS);
+  const includedBaseGuests = baseOccupancy * effectiveRoomsRequested;
+  const maxGuestsForRooms = maxOccupancy * effectiveRoomsRequested;
+  const maxExtraGuests = Math.max(0, maxGuestsForRooms - includedBaseGuests);
+  const effectiveBaseGuests = Math.min(Math.max(1, baseGuests), includedBaseGuests);
+  const totalGuests = isDorm ? dormGuests : isSingleOccupancy ? singleOccupancyGuests : effectiveBaseGuests + extraGuests;
+  guestIntentRef.current = selectedRoom ? totalGuests : desiredGuests;
 
-  const handleConfirmBooking = async () => {
-    if (!selectedRoom) {
-      notifyInfo('Please select a room before continuing.');
+  const datesReady = stayRangeIsValid(checkInDate, checkOutDate);
+  const dateKey = `${checkInDate}|${checkOutDate}`;
+  const parsedCheckIn = parseDate(checkInDate);
+  const parsedCheckOut = parseDate(checkOutDate);
+  const nights = datesReady && parsedCheckIn && parsedCheckOut ? calculateNights(parsedCheckIn, parsedCheckOut) : 0;
+  const roomsNeeded = isDorm ? 1 : isSingleOccupancy ? totalGuests : effectiveRoomsRequested;
+  const availabilitySettled = Boolean(availability && availability.key === dateKey && !availabilityLoading);
+  const selectedAvailableCount = availabilitySettled && selectedRoom ? (availability?.counts[selectedRoom] ?? 0) : 0;
+  const roomStillOffered = Boolean(availabilitySettled && selectedRoom && !availability?.failed && selectedAvailableCount > 0);
+  const showPricedSummary = Boolean(selectedRoomData && datesReady && (roomStillOffered || !availabilitySettled));
+
+  useEffect(() => {
+    if (!datesReady) {
+      setAvailability(null);
+      setAvailabilityError(null);
+      setAvailabilityLoading(false);
+      return;
+    }
+    if (loading) return;
+    if (roomTypes.length === 0) {
+      setAvailability({ key: dateKey, counts: {}, failed: false });
+      setAvailabilityError(null);
+      setAvailabilityLoading(false);
       return;
     }
 
-    if (missingRequirements.length > 0) {
-      notifyInfo(`Please complete: ${missingRequirements.join(', ')}.`);
+    const controller = new AbortController();
+    let ignore = false;
+    setAvailabilityLoading(true);
+    setAvailabilityError(null);
+
+    void (async () => {
+      try {
+        const results = await Promise.all(
+          roomTypes.map((room) => checkRoomAvailability(room.id, checkInDate, checkOutDate, controller.signal)),
+        );
+        if (ignore) return;
+        const counts: Record<string, number> = {};
+        let okCount = 0;
+        for (const result of results) {
+          if (result.ok) {
+            counts[result.id] = result.count;
+            okCount += 1;
+          }
+        }
+        setAvailability({ key: dateKey, counts, failed: okCount === 0 });
+        setAvailabilityError(okCount === 0 ? "We couldn't check availability for these dates. Try again in a moment." : null);
+      } catch (error) {
+        if (ignore || isAbortError(error)) return;
+        setAvailability({ key: dateKey, counts: {}, failed: true });
+        setAvailabilityError("We couldn't check availability for these dates. Try again in a moment.");
+      } finally {
+        if (!ignore) setAvailabilityLoading(false);
+      }
+    })();
+
+    return () => {
+      ignore = true;
+      controller.abort();
+    };
+  }, [checkInDate, checkOutDate, dateKey, datesReady, loading, roomTypes, availabilityAttempt]);
+
+  useEffect(() => {
+    if (!selectedRoom || !datesReady || availabilityLoading) return;
+    if (!availability || availability.key !== dateKey) return;
+    const count = availability.counts[selectedRoom] ?? 0;
+    if (count <= 0 || availability.failed) {
+      setDesiredGuests(totalGuests);
+      setSelectedMeals([]);
+      setSelectedRoom(null);
+    }
+  }, [availability, availabilityLoading, dateKey, datesReady, selectedRoom, totalGuests]);
+
+  useEffect(() => {
+    if (isSingleOccupancy) {
+      setExtraGuests(0);
+      setBaseGuests(1);
+    }
+  }, [isSingleOccupancy]);
+
+  useEffect(() => {
+    if (!isSingleOccupancy) {
+      setRoomsRequested((prev) => Math.min(Math.max(1, prev), MAX_ROOMS));
+      setBaseGuests((prev) => Math.min(Math.max(1, prev), includedBaseGuests));
+    }
+  }, [isSingleOccupancy, includedBaseGuests]);
+
+  useEffect(() => {
+    if (effectiveBaseGuests < includedBaseGuests && extraGuests > 0) {
+      setExtraGuests(0);
+    }
+  }, [effectiveBaseGuests, includedBaseGuests, extraGuests]);
+
+  const availableRooms = useMemo(() => {
+    if (!availabilitySettled || !availability || availability.failed) return [];
+    return [...roomTypes]
+      .filter((room) => (availability.counts[room.id] ?? 0) > 0)
+      .sort((firstRoom, secondRoom) => secondRoom.basePrice - firstRoom.basePrice);
+  }, [availability, availabilitySettled, roomTypes]);
+
+  const selectedTier = useMemo(() => fullestMealTier(selectedMeals), [selectedMeals]);
+  const selectedMealPlanId = useMemo(
+    () => (selectedTier ? mealPlanIdForTier(mealPlans, selectedTier) : null),
+    [mealPlans, selectedTier],
+  );
+  const quote = selectedRoomData && nights && selectedTier
+    ? quoteStay({
+        room: selectedRoomData,
+        tier: selectedTier,
+        guests: totalGuests,
+        roomsRequested: roomsNeeded,
+        nights,
+      })
+    : null;
+  const basePrice = quote?.quotedRoomAmount || 0;
+  const extraGuestAmount = quote?.quotedExtraGuestAmount || 0;
+  const grandTotal = quote?.totalAmount || 0;
+  const occupancyError = selectedRoomData
+    ? stayOccupancyError(
+        { ...selectedRoomData, capacity: selectedRoomData.maxOccupancy },
+        totalGuests,
+        roomsNeeded,
+      )
+    : null;
+  const needsMoreRooms = roomStillOffered && roomsNeeded > selectedAvailableCount;
+  const canContinue = Boolean(roomStillOffered && selectedTier && !occupancyError && !needsMoreRooms && !submitting);
+  const roomSkeletons = [1, 2, 3];
+  const checkOutMin = checkInDate ? shiftIndiaDate(checkInDate, 1) : todayIndiaInput();
+
+  const chooseStay = (room: RoomTypeApi, tier: MealTier) => {
+    if (selectedRoom !== room.id) {
+      const fitted = fitPartyToRoom(room, guestIntentRef.current);
+      setRoomsRequested(fitted.roomsRequested);
+      setBaseGuests(fitted.baseGuests);
+      setExtraGuests(fitted.extraGuests);
+      setSingleOccupancyGuests(fitted.singleOccupancyGuests);
+      setDormGuests(fitted.dormGuests);
+    }
+    setSelectedMeals([tier]);
+    setSelectedRoom(room.id);
+  };
+
+  const selectRoom = (room: RoomTypeApi) => {
+    if (selectedRoom === room.id) return;
+    chooseStay(room, 'all-meals');
+  };
+
+  const handleConfirmBooking = async () => {
+    if (!datesReady) {
+      notifyInfo('Choose a check-out date after check-in.');
+      return;
+    }
+    if (!selectedRoom || !roomStillOffered) {
+      notifyInfo('Select a room that is free for these dates.');
+      return;
+    }
+    if (!selectedTier) {
+      notifyInfo('Choose at least one meal option.');
+      return;
+    }
+    if (occupancyError) {
+      notifyInfo(occupancyError);
+      return;
+    }
+    if (needsMoreRooms) {
+      notifyInfo(`Only ${selectedAvailableCount} ${selectedAvailableCount === 1 ? 'room is' : 'rooms are'} left for those dates.`);
       return;
     }
 
@@ -218,47 +537,17 @@ export function StayBooking({ }: StayBookingProps) {
       setSubmitting(true);
       setError(null);
 
-      const availabilityRes = await fetch('/api/availability/stay', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          roomTypeId: selectedRoom,
-          checkIn: new Date(checkInDate).toISOString(),
-          checkOut: new Date(checkOutDate).toISOString(),
-          guests: totalGuests,
-          roomsRequested,
-          mealPlanId: selectedMealPlanId,
-        }),
-      });
-
-      const availabilityJson = await availabilityRes.json();
-      if (!availabilityRes.ok) {
-        throw new Error(availabilityJson?.error?.message || 'Availability check failed');
-      }
-
-      if (!availabilityJson?.data?.available) {
-        setAvailabilityChecked(true);
-        setIsAvailable(false);
-        throw new Error('Selected room is not available for the selected dates.');
-      }
-
-      if (!availabilityChecked || !isAvailable) {
-        setAvailabilityChecked(true);
-        setIsAvailable(true);
-        notifySuccess('Room is available', 'Click the button again to continue booking.');
-        return;
-      }
-
       const createRes = await fetch('/api/bookings/stay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           roomTypeId: selectedRoom,
-          checkIn: new Date(checkInDate).toISOString(),
-          checkOut: new Date(checkOutDate).toISOString(),
+          checkIn: checkInDate,
+          checkOut: checkOutDate,
           guests: totalGuests,
-          roomsRequested,
+          roomsRequested: roomsNeeded,
           mealPlanId: selectedMealPlanId,
+          mealPlanName: mealTierLabel(selectedTier),
         }),
       });
       const createJson = await createRes.json();
@@ -278,587 +567,534 @@ export function StayBooking({ }: StayBookingProps) {
     }
   };
 
-  const selectedRoomData = roomTypes.find(r => r.id === selectedRoom);
-  const isSingleOccupancy = Boolean(selectedRoomData?.isSingleOccupancy);
-  const baseOccupancy = selectedRoomData?.baseOccupancy || 1;
-  const maxOccupancy = selectedRoomData?.maxOccupancy || baseOccupancy;
-  const maxRoomsForType = 20;
-  const effectiveRoomsRequested = isSingleOccupancy ? singleOccupancyGuests : Math.min(Math.max(1, roomsRequested), maxRoomsForType);
-  const includedBaseGuests = baseOccupancy * effectiveRoomsRequested;
-  const maxGuestsForRooms = maxOccupancy * effectiveRoomsRequested;
-  const maxExtraGuests = Math.max(0, maxGuestsForRooms - includedBaseGuests);
-  const effectiveBaseGuests = Math.min(Math.max(1, baseGuests), includedBaseGuests);
-  const maxSingleOccupancyGuests = maxRoomsForType;
-  const totalGuests = isSingleOccupancy ? singleOccupancyGuests : effectiveBaseGuests + extraGuests;
+  const ruleNote = !selectedRoomData
+    ? 'Dorms are priced per person. A private room rate includes its base occupancy, and further guests use the extra-person rate.'
+    : isDorm
+      ? 'Every guest is charged the nightly dorm rate.'
+      : isSingleOccupancy
+        ? 'Each guest books a separate room.'
+        : `The rate includes ${baseOccupancy} ${baseOccupancy === 1 ? 'guest' : 'guests'} per room. An extra person is ₹${(selectedRoomData.extraPersonPrice || 0).toLocaleString('en-IN')} per night, with all meals.`;
 
-  useEffect(() => {
-    setAvailabilityChecked(false);
-    setIsAvailable(false);
-  }, [selectedRoom, checkInDate, checkOutDate, extraGuests, selectedMealPlanId, singleOccupancyGuests, roomsRequested, baseGuests]);
-
-  useEffect(() => {
-    setRoomsRequested(1);
-    setBaseGuests(1);
-    setExtraGuests(0);
-    setSingleOccupancyGuests(1);
-  }, [selectedRoom]);
-
-  useEffect(() => {
-    if (isSingleOccupancy) {
-      setExtraGuests(0);
-      setBaseGuests(1);
-    }
-  }, [isSingleOccupancy]);
-
-  useEffect(() => {
-    if (!isSingleOccupancy) {
-      setRoomsRequested((prev) => Math.min(Math.max(1, prev), maxRoomsForType));
-      setBaseGuests((prev) => Math.min(Math.max(1, prev), includedBaseGuests));
-    }
-  }, [isSingleOccupancy, maxRoomsForType, includedBaseGuests]);
-
-  useEffect(() => {
-    if (effectiveBaseGuests < includedBaseGuests && extraGuests > 0) {
-      setExtraGuests(0);
-    }
-  }, [effectiveBaseGuests, includedBaseGuests, extraGuests]);
-
-  const nights = checkInDate && checkOutDate ? Math.max(1, Math.ceil((new Date(checkOutDate).getTime() - new Date(checkInDate).getTime()) / (1000 * 60 * 60 * 24))) : 0;
-  const roomsNeeded = isSingleOccupancy ? totalGuests : effectiveRoomsRequested;
-  const basePrice = selectedRoomData && nights ? selectedRoomData.basePrice * nights * roomsNeeded : 0;
-  const extraGuestAmount = selectedRoomData && nights && !isSingleOccupancy
-    ? extraGuests * selectedRoomData.extraPersonPrice * nights
-    : 0;
-  const selectedMealPlan = mealPlans.find((plan) => plan.id === selectedMealPlanId) || null;
-  const mealPlanAmount = selectedMealPlan && nights ? selectedMealPlan.pricePerPerson * totalGuests * nights : 0;
-  const grandTotal = basePrice + extraGuestAmount + mealPlanAmount;
-  const bookingSteps = [
-    { id: '1', label: 'Choose room' },
-    { id: '2', label: 'Select dates & guests' },
-    { id: '3', label: 'Pick Meal Plan' },
-    { id: '4', label: 'Review and pay' },
-  ];
-  const roomSkeletons = [1, 2, 3];
+  const guestHeading = !selectedRoomData ? 'Guests' : isDorm ? 'Guests' : isSingleOccupancy ? 'Rooms' : 'Guests';
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40 pt-10">
+    <div className="min-h-screen bg-[#f6f1e6] px-4 pb-20 pt-24 text-stone-800 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-6xl">
+        <button type="button" onClick={handleBack} className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+          Back to booking
+        </button>
+        <header className="mt-6 max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Land&apos;s End · The Last Resort</p>
+          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#1f3d2e] sm:text-5xl">Stay at Sumiran</h1>
+          <p className="mt-4 text-base leading-7 text-stone-700">Choose your dates and guests, then a room and the meal price that suits you.</p>
+        </header>
+        <figure className="relative mt-8 aspect-video overflow-hidden">
+          <Image
+            src="/gallery/building.jpeg"
+            alt="Land's End in Sumiran Forest"
+            fill
+            priority
+            sizes="(min-width: 1152px) 1152px, 100vw"
+            className="object-cover object-[center_38%]"
+          />
+        </figure>
 
-
-      {/* Hero Section */}
-      <div className="relative h-48 overflow-hidden ">
-        <ImageWithFallback 
-          src="https://images.unsplash.com/photo-1630823070635-5fe15b1a7c14?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqdW5nbGUlMjByZXNvcnR8ZW58MXx8fHwxNzYzNjk4MjE2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-          alt="Resort stay"
-          width={1920}
-          height={192}
-          
-          className="w-full h-full object-cover"
-        />
-
-        <div className="absolute inset-0  bg-linear-to-r  from-slate-900/80 via-slate-900/40 to-transparent">
-          <div className="max-w-7xl mx-auto md:ml-25  px-6 h-full flex items-center ">
-            <div>
-              <button onClick={handleBack} className="flex items-center gap-2 text-white mb-2 hover:text-green-400 transition-colors">
-                <ArrowLeft className="w-5 h-5" />
-                Back to offerings
-              </button>
-              <p className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-xs text-white/90 backdrop-blur-sm">
-                <Sparkles className="h-3.5 w-3.5" />
-                Nature stay booking
-              </p>
-              <h1 className="mt-2 text-white mb-2">Stay at Sumiran</h1>
-              <p className="text-sm text-white/85">Pick your room, dates, guests, and meal plan in one flow.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto  md:px-16 py-8 ">
-        <div className="mb-6 rounded-2xl border border-emerald-100 bg-white/90 p-4 shadow-sm">
-          <p className="mb-3 text-sm font-medium text-gray-700">Booking steps</p>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            {bookingSteps.map((step) => (
-              <div key={step.id} className="flex items-center gap-2 rounded-xl border border-gray-100 bg-gray-50/80 px-3 py-2 text-sm text-gray-700">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold">{step.id}</span>
-                <span>{step.label}</span>
+        <section className="mt-8" aria-labelledby="stay-dates-heading">
+          <h2 id="stay-dates-heading" className="font-serif text-3xl font-medium text-[#1f3d2e]">Dates and guests</h2>
+          <p className="mt-2 text-sm leading-6 text-stone-600">Check-in, check-out, and who is coming, in one booking bar.</p>
+          <div className="mt-4 border border-[#e4d7c3] bg-[#fffdf8]">
+            <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.25fr)]">
+              <div
+                className="cursor-pointer border-b border-[#e4d7c3] px-4 py-4 sm:px-5 md:border-b-0 md:border-r"
+                onClick={() => openDatePicker(checkInInputRef.current)}
+              >
+                <label htmlFor="stay-check-in" className="block">
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6d5a38]">Check-in</span>
+                    <Calendar className="h-4 w-4 text-[#1f3d2e]" aria-hidden="true" />
+                  </span>
+                  <input
+                    ref={checkInInputRef}
+                    id="stay-check-in"
+                    type="date"
+                    value={checkInDate}
+                    min={todayIndiaInput()}
+                    onChange={(event) => setCheckInDate(event.target.value)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openDatePicker(checkInInputRef.current);
+                    }}
+                    className="mt-2 w-full cursor-pointer bg-transparent font-serif text-lg text-[#1f3d2e] outline-none [color-scheme:light]"
+                  />
+                </label>
               </div>
-            ))}
+
+              <div
+                className="cursor-pointer border-b border-[#e4d7c3] px-4 py-4 sm:px-5 md:border-b-0 md:border-r"
+                onClick={() => openDatePicker(checkOutInputRef.current)}
+              >
+                <label htmlFor="stay-check-out" className="block">
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6d5a38]">Check-out</span>
+                    <Calendar className="h-4 w-4 text-[#1f3d2e]" aria-hidden="true" />
+                  </span>
+                  <input
+                    ref={checkOutInputRef}
+                    id="stay-check-out"
+                    type="date"
+                    value={checkOutDate}
+                    min={checkOutMin}
+                    onChange={(event) => setCheckOutDate(event.target.value)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openDatePicker(checkOutInputRef.current);
+                    }}
+                    className="mt-2 w-full cursor-pointer bg-transparent font-serif text-lg text-[#1f3d2e] outline-none [color-scheme:light]"
+                  />
+                </label>
+              </div>
+
+              <div className="px-4 py-4 sm:px-5">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6d5a38]">{guestHeading}</p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowGuestInfo((prev) => !prev)}
+                      className="border border-[#e4d7c3] bg-[#fffdf8] p-1 text-[#6d5a38]"
+                      aria-label="Booking info"
+                      aria-expanded={showGuestInfo}
+                      title="How room and guest pricing works"
+                    >
+                      <CircleQuestionMark className="h-5 w-5" />
+                    </button>
+                    <Users className="h-4 w-4 text-[#1f3d2e]" aria-hidden="true" />
+                  </div>
+                </div>
+
+                {!selectedRoomData && (
+                  <div className="mt-3">
+                    <CountControl
+                      valueLabel={`${desiredGuests} ${desiredGuests === 1 ? 'guest' : 'guests'}`}
+                      onDecrease={() => setDesiredGuests((prev) => Math.max(1, prev - 1))}
+                      onIncrease={() => setDesiredGuests((prev) => Math.min(MAX_ROOMS, prev + 1))}
+                      decreaseDisabled={desiredGuests <= 1}
+                      increaseDisabled={desiredGuests >= MAX_ROOMS}
+                      decreaseLabel="Decrease guests"
+                      increaseLabel="Increase guests"
+                    />
+                  </div>
+                )}
+
+                {selectedRoomData && isDorm && (
+                  <div className="mt-3">
+                    <CountControl
+                      valueLabel={`${dormGuests} ${dormGuests === 1 ? 'guest' : 'guests'}`}
+                      onDecrease={() => setDormGuests((prev) => Math.max(1, prev - 1))}
+                      onIncrease={() => setDormGuests((prev) => Math.min(Math.max(1, maxOccupancy), prev + 1))}
+                      decreaseDisabled={dormGuests <= 1}
+                      increaseDisabled={dormGuests >= Math.max(1, maxOccupancy)}
+                      decreaseLabel="Decrease guests"
+                      increaseLabel="Increase guests"
+                    />
+                  </div>
+                )}
+
+                {selectedRoomData && isSingleOccupancy && (
+                  <div className="mt-3">
+                    <CountControl
+                      valueLabel={`${singleOccupancyGuests} ${singleOccupancyGuests === 1 ? 'room' : 'rooms'}`}
+                      onDecrease={() => setSingleOccupancyGuests((prev) => Math.max(1, prev - 1))}
+                      onIncrease={() => setSingleOccupancyGuests((prev) => Math.min(MAX_ROOMS, prev + 1))}
+                      decreaseDisabled={singleOccupancyGuests <= 1}
+                      increaseDisabled={singleOccupancyGuests >= MAX_ROOMS}
+                      decreaseLabel="Decrease rooms"
+                      increaseLabel="Increase rooms"
+                    />
+                  </div>
+                )}
+
+                {selectedRoomData && !isDorm && !isSingleOccupancy && (
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-sm text-stone-600">Rooms</span>
+                      <div className="w-40 shrink-0">
+                        <CountControl
+                          valueLabel={`${effectiveRoomsRequested} ${effectiveRoomsRequested === 1 ? 'room' : 'rooms'}`}
+                          onDecrease={() => setRoomsRequested((prev) => Math.max(1, prev - 1))}
+                          onIncrease={() => setRoomsRequested((prev) => Math.min(MAX_ROOMS, prev + 1))}
+                          decreaseDisabled={effectiveRoomsRequested <= 1}
+                          increaseDisabled={effectiveRoomsRequested >= MAX_ROOMS}
+                          decreaseLabel="Decrease rooms"
+                          increaseLabel="Increase rooms"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-sm text-stone-600">Guests</span>
+                      <div className="w-40 shrink-0">
+                        <CountControl
+                          valueLabel={effectiveBaseGuests === 1 ? '1 guest' : `${effectiveBaseGuests} guests`}
+                          onDecrease={() => setBaseGuests((prev) => Math.max(1, prev - 1))}
+                          onIncrease={() => setBaseGuests((prev) => Math.min(includedBaseGuests, prev + 1))}
+                          decreaseDisabled={effectiveBaseGuests <= 1}
+                          increaseDisabled={effectiveBaseGuests >= includedBaseGuests}
+                          decreaseLabel="Decrease guests"
+                          increaseLabel="Increase guests"
+                        />
+                      </div>
+                    </div>
+                    {effectiveBaseGuests >= includedBaseGuests && maxExtraGuests > 0 && (
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-sm text-stone-600">Extra</span>
+                        <div className="w-40 shrink-0">
+                          <CountControl
+                            valueLabel={extraGuests === 0 ? 'None' : `${extraGuests} extra`}
+                            onDecrease={() => setExtraGuests((prev) => Math.max(0, prev - 1))}
+                            onIncrease={() => setExtraGuests((prev) => Math.min(maxExtraGuests, prev + 1))}
+                            decreaseDisabled={extraGuests === 0}
+                            increaseDisabled={extraGuests >= maxExtraGuests}
+                            decreaseLabel="Decrease extra guests"
+                            increaseLabel="Increase extra guests"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {showGuestInfo && (
+                  <div className="mt-3 space-y-1 border border-[#e4d7c3] bg-[#f6f1e6] p-3 text-xs leading-5 text-stone-700">
+                    <p><strong>Rooms:</strong> How many rooms are in this booking.</p>
+                    <p><strong>Guests:</strong> People staying.</p>
+                    <p><strong>Dorm:</strong> Each guest pays the nightly rate.</p>
+                    <p><strong>Private room:</strong> The rate includes {selectedRoomData ? `${baseOccupancy} per room` : 'the base occupancy'}. Extra guests are charged per night, with all meals.</p>
+                    <p><strong>Meals:</strong> Every meal starts on. The fullest one you leave selected sets the nightly price.</p>
+                    {isSingleOccupancy && <p><strong>Single occupancy:</strong> Each guest needs one room.</p>}
+                  </div>
+                )}
+
+                {selectedRoomData && <p className="mt-3 text-sm font-semibold text-stone-900">Total guests: {totalGuests}</p>}
+              </div>
+            </div>
+            <p className={`border-t border-[#e4d7c3] px-4 py-3 text-sm leading-6 sm:px-5 ${checkInDate && checkOutDate && !datesReady ? 'text-amber-700' : 'text-stone-600'}`}>
+              {checkInDate && checkOutDate && !datesReady ? 'Check-out has to be after check-in.' : ruleNote}
+            </p>
           </div>
-        </div>
+        </section>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - Booking Details */}
+        <div className="mt-10 grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-6">
-            {error && <p className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">{error}</p>}
+            {error && <p className="border border-red-200 bg-red-50 p-4 text-red-700">{error}</p>}
 
-            {/* Room Selection */}
-            <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-              <h2 className="text-gray-900 mb-1 text-2xl font-bold">Choose Your Room</h2>
-              <p className="mb-4 text-sm text-gray-600">Select the stay option that matches your group size and comfort preference.</p>
-              {loading ? (
-                <div className="space-y-4">
+            <section aria-labelledby="available-rooms-heading">
+              <h2 id="available-rooms-heading" className="font-serif text-3xl font-medium text-[#1f3d2e]">Available rooms</h2>
+              {datesReady ? (
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
+                  {formatIndiaDate(checkInDate, { month: 'short' })} to {formatIndiaDate(checkOutDate, { month: 'short' })}
+                  {' · '}
+                  {nights} {nights === 1 ? 'night' : 'nights'}. Select a room, then the meal plan you want.
+                </p>
+              ) : (
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
+                  {checkInDate && checkOutDate ? 'Check-out has to be after check-in.' : 'Choose check-in and check-out to see available rooms.'}
+                </p>
+              )}
+
+              {datesReady && loading && (
+                <div className="mt-4 divide-y divide-[#e4d7c3] border-y border-[#e4d7c3]">
                   {roomSkeletons.map((item) => (
-                    <div key={item} className="rounded-xl border border-gray-200 p-4">
-                      <div className="animate-pulse flex items-start gap-4">
-                        <div className="h-20 w-20 rounded bg-gray-200" />
+                    <div key={item} className="py-5">
+                      <div className="flex animate-pulse items-start gap-4">
+                        <div className="h-28 w-36 bg-[#e4d7c3] sm:h-32 sm:w-40" />
                         <div className="flex-1 space-y-3">
-                          <div className="h-4 w-2/5 rounded bg-gray-200" />
-                          <div className="h-3 w-full rounded bg-gray-100" />
-                          <div className="h-3 w-4/5 rounded bg-gray-100" />
-                          <div className="flex gap-2">
-                            <div className="h-6 w-16 rounded-full bg-gray-100" />
-                            <div className="h-6 w-20 rounded-full bg-gray-100" />
-                            <div className="h-6 w-14 rounded-full bg-gray-100" />
-                          </div>
-                          <div className="h-4 w-1/3 rounded bg-gray-200" />
+                          <div className="h-4 w-2/5 bg-[#e4d7c3]" />
+                          <div className="h-3 w-full bg-[#f6f1e6]" />
+                          <div className="h-3 w-4/5 bg-[#f6f1e6]" />
+                          <div className="h-4 w-1/3 bg-[#e4d7c3]" />
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {[...roomTypes].sort((firstRoom, secondRoom) => secondRoom.basePrice - firstRoom.basePrice).map((room) => {
+              )}
+
+              {datesReady && !loading && !availabilitySettled && (
+                <p className="mt-4 text-sm text-stone-600">Checking which rooms are free for these dates.</p>
+              )}
+
+              {datesReady && availabilitySettled && availability?.failed && (
+                <div className="mt-4">
+                  <p className="text-sm text-red-700">{availabilityError}</p>
+                  <button
+                    type="button"
+                    onClick={() => setAvailabilityAttempt((attempt) => attempt + 1)}
+                    className="mt-3 text-sm font-medium text-[#1f3d2e] underline decoration-stone-400 underline-offset-4"
+                  >
+                    Try again
+                  </button>
+                </div>
+              )}
+
+              {datesReady && availabilitySettled && !availability?.failed && availableRooms.length === 0 && (
+                <p className="mt-4 text-sm text-stone-700">No rooms are free for these dates.</p>
+              )}
+
+              {datesReady && availabilitySettled && availableRooms.length > 0 && (
+                <div className="mt-4 divide-y divide-[#e4d7c3] border-y border-[#e4d7c3]">
+                  {availableRooms.map((room) => {
                     const isSelected = selectedRoom === room.id;
-                    
+                    const roomsLeft = availability?.counts[room.id] ?? 0;
                     return (
-                      <div
+                      <article
                         key={room.id}
-                        onClick={() => setSelectedRoom(room.id)}
-                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                          isSelected
-                            ? 'border-green-600 bg-green-50 shadow-sm'
-                            : 'border-gray-200 hover:border-green-300 hover:shadow-sm'
-                        }`}
+                        role="button"
+                        tabIndex={0}
+                        aria-pressed={isSelected}
+                        aria-label={`Select ${room.name}`}
+                        onClick={() => selectRoom(room)}
+                        onKeyDown={(event) => {
+                          if (event.target !== event.currentTarget) return;
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            selectRoom(room);
+                          }
+                        }}
+                        className={`cursor-pointer py-5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3d2e] ${isSelected ? 'bg-[#fffdf8] px-4 ring-1 ring-inset ring-[#1f3d2e]' : ''}`}
                       >
-                        <div className="flex items-start gap-4">
-                          <RoomImageGallery roomName={room.name} />
-                          <div className="flex-1">
-                            <div className="flex items-start justify-between mb-2 gap-3">
-                              <h3 className="text-gray-900 font-semibold">{room.name}</h3>
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                          <RoomImageGallery roomName={room.name} onOpen={() => selectRoom(room)} />
+                          <div className="min-w-0 flex-1">
+                            <div className="mb-2 flex items-start justify-between gap-3">
+                              <h3 className="font-serif text-2xl text-stone-900">{room.name}</h3>
                               {isSelected && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                                  <CheckCircle2 className="w-4 h-4" />
-                                  Selected
-                                </span>
+                                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Selected</span>
                               )}
                             </div>
-                            <p className="text-gray-600 mb-2">{room.description}</p>
-                            <div className="flex flex-wrap gap-2 mb-2">
+                            <p className="mb-2 text-sm leading-6 text-stone-600">{room.description}</p>
+                            <div className="mb-2 flex flex-wrap gap-x-3 gap-y-1">
                               {room.amenities.map((amenity) => (
-                                <span key={amenity} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-sm">
+                                <span key={amenity} className="text-xs uppercase tracking-wide text-stone-500">
                                   {amenity}
                                 </span>
                               ))}
                             </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-gray-600">
+                            <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+                              <span className="text-sm text-stone-600">
                                 {room.isDormRoom
-                                  ? "Shared AC dorm accommodation"
+                                  ? 'Shared AC dorm · per person, per night'
                                   : room.isSingleOccupancy
-                                  ? "Single occupancy room • book multiple rooms"
-                                  : `Base occupancy ${room.baseOccupancy} • Additional guests up to ${Math.max(0, room.maxOccupancy - room.baseOccupancy)}`}
+                                    ? 'Single occupancy room • book multiple rooms'
+                                    : `Rate for ${room.baseOccupancy}. Extra person ₹${room.extraPersonPrice.toLocaleString('en-IN')} / night, with all meals.`}
                               </span>
-                              <span className="text-gray-900 font-semibold">₹{room.basePrice.toLocaleString()}/night</span>
+                              <span className="shrink-0 font-serif text-xl text-stone-900">
+                                From ₹{nightlyRateForTier(room, 'breakfast-only').toLocaleString('en-IN')}/night
+                              </span>
+                            </div>
+                            <p className="mt-2 text-xs uppercase tracking-wide text-stone-500">
+                              {room.isDormRoom
+                                ? roomsLeft === 1
+                                  ? 'Dorm available for these dates'
+                                  : `${roomsLeft} dorm rooms available for these dates`
+                                : roomsLeft === 1
+                                  ? '1 room left for these dates'
+                                  : `${roomsLeft} rooms left for these dates`}
+                            </p>
+                            <div className="mt-4 grid gap-2 sm:grid-cols-3">
+                              {MEAL_TIERS.map((tier) => {
+                                const chosen = isSelected && selectedMeals.includes(tier.id);
+                                const rate = nightlyRateForTier(room, tier.id);
+                                return (
+                                  <button
+                                    type="button"
+                                    key={tier.id}
+                                    aria-pressed={chosen}
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      chooseStay(room, tier.id);
+                                    }}
+                                    className={`px-3 py-2 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3d2e] ${
+                                      chosen
+                                        ? 'border border-[#1f3d2e] bg-white ring-1 ring-[#1f3d2e]'
+                                        : 'border border-[#e4d7c3] bg-[#f6f1e6] hover:border-[#1f3d2e]'
+                                    }`}
+                                  >
+                                    <p className="text-[11px] uppercase tracking-wide text-stone-500">{tier.label}</p>
+                                    <p className="mt-1 font-serif text-xl text-stone-900">
+                                      ₹{rate.toLocaleString('en-IN')}
+                                      <span className="mt-1 block font-sans text-xs font-normal text-stone-500">
+                                        {room.isDormRoom ? 'per person / night' : 'per room / night'}
+                                      </span>
+                                    </p>
+                                    {chosen && (
+                                      <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Selected</p>
+                                    )}
+                                  </button>
+                                );
+                              })}
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </article>
                     );
                   })}
                 </div>
               )}
             </section>
-
-            {selectedRoom && (
-              <>
-                {/* Stay Details */}
-                <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                  <h2 className="text-gray-900 mb-1 text-xl font-semibold">Stay Details</h2>
-                  <p className="mb-4 text-sm text-gray-600">Click anywhere on a date card to open the calendar quickly.</p>
-
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={openCheckInPicker}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        openCheckInPicker();
-                      }
-                    }}
-                    className="rounded-xl border border-gray-200 bg-linear-to-br from-white to-green-50 p-4 shadow-xs transition-all hover:border-green-400 hover:shadow-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <p className="text-gray-600">Check-In</p>
-                      <Calendar className="w-4 h-4 text-green-700" />
-                    </div>
-                    <p className="mt-2 text-gray-900">
-                      {checkInDate ? new Date(checkInDate).toLocaleDateString() : 'Select arrival date'}
-                    </p>
-                    <input
-                      ref={checkInInputRef}
-                      type="date"
-                      value={checkInDate}
-                      onChange={(e) => setCheckInDate(e.target.value)}
-                      min={new Date().toISOString().split('T')[0]}
-                      className="mt-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-gray-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400"
-                    />
-                  </div>
-
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={openCheckOutPicker}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        openCheckOutPicker();
-                      }
-                    }}
-                    className="rounded-xl border border-gray-200 bg-linear-to-br from-white to-emerald-50 p-4 shadow-xs transition-all hover:border-emerald-400 hover:shadow-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <p className="text-gray-600">Check-Out</p>
-                      <Calendar className="w-4 h-4 text-emerald-700" />
-                    </div>
-                    <p className="mt-2 text-gray-900">
-                      {checkOutDate ? new Date(checkOutDate).toLocaleDateString() : 'Select departure date'}
-                    </p>
-                    <input
-                      ref={checkOutInputRef}
-                      type="date"
-                      value={checkOutDate}
-                      onChange={(e) => setCheckOutDate(e.target.value)}
-                      min={checkInDate || new Date().toISOString().split('T')[0]}
-                      className="mt-3 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-gray-900 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                    />
-                  </div>
-
-                  <div className="col-span-2 md:col-span-1 rounded-xl border border-gray-200 bg-linear-to-br from-white to-blue-50 p-4 shadow-xs">
-                    <div className="flex items-center justify-between">
-                      <p className="text-gray-600">{isSingleOccupancy ? "Rooms" : "Guests"}</p>
-                      
-                      <div className='relative'>
-
-                      
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setShowGuestInfo((prev) => !prev)}
-                          className="rounded-full bg-white p-1 text-yellow-500 transition hover:bg-blue-50"
-                          aria-label="Booking info"
-                          title="How room and guest pricing works"
-                        >
-                          <CircleQuestionMark  className="h-5 w-5" />
-                          {/* <span className='text-sm p-2'>?</span> */}
-                        </button>
-                        <Users className="w-4 h-4 text-blue-700" />
-                      </div>
-                    </div>
-
-                    {showGuestInfo && (
-                      <div className="mt-3 rounded-lg border absolute border-blue-200 bg-white p-3 text-xs text-gray-700 space-y-1">
-                        <p><strong>Rooms:</strong> Number of physical rooms in this booking.</p>
-                        <p><strong>Guests:</strong> Total people staying.</p>
-                        <p><strong>Included guests:</strong> {isSingleOccupancy ? '1 per room.' : `${baseOccupancy} per room, included in room charge.`}</p>
-                        {!isSingleOccupancy && (
-                          <p><strong>Extra mattress:</strong> Used when guests exceed included guests. Charged per person per night.</p>
-                        )}
-                        <p><strong>Meal plan:</strong> Charged per guest per night.</p>
-                        <p><strong>Room charge:</strong> Room rate x nights x rooms.</p>
-                        {isSingleOccupancy && (
-                          <p><strong>Single occupancy rule:</strong> Each guest requires one room and extra mattress is not available.</p>
-                        )}
-                      </div>
-                    )}
-
-                    </div>
-
-                    <p className="mt-2 text-sm text-gray-700">
-                      {isSingleOccupancy
-                        ? "Each guest books a separate room."
-                        : `Base guests included: ${includedBaseGuests} (${baseOccupancy} per room)`}
-                    </p>
-
-                    {!isSingleOccupancy && (
-                      <>
-                        <p className="mt-3 text-sm text-gray-600">Rooms</p>
-                        <div className="mt-2 flex items-center gap-3">
-                          <button
-                            type="button"
-                            onClick={() => setRoomsRequested((prev) => Math.max(1, prev - 1))}
-                            className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-                            aria-label="Decrease rooms"
-                            disabled={effectiveRoomsRequested <= 1}
-                          >
-                            -
-                          </button>
-                          <div className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-gray-700">
-                            {effectiveRoomsRequested} {effectiveRoomsRequested === 1 ? 'room' : 'rooms'}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setRoomsRequested((prev) => Math.min(maxRoomsForType, prev + 1))}
-                            className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-                            aria-label="Increase rooms"
-                            disabled={effectiveRoomsRequested >= maxRoomsForType}
-                          >
-                            +
-                          </button>
-                        </div>
-                        <p className="mt-2 text-xs text-gray-500">Select required rooms. Availability will be verified for your dates.</p>
-                      </>
-                    )}
-
-                    {!isSingleOccupancy && <p className="mt-3 text-sm text-gray-600">Guests</p>}
-                    <div className="mt-2 flex items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          isSingleOccupancy
-                            ? setSingleOccupancyGuests((prev) => Math.max(1, prev - 1))
-                            : setBaseGuests((prev) => Math.max(1, prev - 1))
-                        }
-                        className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-                        aria-label="Decrease guests"
-                        disabled={isSingleOccupancy ? singleOccupancyGuests <= 1 : effectiveBaseGuests <= 1}
-                      >
-                        -
-                      </button>
-                      <div className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-gray-700">
-                        {isSingleOccupancy
-                          ? `${singleOccupancyGuests} ${singleOccupancyGuests === 1 ? "room" : "rooms"}`
-                          : effectiveBaseGuests === 1
-                          ? '1 guest'
-                          : `${effectiveBaseGuests} guests`}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          isSingleOccupancy
-                            ? setSingleOccupancyGuests((prev) => Math.min(maxSingleOccupancyGuests, prev + 1))
-                            : setBaseGuests((prev) => Math.min(includedBaseGuests, prev + 1))
-                        }
-                        className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-                        aria-label="Increase guests"
-                        disabled={isSingleOccupancy ? singleOccupancyGuests >= maxSingleOccupancyGuests : effectiveBaseGuests >= includedBaseGuests}
-                      >
-                        +
-                      </button>
-                    </div>
-
-                    {!isSingleOccupancy && effectiveBaseGuests >= includedBaseGuests && maxExtraGuests > 0 && (
-                      <>
-                        <p className="mt-3 text-sm text-gray-600">Extra mattresses</p>
-                        <div className="mt-2 flex items-center gap-3">
-                          <button
-                            type="button"
-                            onClick={() => setExtraGuests((prev) => Math.max(0, prev - 1))}
-                            className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-                            aria-label="Decrease extra guests"
-                            disabled={extraGuests === 0}
-                          >
-                            -
-                          </button>
-                          <div className="flex-1 rounded-lg border border-gray-200 bg-white px-3 py-2 text-center text-gray-700">
-                            {extraGuests === 0 ? 'None' : `${extraGuests} extra`}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setExtraGuests((prev) => Math.min(maxExtraGuests, prev + 1))}
-                            className="h-10 w-10 rounded-lg border border-gray-300 text-lg text-gray-700 transition-colors hover:bg-gray-100 disabled:opacity-50"
-                            aria-label="Increase extra guests"
-                            disabled={extraGuests >= maxExtraGuests}
-                          >
-                            +
-                          </button>
-                        </div>
-                        <p className="mt-2 text-xs text-gray-500">Extra ₹{selectedRoomData?.extraPersonPrice?.toLocaleString() || 0}/night per person</p>
-                      </>
-                    )}
-
-                    {!isSingleOccupancy && (
-                      <p className="mt-2 text-xs text-gray-500">Max {maxGuestsForRooms} guests for {effectiveRoomsRequested} {effectiveRoomsRequested === 1 ? 'room' : 'rooms'}</p>
-                    )}
-                    <p className="mt-2 text-sm font-semibold text-gray-900">Total guests: {totalGuests}</p>
-                  </div>
-                </div>
-                </section>
-
-                {/* Meal Plan */}
-                <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                  <h2 className="text-gray-900 mb-2 text-xl font-semibold">Meal Plan (Mandatory)</h2>
-                  <p className="text-gray-600 mb-4">Choose your meal plan for every guest.</p>
-                  <div className="grid gap-3 md:grid-cols-2">
-                    {mealPlans.map((plan) => {
-                      const isSelected = selectedMealPlanId === plan.id;
-                      return (
-                        <button
-                          type="button"
-                          key={plan.id}
-                          onClick={() => setSelectedMealPlanId(plan.id)}
-                          className={`text-left rounded-xl border-2 p-4 transition-all ${
-                            isSelected
-                              ? 'border-green-600 bg-green-50'
-                              : 'border-gray-200 hover:border-green-300'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <p className="text-gray-900 font-medium">{plan.name}</p>
-                              {plan.description && (
-                                <p className="mt-1 text-xs text-gray-600">{plan.description}</p>
-                              )}
-                            </div>
-                            <div className="text-right">
-                              <p className="text-gray-900 font-semibold">₹{plan.pricePerPerson.toLocaleString('en-IN')}</p>
-                              <p className="text-xs text-gray-500">per person / night</p>
-                            </div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                    {mealPlans.length === 0 && (
-                      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-                        Meal plan pricing is not configured yet. Please contact support.
-                      </div>
-                    )}
-                  </div>
-                </section>
-
-              </>
-            )}
           </div>
 
-          {/* Right Column - Price Summary */}
-          {selectedRoom && (  
-            <div className="lg:col-span-1">
-              <div className="sticky top-4 rounded-2xl border border-blue-200 bg-linear-to-b from-blue-50 to-white p-6 shadow-sm">
-                <div className="mb-4">
-                  <RoomImageGallery roomName={selectedRoomData?.name || 'Room'} compact />
-                  <h3 className="text-gray-900 mb-1">{selectedRoomData?.name}</h3>
-                  <p className="text-gray-600">Land&apos;s End The Last Resort</p>
-                  {checkInDate && checkOutDate && (
-                    <p className="mt-2 rounded-lg bg-blue-100 px-3 py-2 text-xs text-blue-800">
-                      {nights} {nights === 1 ? 'night' : 'nights'} stay selected
+          <div className="lg:col-span-1">
+            <div className="sticky top-24 border border-[#e4d7c3] bg-[#fffdf8] p-6">
+              <h3 className="font-serif text-2xl text-[#1f3d2e]">Price summary</h3>
+              {showPricedSummary && selectedRoomData && selectedTier ? (
+                <>
+                  <div className="mt-4">
+                    <RoomImageGallery roomName={selectedRoomData.name} compact />
+                    <h4 className="mt-4 font-serif text-2xl text-[#1f3d2e]">{selectedRoomData.name}</h4>
+                    <p className="text-sm text-stone-600">Land&apos;s End The Last Resort</p>
+                    <p className="mt-2 font-serif text-2xl text-stone-900">
+                      ₹{nightlyRateForTier(selectedRoomData, selectedTier).toLocaleString('en-IN')}
+                      <span className="ml-2 font-sans text-sm text-stone-600">{isDorm ? 'per person / night' : 'per room / night'}</span>
+                    </p>
+                    <p className="mt-1 text-sm text-stone-700">{mealTierLabel(selectedTier)}</p>
+                    <p className="mt-2 text-sm leading-6 text-stone-700">
+                      About ₹{buildPriceBreakdown({ baseAmount: nightlyRateForTier(selectedRoomData, selectedTier) }).totalAmount.toLocaleString('en-IN')} after GST and the online fee for one {isDorm ? 'guest' : 'room'} night.
+                    </p>
+                    <p className="mt-2 border border-[#e4d7c3] bg-[#f6f1e6] px-3 py-2 text-sm text-stone-700">
+                      {formatIndiaDate(checkInDate, { month: 'short' })} – {formatIndiaDate(checkOutDate, { month: 'short' })}
+                      {' · '}
+                      {nights} {nights === 1 ? 'night' : 'nights'}
+                      {' · '}
+                      {totalGuests} {totalGuests === 1 ? 'guest' : 'guests'}
+                    </p>
+                  </div>
+
+                  {quote && (
+                    <>
+                      <div className="mb-4 mt-4 border-b border-[#e4d7c3] pb-4">
+                        <h4 className="mb-3 font-serif text-xl text-[#1f3d2e]">Price details</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between gap-3 text-stone-700">
+                            <span>
+                              {isDorm ? 'Dorm' : 'Room'} · {mealTierLabel(selectedTier)} ({nights} {nights === 1 ? 'night' : 'nights'})
+                              {isDorm ? ` × ${totalGuests} guests` : roomsNeeded > 1 ? ` × ${roomsNeeded}` : ''}
+                            </span>
+                            <span>₹{basePrice.toLocaleString('en-IN')}</span>
+                          </div>
+                          <div className="flex justify-between text-stone-700">
+                            <span>{mealTierLabel(selectedTier)} included</span>
+                            <span>₹0</span>
+                          </div>
+                          {extraGuestAmount > 0 && (
+                            <div className="flex justify-between text-stone-700">
+                              <span>Extra guests ({quote.extraGuestCount || extraGuests}), all meals</span>
+                              <span>₹{extraGuestAmount.toLocaleString('en-IN')}</span>
+                            </div>
+                          )}
+                          <div className="flex justify-between text-stone-700">
+                            <span>GST (5%)</span>
+                            <span>₹{(quote.taxAmount || 0).toLocaleString('en-IN')}</span>
+                          </div>
+                          <div className="flex justify-between text-stone-700">
+                            <span>Convenience fee (3%)</span>
+                            <span>₹{(quote.convenienceFeeAmount || 0).toLocaleString('en-IN')}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mb-4 flex items-end justify-between text-stone-900">
+                        <span className="text-sm uppercase tracking-[0.16em] text-[#6d5a38]">Total</span>
+                        <span className="font-serif text-3xl">₹{grandTotal.toLocaleString('en-IN')}</span>
+                      </div>
+                    </>
+                  )}
+
+                  {occupancyError && <p className="mb-3 text-sm text-amber-700">{occupancyError}</p>}
+                  {needsMoreRooms && (
+                    <p className="mb-3 text-sm text-amber-700">
+                      Only {selectedAvailableCount} {selectedAvailableCount === 1 ? 'room is' : 'rooms are'} left for those dates. This stay needs {roomsNeeded}.
                     </p>
                   )}
-                  {/* <div className="flex items-center gap-1 mt-2">
-                    <span className="text-gray-900">4.8</span>
-                    <span className="text-gray-600">Excellent</span>
-                    <span className="text-gray-500 ml-1">286 reviews</span>
-                  </div> */}
-                </div>
+                  {!availabilitySettled && <p className="mb-3 text-sm text-stone-600">Checking availability for these dates.</p>}
 
-                <div className="mb-4 border-b border-blue-200">
-                  {/* <p className="text-gray-600 mb-1">Your booking is protected by <span className="text-gray-900">Sumiran</span></p> */}
-                </div>
+                  <button
+                    type="button"
+                    disabled={!canContinue}
+                    onClick={handleConfirmBooking}
+                    className="w-full bg-[#1f3d2e] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {submitting ? 'Continuing...' : !availabilitySettled ? 'Checking availability...' : 'Continue to payment'}
+                  </button>
+                  {error && <p className="mt-3 text-sm text-red-700">{error}</p>}
+                </>
+              ) : (
+                <p className="mt-3 text-sm leading-6 text-stone-600">
+                  {selectedRoomData && !selectedTier
+                    ? 'Choose at least one meal to see the total.'
+                    : datesReady && availabilitySettled && !availability?.failed && availableRooms.length === 0
+                      ? 'No rooms are free for these dates, so payment stays closed.'
+                      : datesReady
+                        ? 'Select an available room to see the total.'
+                        : 'Choose check-in and check-out, then a room, to see the total.'}
+                </p>
+              )}
 
-                {checkInDate && checkOutDate && (
-                  <>
-                    <div className="mb-4 pb-4 border-b border-blue-200">
-                      <h4 className="text-gray-900 mb-3">Price Details</h4>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-gray-700">
-                          <span>
-                            Room ({nights} {nights === 1 ? 'night' : 'nights'})
-                            {roomsNeeded > 1 ? ` x ${roomsNeeded}` : ''}
-                          </span>
-                          <span>₹{basePrice.toLocaleString()}</span>
-                        </div>
-                        {mealPlanAmount > 0 && (
-                          <div className="flex justify-between text-gray-700">
-                            <span>Meal plan ({totalGuests} guests)</span>
-                            <span>₹{mealPlanAmount.toLocaleString()}</span>
-                          </div>
-                        )}
-                        {extraGuestAmount > 0 && (
-                          <div className="flex justify-between text-gray-700">
-                            <span>Extra mattresses/Bed ({extraGuests})</span>
-                            <span>₹{extraGuestAmount.toLocaleString()}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between text-gray-900 mb-4">
-                      <span>Total</span>
-                      <span>₹{grandTotal.toLocaleString()}</span>
-                    </div>
-                  </>
-                )}
-
-                {/* TODO: Re-enable booking functionality */}
-                <button 
-                  disabled={submitting}
-                  onClick={handleConfirmBooking}
-                  className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {submitting
-                    ? 'Checking...'
-                    : availabilityChecked && isAvailable
-                    ? 'Available - Continue Booking'
-                    : availabilityChecked && !isAvailable
-                    ? 'Not Available - Try Different Dates'
-                    : 'Check Availability'}
-                </button>
-                {/* <button 
-                  disabled={submitting}
-                  onClick={handleConfirmBooking}
-                  className="w-full py-3 mt-3  border-green-500 border-2 rounded-lg hover:bg-green-200 transition-colors hover:scale-104 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {submitting ? 'Confirming...' : 'Confirm Booking (pay now)'}
-                </button> */}
-                {missingRequirements.length > 0 && (
-                  <p className="mt-3 text-sm text-amber-700">
-                    Please complete: {missingRequirements.join(', ')}.
-                  </p>
-                )}
-
-                <div className="mt-4 border-t border-blue-200 pt-4 space-y-2 text-xs text-gray-600">
-                  <p className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-emerald-600" /> Secure booking and payment flow</p>
-                  <p className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-blue-600" /> Instant confirmation after successful payment</p>
-                </div>
+              <div className="mt-4 space-y-2 border-t border-[#e4d7c3] pt-4 text-xs text-stone-600">
+                <p className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#1f3d2e]" /> Secure booking and payment flow</p>
+                <p className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-[#1f3d2e]" /> Instant confirmation after successful payment</p>
               </div>
             </div>
-          )}
+          </div>
         </div>
 
-        <section className="mt-10 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-gray-900 text-xl font-semibold mb-1">Important Booking Information</h2>
-          <p className="text-gray-600 text-sm mb-5">Please review these details before confirming your stay.</p>
+        <section className="mt-14 border-t border-[#e4d7c3] pt-8">
+          <h2 className="font-serif text-2xl font-medium text-[#1f3d2e]">Important booking information</h2>
+          <p className="mt-2 text-sm leading-6 text-stone-600">Please review these details before confirming your stay.</p>
 
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 p-4">
-              <h3 className="text-sm font-semibold text-emerald-800 mb-2">Check-In / Check-Out</h3>
-              <p className="text-sm text-emerald-900/90">Check-in starts at 1:00 PM and check-out is by 11:00 AM. Early check-in depends on room availability.</p>
+          <div className="mt-6 grid gap-8 md:grid-cols-2">
+            <div>
+              <h3 className="font-serif text-xl text-[#1f3d2e]">Check-in / check-out</h3>
+              <p className="mt-2 text-sm leading-6 text-stone-700">Check-in is at {CHECK_IN_LABEL} and check-out is by {CHECK_OUT_LABEL}.</p>
             </div>
 
-            <div className="rounded-xl border border-blue-100 bg-blue-50/60 p-4">
-              <h3 className="text-sm font-semibold text-blue-800 mb-2">Cancellation Policy</h3>
-              <p className="text-sm text-blue-900/90">Free cancellation up to 72 hours before check-in. After that, cancellation charges may apply.</p>
+            <div>
+              <h3 className="font-serif text-xl text-[#1f3d2e]">Cancellation policy</h3>
+              <p className="mt-2 text-sm leading-6 text-stone-700">{CANCELLATION_POLICY}</p>
             </div>
 
-            <div className="rounded-xl border border-amber-100 bg-amber-50/60 p-4">
-              <h3 className="text-sm font-semibold text-amber-800 mb-2">Activities and Safety</h3>
-              <p className="text-sm text-amber-900/90">Guided activities are weather dependent. Follow guide instructions and use provided safety equipment.</p>
+            <div>
+              <h3 className="font-serif text-xl text-[#1f3d2e]">Activities and safety</h3>
+              <p className="mt-2 text-sm leading-6 text-stone-700">Guided activities are weather dependent. Follow guide instructions and use provided safety equipment.</p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
-              <h3 className="text-sm font-semibold text-slate-800 mb-2">Need Help?</h3>
-              <p className="text-sm text-slate-700 mb-2">Our team can help with room selection and custom group requests.</p>
-              <p className="inline-flex items-center gap-2 text-sm font-medium text-slate-900">
+            <div>
+              <h3 className="font-serif text-xl text-[#1f3d2e]">Need help?</h3>
+              <p className="mt-2 text-sm leading-6 text-stone-700">Our team can help with room selection and custom group requests.</p>
+              <p className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-[#1f3d2e]">
                 <PhoneCall className="h-4 w-4" />
-                +91 98765 43210
+                <a href={`tel:${RESORT_PHONE_TEL}`}>{RESORT_PHONE_DISPLAY}</a>
               </p>
+              <p className="mt-1 text-sm"><a className="font-medium text-[#1f3d2e]" href={`mailto:${RESORT_EMAIL}`}>{RESORT_EMAIL}</a></p>
             </div>
           </div>
         </section>
-      </div>
 
+        <section className="mt-10 grid gap-8 border-t border-[#e4d7c3] pt-8 md:grid-cols-2">
+          <div>
+            <h2 className="font-serif text-2xl text-[#1f3d2e]">Included with every stay</h2>
+            <ul className="mt-3 space-y-1 text-sm leading-6 text-stone-700">
+              {STAY_INCLUSIONS.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
+          <div>
+            <h2 className="font-serif text-2xl text-[#1f3d2e]">Add-ons</h2>
+            <p className="mt-3 text-sm font-medium text-stone-800">{ASK_ON_ARRIVAL_NOTE}</p>
+            <ul className="mt-2 space-y-1 text-sm leading-6 text-stone-700">
+              {STAY_ADDONS.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

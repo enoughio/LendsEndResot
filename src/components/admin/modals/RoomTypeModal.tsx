@@ -20,6 +20,9 @@ export function RoomTypeModal({
       maxOccupancy: 2,
       baseOccupancy: 2,
       extraPersonPrice: 0,
+      breakfastOnlyPrice: 0,
+      breakfastPlusMealPrice: 0,
+      allMealsPrice: 0,
       amenities: [],
       totalRooms: 0,
       isSingleOccupancy: false,
@@ -107,6 +110,20 @@ export function RoomTypeModal({
                 onChange={e => setForm(f => ({ ...f, extraPersonPrice: Number(e.target.value) }))}
                 disabled={form.isSingleOccupancy}
               />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div>
+              <label className="text-stone-400 text-xs uppercase tracking-widest block mb-2">Breakfast only</label>
+              <input type="number" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]" value={form.breakfastOnlyPrice ?? 0} onChange={e => setForm(f => ({ ...f, breakfastOnlyPrice: Number(e.target.value) }))} />
+            </div>
+            <div>
+              <label className="text-stone-400 text-xs uppercase tracking-widest block mb-2">Breakfast + one</label>
+              <input type="number" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]" value={form.breakfastPlusMealPrice ?? 0} onChange={e => setForm(f => ({ ...f, breakfastPlusMealPrice: Number(e.target.value) }))} />
+            </div>
+            <div>
+              <label className="text-stone-400 text-xs uppercase tracking-widest block mb-2">All meals</label>
+              <input type="number" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#4a8f3f]" value={form.allMealsPrice ?? 0} onChange={e => setForm(f => ({ ...f, allMealsPrice: Number(e.target.value) }))} />
             </div>
           </div>
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { BedDouble, Building2, CalendarCheck, ChevronRight, LayoutDashboard, Leaf, Menu, Sun } from 'lucide-react';
+import { BedDouble, Building2, CalendarCheck, ChevronRight, Inbox, LayoutDashboard, Leaf, Menu, Sun } from 'lucide-react';
 import { BookingDetailModal } from './modals/BookingDetailModal';
 import { DeleteConfirm } from './modals/DeleteConfirm';
 import { ActivityModal } from './modals/ActivityModal';
@@ -16,8 +16,10 @@ import { OverviewSection } from './sections/OverviewSection';
 import { RoomTypesSection } from './sections/RoomTypesSection';
 import { RoomsSection } from './sections/RoomsSection';
 import { VisitPackagesSection } from './sections/VisitPackagesSection';
+import { EnquiriesSection } from './sections/EnquiriesSection';
 import { type Activity, type Booking, type BookingStatus, type MealPlan, type Room, type RoomType, type Section, type VisitPackage } from './types';
 import { notifyError, notifySuccess } from '@/lib/client-notify';
+import { calculateNights, indiaDateKey } from '@/lib/india-date';
 
 type ApiResponse<T> = { data: T; meta?: { total: number; page: number; pageSize: number } };
 
@@ -29,6 +31,9 @@ type RoomTypeApi = {
   maxOccupancy: number;
   baseOccupancy: number;
   extraPersonPrice: number;
+  breakfastOnlyPrice?: number;
+  breakfastPlusMealPrice?: number;
+  allMealsPrice?: number;
   amenities: string[];
   totalRooms: number;
   isSingleOccupancy?: boolean;
@@ -204,6 +209,9 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
           maxOccupancy: Number(item.maxOccupancy),
           baseOccupancy: Number(item.baseOccupancy || item.maxOccupancy || 1),
           extraPersonPrice: Number(item.extraPersonPrice || 0),
+          breakfastOnlyPrice: Number(item.breakfastOnlyPrice || 0),
+          breakfastPlusMealPrice: Number(item.breakfastPlusMealPrice || 0),
+          allMealsPrice: Number(item.allMealsPrice || 0),
           amenities: item.amenities || [],
           totalRooms: Number(item.totalRooms || 0),
           isSingleOccupancy: Boolean(item.isSingleOccupancy),
@@ -243,9 +251,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
         bookingsRes.data.map((item) => {
           const checkIn = item.checkIn ? new Date(item.checkIn) : null;
           const checkOut = item.checkOut ? new Date(item.checkOut) : null;
-          const nights = checkIn && checkOut
-            ? Math.max(1, Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)))
-            : undefined;
+          const nights = checkIn && checkOut ? calculateNights(checkIn, checkOut) : undefined;
 
           return {
             id: item.bookingId,
@@ -261,10 +267,10 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
             createdAt: new Date(item.createdAt).toISOString().slice(0, 10),
             roomId: item.roomId || undefined,
             roomTypeId: item.roomTypeId || undefined,
-            checkIn: item.checkIn ? new Date(item.checkIn).toISOString().slice(0, 10) : undefined,
-            checkOut: item.checkOut ? new Date(item.checkOut).toISOString().slice(0, 10) : undefined,
+            checkIn: checkIn ? indiaDateKey(checkIn) : undefined,
+            checkOut: checkOut ? indiaDateKey(checkOut) : undefined,
             nights,
-            visitDate: item.visitDate ? new Date(item.visitDate).toISOString().slice(0, 10) : undefined,
+            visitDate: item.visitDate ? indiaDateKey(new Date(item.visitDate)) : undefined,
             visitType: 'half-day',
             activities: (item.activities || []).map((activity) => activity.name),
             specialRequests: item.specialRequest || undefined,
@@ -324,6 +330,9 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
           maxCapacity: rt.maxOccupancy,
           baseOccupancy: rt.baseOccupancy,
           extraPersonPrice: rt.extraPersonPrice,
+          ...(typeof rt.breakfastOnlyPrice === 'number' ? { breakfastOnlyPrice: rt.breakfastOnlyPrice } : {}),
+          ...(typeof rt.breakfastPlusMealPrice === 'number' ? { breakfastPlusMealPrice: rt.breakfastPlusMealPrice } : {}),
+          ...(typeof rt.allMealsPrice === 'number' ? { allMealsPrice: rt.allMealsPrice } : {}),
           amenities: rt.amenities,
           totalRooms: rt.totalRooms,
           isSingleOccupancy: rt.isSingleOccupancy,
@@ -548,6 +557,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     { id: 'meal-plans', label: 'Meal Plans', icon: <Sun size={18} /> },
     { id: 'activities', label: 'Activities', icon: <Leaf size={18} /> },
     { id: 'bookings', label: 'Bookings', icon: <CalendarCheck size={18} /> },
+    { id: 'enquiries', label: 'Enquiries', icon: <Inbox size={18} /> },
   ];
 
   return (
@@ -711,6 +721,8 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
               onViewBooking={setViewingBooking}
             />
           )}
+
+          {section === 'enquiries' && <EnquiriesSection />}
         </main>
       </div>
 

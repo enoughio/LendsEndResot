@@ -3,8 +3,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { CheckCircle2, Calendar, MapPin, Phone, Mail, Sparkles, ShieldCheck, ArrowRight } from 'lucide-react'
+import Image from 'next/image'
+import { Calendar, MapPin, Phone, Mail } from 'lucide-react'
 import Link from 'next/link'
+import { formatIndiaDate } from '@/lib/india-date'
+import { EXIT_POLICY_TEXT, ruleText } from '@/lib/house-rules'
+import { ASK_ON_ARRIVAL_NOTE, CHECK_IN_LABEL, CHECK_OUT_LABEL, STAY_ADDONS, STAY_INCLUSIONS } from '@/lib/resort-copy'
 
 type BookingDetailsResponse = {
   data: {
@@ -16,14 +20,28 @@ type BookingDetailsResponse = {
       email?: string | null;
       phone?: string | null;
     };
+    checkInTime?: string | null;
+    checkOutTime?: string | null;
+    included?: string[];
+    extras?: string[];
+    extrasNote?: string | null;
+    houseRules?: {
+      signerName?: string | null;
+      acceptedRuleIds?: string[];
+      exitPolicyAccepted?: boolean;
+    } | null;
     stayDetails: {
       roomType?: string | null;
       checkIn?: string | null;
       checkOut?: string | null;
+      mealPlanName?: string | null;
     } | null;
     visitDetails: {
       packageName?: string | null;
       visitDate?: string | null;
+      timing?: string | null;
+      description?: string | null;
+      includes?: string[];
     } | null;
   };
 }
@@ -84,94 +102,77 @@ function BookedContent() {
   }, [booking])
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40">
-      {/* Header */}
-      {/* <header className="bg-slate-900/95 text-white px-4 py-4 sm:px-6 sticky top-0 z-20 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 sm:gap-8">
-            <Link href="/" className="flex items-center gap-2 text-white hover:text-green-400 transition-colors">
-              <TreePine className="w-5 h-5 sm:w-6 sm:h-6" />
-              <h1 className="text-white text-sm sm:text-base">Lend's End Resort</h1>
-            </Link>
-            <nav className="hidden sm:flex items-center gap-6">
-              <Link href="/booking" className="text-white hover:text-green-400 transition-colors">Bookings</Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-4">
-            <Link href="/booking" className="px-3 py-2 sm:px-4 border border-white/70 rounded-lg hover:bg-white/10 transition-colors text-sm">
-              Book Again
-            </Link>
-            <div className="hidden sm:flex items-center gap-2">
-              <div className="w-8 h-8 bg-teal-500 rounded-full"></div>
-              <span className="text-sm">Guest</span>
-            </div>
-          </div>
-        </div>
-      </header> */}
-
-      {/* Success Content */}
-      <div className="max-w-5xl mx-auto px-4 pt-13 py-10 sm:px-6 sm:py-14">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-200 rounded-full mb-6 shadow-sm">
-            <CheckCircle2 className="w-12 h-12 text-green-700" />
-          </div>
-          <p className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            Confirmation complete
-          </p>
-          <h1 className="text-3xl sm:text-4xl text-gray-900 mb-3">Booking Confirmed!</h1>
-          <p className="text-base sm:text-xl text-gray-600">{details.description}</p>
-        </div>
+    <div className="min-h-screen bg-[#f6f1e6] px-4 pb-20 pt-24 text-stone-800 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-5xl">
+        <Link href="/booking" className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+          Back to booking
+        </Link>
+        <header className="mt-6 max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Land&apos;s End · The Last Resort</p>
+          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#1f3d2e] sm:text-5xl">Booking confirmed</h1>
+          <p className="mt-4 text-base leading-7 text-stone-700">{details.description}</p>
+        </header>
+        <figure className="relative mt-8 h-56 overflow-hidden sm:h-80">
+          <Image
+            src="/gallery/building.jpeg"
+            alt="Land's End in Sumiran Forest"
+            fill
+            priority
+            sizes="(min-width: 1024px) 1024px, 100vw"
+            className="object-cover"
+          />
+        </figure>
 
         {/* Booking Details Card */}
-        <div className="bg-white border border-green-200 rounded-2xl p-5 sm:p-8 mb-8 shadow-sm">
+        <div className="mt-8 border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-8">
           <div className="mb-6">
-            <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm mb-2">
-              {details.subtitle}
-            </span>
-            <h2 className="text-2xl text-gray-900 font-semibold">{details.title}</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">{details.subtitle}</p>
+            <h2 className="mt-2 font-serif text-3xl text-[#1f3d2e]">{details.title}</h2>
           </div>
 
           {loading ? (
             <div className="grid md:grid-cols-2 gap-6 animate-pulse">
               <div className="space-y-4">
-                <div className="h-16 rounded-xl bg-gray-100" />
-                <div className="h-16 rounded-xl bg-gray-100" />
+                <div className="h-16 bg-[#e4d7c3]" />
+                <div className="h-16 bg-[#e4d7c3]" />
               </div>
               <div className="space-y-4">
-                <div className="h-16 rounded-xl bg-gray-100" />
-                <div className="h-16 rounded-xl bg-gray-100" />
+                <div className="h-16 bg-[#e4d7c3]" />
+                <div className="h-16 bg-[#e4d7c3]" />
               </div>
             </div>
           ) : (
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div className="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3">
-                <Calendar className="w-5 h-5 text-gray-600 mt-1" />
+              <div className="flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
+                <Calendar className="mt-1 h-4 w-4 text-[#1f3d2e]" />
                 <div>
-                  <p className="text-gray-600 text-sm">Booking Date</p>
-                  <p className="text-gray-900">
-                    {new Date(details.bookingDate || Date.now()).toLocaleDateString('en-US', {
-                      weekday: 'long', 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
+                  <p className="text-stone-600 text-sm">{booking?.type === 'VISIT' ? 'Visit date' : 'Check-in'}</p>
+                  <p className="text-stone-900">
+                    {booking?.type === 'VISIT'
+                      ? (formatIndiaDate(booking.visitDetails?.visitDate, { weekday: 'long' }) || 'Date to be confirmed')
+                      : (formatIndiaDate(booking?.stayDetails?.checkIn, { weekday: 'long' }) || 'Date to be confirmed')}
                   </p>
+                  {booking?.type === 'STAY' && (
+                    <p className="text-stone-600 text-sm">at {booking.checkInTime || CHECK_IN_LABEL}</p>
+                  )}
+                  {booking?.type === 'VISIT' && booking.visitDetails?.timing && (
+                    <p className="text-stone-600 text-sm">{booking.visitDetails.timing}</p>
+                  )}
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3">
-                <MapPin className="w-5 h-5 text-gray-600 mt-1" />
+              <div className="flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
+                <MapPin className="mt-1 h-4 w-4 text-[#1f3d2e]" />
                 <div>
-                  <p className="text-gray-600 text-sm">Location</p>
-                  <p className="text-gray-900">Land&apos;s End Resort at Sumiran Ecological Foundation</p>
-                  <p className="text-gray-600 text-sm">Sagoni, Bilkisganj, Madhya Pradesh 466115</p>
+                  <p className="text-stone-600 text-sm">Location</p>
+                  <p className="text-stone-900">Land&apos;s End Resort at Sumiran Ecological Foundation</p>
+                  <p className="text-stone-600 text-sm">Sagoni, Bilkisganj, Madhya Pradesh 466115</p>
                   <a
                     href="https://maps.app.goo.gl/BNvC131L8wwmBHbi8"
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-1 inline-block text-sm text-green-700 hover:text-green-800"
+                    className="mt-1 inline-block text-sm text-[#1f3d2e] underline decoration-stone-400 underline-offset-4"
                   >
                     Open in Google Maps
                   </a>
@@ -180,125 +181,119 @@ function BookedContent() {
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3">
-                <Mail className="w-5 h-5 text-gray-600 mt-1" />
+              <div className="flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
+                <Mail className="mt-1 h-4 w-4 text-[#1f3d2e]" />
                 <div>
-                  <p className="text-gray-600 text-sm">Confirmation Email</p>
-                  <p className="text-gray-900">{details.emailText}</p>
+                  <p className="text-stone-600 text-sm">Confirmation Email</p>
+                  <p className="text-stone-900">{details.emailText}</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3">
-                <Phone className="w-5 h-5 text-gray-600 mt-1" />
+              <div className="flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
+                <Phone className="mt-1 h-4 w-4 text-[#1f3d2e]" />
                 <div>
-                  <p className="text-gray-600 text-sm">Contact Support</p>
-                  <p className="text-gray-900">+91 6268244196</p>
-                  <p className="text-gray-600 text-sm">landsend.sumiran@gmail.com</p>
+                  <p className="text-stone-600 text-sm">Contact Support</p>
+                  <p className="text-stone-900">+91 6268244196</p>
+                  <p className="text-stone-600 text-sm">landsend.sumiran@gmail.com</p>
                 </div>
               </div>
             </div>
           </div>
           )}
 
-          <div className="mt-6 pt-6 border-t border-gray-200">
-            <p className="text-gray-600 text-sm">
-              <strong>Booking Reference:</strong> {booking?.bookingId || `SR${Date.now().toString().slice(-8)}`}
+          {booking?.type === 'STAY' && (
+            <div className="mt-6 flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
+              <Calendar className="mt-1 h-4 w-4 text-[#1f3d2e]" />
+              <div>
+                <p className="text-stone-600 text-sm">Check-out</p>
+                <p className="text-stone-900">{formatIndiaDate(booking.stayDetails?.checkOut, { weekday: 'long' }) || 'Date to be confirmed'}</p>
+                <p className="text-stone-600 text-sm">by {booking.checkOutTime || CHECK_OUT_LABEL}</p>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-6 border-t border-[#e4d7c3] pt-6">
+            <p className="text-stone-600 text-sm">
+              <strong>Booking Reference:</strong> {booking?.bookingId || 'Shown after the booking loads'}
             </p>
           </div>
         </div>
 
-        {/* Next Steps */}
-        <div className="bg-linear-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-6 mb-8 shadow-sm">
-          <h3 className="text-gray-900 mb-4 text-xl font-semibold">What&apos;s Next?</h3>
-          <ul className="space-y-3">
-            <li className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
-              <span className="text-gray-700">Check your email for booking confirmation and details</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
-              <span className="text-gray-700">We&apos;ll contact you 24 hours before your visit with final instructions</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
-              <span className="text-gray-700">Save our contact number for any questions or changes</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 shrink-0" />
-              <span className="text-gray-700">Prepare for an amazing jungle experience!</span>
-            </li>
-          </ul>
+        {booking && (
+          <div className="mt-8 border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-8">
+            <h3 className="font-serif text-2xl text-[#1f3d2e]">On the day</h3>
+            {booking.type === 'STAY' ? (
+              <p className="mt-2 text-sm text-stone-700">
+                Check-in {booking.checkInTime || CHECK_IN_LABEL}. Check-out {booking.checkOutTime || CHECK_OUT_LABEL}.
+                {booking.stayDetails?.mealPlanName ? ` Meals: ${booking.stayDetails.mealPlanName}.` : ''}
+              </p>
+            ) : (
+              <p className="mt-2 text-sm text-stone-700">
+                {booking.visitDetails?.timing || 'Arrive at the time on your visit.'}
+                {booking.visitDetails?.description ? ` Meals: ${booking.visitDetails.description}.` : ''}
+              </p>
+            )}
 
-          <div className="mt-5 rounded-xl border border-emerald-100 bg-emerald-50/70 p-3 text-sm text-emerald-800 flex items-start gap-2">
-            <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0" />
-            Your reservation is securely stored and can be retrieved anytime with your booking reference.
+            <h4 className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Included</h4>
+            <ul className="mt-2 space-y-1 text-sm text-stone-700">
+              {(booking.included?.length ? booking.included : booking.type === 'STAY' ? STAY_INCLUSIONS : booking.visitDetails?.includes || []).map((item) => (
+                <li key={item}>· {item}</li>
+              ))}
+            </ul>
+
+            <h4 className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Extra</h4>
+            <p className="mt-1 text-sm font-medium text-stone-800">{booking.extrasNote || ASK_ON_ARRIVAL_NOTE}</p>
+            <ul className="mt-2 space-y-1 text-sm text-stone-700">
+              {(booking.extras?.length ? booking.extras : STAY_ADDONS).map((item) => (
+                <li key={item}>· {item}</li>
+              ))}
+            </ul>
+
+            <h4 className="mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Rules you signed</h4>
+            {booking.houseRules?.acceptedRuleIds?.length ? (
+              <div className="mt-2 text-sm text-stone-700">
+                <p>Signed by {booking.houseRules.signerName || 'the lead guest'}.</p>
+                <ul className="mt-2 space-y-1">
+                  {booking.houseRules.acceptedRuleIds.map((id) => (
+                    <li key={id}>· {ruleText(id)}</li>
+                  ))}
+                </ul>
+                {booking.houseRules.exitPolicyAccepted && <p className="mt-3">{EXIT_POLICY_TEXT}</p>}
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-stone-600">The signed house rules are not on this booking yet.</p>
+            )}
           </div>
-        </div>
+        )}
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link 
+        <section className="mt-8 border-t border-[#e4d7c3] pt-8">
+          <h3 className="font-serif text-2xl text-[#1f3d2e]">What&apos;s next</h3>
+          <ul className="mt-3 space-y-2 text-sm leading-6 text-stone-700">
+            <li>Check your email for booking confirmation and details</li>
+            <li>We&apos;ll contact you 24 hours before your visit with final instructions</li>
+            <li>Save our contact number for any questions or changes</li>
+            <li>Prepare for an amazing jungle experience!</li>
+          </ul>
+          <p className="mt-4 text-sm leading-6 text-stone-600">
+            Your reservation is securely stored and can be retrieved anytime with your booking reference.
+          </p>
+        </section>
+
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Link
             href="/booking"
-            className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center"
+            className="inline-flex items-center justify-center bg-[#1f3d2e] px-6 py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026]"
           >
             Book Another Experience
-            <ArrowRight className="w-4 h-4" />
           </Link>
-          <Link 
+          <Link
             href="/"
-            className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-center"
+            className="inline-flex items-center justify-center border border-[#1f3d2e] px-6 py-3 text-sm font-semibold text-[#1f3d2e] hover:bg-[#1f3d2e] hover:text-[#f6f1e6]"
           >
             Return to Home
           </Link>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 text-white mt-16">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex gap-4">
-                <a href="#" className="hover:text-green-400 transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
-                </a>
-                <a href="#" className="hover:text-green-400 transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
-                </a>
-                <a href="#" className="hover:text-green-400 transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                </a>
-                <a href="#" className="hover:text-green-400 transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/></svg>
-                </a>
-              </div>
-            </div>
-            <div>
-              <h3 className="text-white mb-4">Our Activities</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-green-400 transition-colors">Wildlife Safari</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">Jungle Trek</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">Bird Watching</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">River Activities</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white mb-4">About Us</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-green-400 transition-colors">Our Story</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">Work with us</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white mb-4">Contact Us</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-green-400 transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-green-400 transition-colors">Contact Support</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
@@ -307,11 +302,12 @@ const Page = () => {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40 px-4 py-12">
+        <div className="min-h-screen bg-[#f6f1e6] px-4 pt-24">
           <div className="mx-auto max-w-5xl animate-pulse space-y-6">
-            <div className="h-24 rounded-2xl bg-gray-100" />
-            <div className="h-80 rounded-2xl bg-gray-100" />
-            <div className="h-56 rounded-2xl bg-gray-100" />
+            <div className="h-10 w-40 bg-[#e4d7c3]" />
+            <div className="h-16 w-2/3 bg-[#e4d7c3]" />
+            <div className="h-64 bg-[#e4d7c3]" />
+            <div className="h-56 bg-[#fffdf8]" />
           </div>
         </div>
       }

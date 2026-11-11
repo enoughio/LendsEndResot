@@ -6,6 +6,9 @@ export type RoomType = {
   maxOccupancy: number;
   baseOccupancy: number;
   extraPersonPrice: number;
+  breakfastOnlyPrice?: number;
+  breakfastPlusMealPrice?: number;
+  allMealsPrice?: number;
   amenities: string[];
   totalRooms: number;
   isSingleOccupancy: boolean;
@@ -83,4 +86,4 @@ export type MealPlan = {
   isActive: boolean;
 };
 
-export type Section = 'overview' | 'room-types' | 'rooms' | 'visit-packages' | 'meal-plans' | 'activities' | 'bookings';
+export type Section = 'overview' | 'room-types' | 'rooms' | 'visit-packages' | 'meal-plans' | 'activities' | 'bookings' | 'enquiries';

@@ -1,15 +1,102 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
 import {
-  buildPriceBreakdown,
+  RoomsUnavailableError,
+  activeStayOverlapWhere,
   calculateNights,
   getAvailableRoomCount,
   parseDate,
+  stayHoldExpiry,
 } from "@/lib/booking-utils";
 import {
   ONLINE_BOOKING_ENABLED,
   ONLINE_BOOKING_UNAVAILABLE_MESSAGE,
 } from "@/lib/service-status";
+import { mealTierFromPlanName, mealTierLabel, quoteStay, stayOccupancyError } from "@/lib/stay-pricing";
+
+type HeldStayInput = {
+  userId?: string;
+  roomTypeId: string;
+  checkIn: Date;
+  checkOut: Date;
+  guests: number;
+  roomsNeeded: number;
+  totalAmount: number;
+  mealPlanId: string | null;
+  mealPlanName: string;
+  extraGuestCount: number;
+  extraGuestPrice: number;
+  quotedRoomAmount: number;
+  quotedExtraGuestAmount: number;
+};
+
+function isSerializationConflict(error: unknown) {
+  return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034";
+}
+
+async function createHeldStay(input: HeldStayInput) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      return await prisma.$transaction(
+        async (tx) => {
+          const availableCount = await getAvailableRoomCount(
+            { roomTypeId: input.roomTypeId, checkIn: input.checkIn, checkOut: input.checkOut },
+            tx,
+          );
+          if (availableCount < input.roomsNeeded) {
+            throw new RoomsUnavailableError(availableCount, input.roomsNeeded);
+          }
+
+          const availableRoom = await tx.room.findFirst({
+            where: {
+              roomTypeId: input.roomTypeId,
+              roomStatus: "AVAILABLE",
+              bookings: { none: activeStayOverlapWhere(input.checkIn, input.checkOut) },
+            },
+            orderBy: { roomNo: "asc" },
+            select: { id: true },
+          });
+
+          if (!availableRoom) {
+            throw new RoomsUnavailableError(0, input.roomsNeeded);
+          }
+
+          return tx.booking.create({
+            data: {
+              ...(input.userId ? { user: { connect: { id: input.userId } } } : {}),
+              bookingType: "STAY",
+              status: "PENDING",
+              room: { connect: { id: availableRoom.id } },
+              checkIn: input.checkIn,
+              checkOut: input.checkOut,
+              guests: input.guests,
+              roomsBooked: input.roomsNeeded,
+              paymentStatus: "PENDING",
+              totalAmount: input.totalAmount,
+              currency: "INR",
+              ...(input.mealPlanId ? { mealPlan: { connect: { id: input.mealPlanId } } } : {}),
+              mealPlanName: input.mealPlanName,
+              mealPlanPrice: 0,
+              extraGuestCount: input.extraGuestCount,
+              extraGuestPrice: input.extraGuestPrice,
+              quotedRoomAmount: input.quotedRoomAmount,
+              quotedMealAmount: 0,
+              quotedExtraGuestAmount: input.quotedExtraGuestAmount,
+            },
+          });
+        },
+        { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+      );
+    } catch (error) {
+      if (error instanceof RoomsUnavailableError || !isSerializationConflict(error) || attempt === 2) {
+        throw error;
+      }
+    }
+  }
+
+  throw new RoomsUnavailableError(0, input.roomsNeeded);
+}
 
 export async function POST(request: Request) {
   try {
@@ -28,138 +115,83 @@ export async function POST(request: Request) {
     const checkOut = parseDate(body?.checkOut);
     const userId = body?.userId ? String(body.userId) : undefined;
     const mealPlanId = body?.mealPlanId ? String(body.mealPlanId) : null;
+    const mealPlanNameInput = String(body?.mealPlanName || "").trim();
 
     if (!roomTypeId || !checkIn || !checkOut || guests < 1) {
       return NextResponse.json(
         { error: { code: "BAD_REQUEST", message: "roomTypeId, checkIn, checkOut and guests are required." } },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (checkOut <= checkIn) {
       return NextResponse.json(
         { error: { code: "BAD_REQUEST", message: "checkOut must be after checkIn." } },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const [roomType, mealPlan] = await Promise.all([
-      prisma.roomType.findUnique({ where: { id: roomTypeId } }),
-      mealPlanId
-        ? prisma.mealPlan.findUnique({ where: { id: mealPlanId } })
-        : prisma.mealPlan.findFirst({ where: { isActive: true }, orderBy: { createdAt: "desc" } }),
-    ]);
-
-
+    const roomType = await prisma.roomType.findUnique({ where: { id: roomTypeId } });
     if (!roomType) {
       return NextResponse.json(
         { error: { code: "NOT_FOUND", message: "Room type not found." } },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
-    if (!mealPlan || !mealPlan.isActive) {
+    let mealPlan = mealPlanId ? await prisma.mealPlan.findUnique({ where: { id: mealPlanId } }) : null;
+    if (mealPlanId && !mealPlan) {
       return NextResponse.json(
-        { error: { code: "NOT_FOUND", message: "Meal plan not available." } },
-        { status: 404 }
+        { error: { code: "NOT_FOUND", message: "Meal plan not found." } },
+        { status: 404 },
       );
     }
+    if (!mealPlan && mealPlanNameInput) {
+      mealPlan = await prisma.mealPlan.findFirst({
+        where: { name: { equals: mealPlanNameInput, mode: "insensitive" } },
+      });
+    }
 
-    const roomsNeeded = roomType.isSingleOccupancy ? guests : roomsRequested;
-
-    if (!roomType.isSingleOccupancy && guests > roomType.capacity * roomsNeeded) {
+    const tierName = mealPlan?.name || mealPlanNameInput;
+    if (!tierName) {
       return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "Guests exceed max occupancy for this room type." } },
-        { status: 400 }
+        { error: { code: "BAD_REQUEST", message: "Select a meal plan." } },
+        { status: 400 },
       );
     }
 
-    const availableCount = await getAvailableRoomCount({ roomTypeId, checkIn, checkOut });
-    if (availableCount < roomsNeeded) {
-      return NextResponse.json(
-        {
-          error: {
-            code: "CONFLICT",
-            message: `Only ${availableCount} room(s) available for selected dates, but ${roomsNeeded} requested.`,
-          },
-          data: { availableCount, roomsNeeded },
-        },
-        { status: 409 }
-      );
-    }
-
-
-    // select a room for which no booking is done at the required time
-    const availableRoom = await prisma.room.findFirst({
-      where: {
-        roomTypeId,
-        roomStatus: "AVAILABLE",
-        bookings: {
-          none: {
-            deletedAt: null,
-            bookingType: "STAY",
-            status: "CONFIRMED",
-            NOT: {
-              OR: [
-                { checkOut: { lte: checkIn } },
-                { checkIn: { gte: checkOut } },
-              ],
-            },
-          },
-        },
-      },
-      orderBy: { roomNo: "asc" },
-      select: { id: true },
-    });
-
-    if (!availableRoom) {
-      return NextResponse.json(
-        {
-          error: {
-            code: "CONFLICT",
-            message: "No rooms available for the selected dates.",
-          },
-        },
-        { status: 409 }
-      );
-    }
-
-
-    // charges are on night stay basis
+    const tier = mealTierFromPlanName(tierName);
     const nights = calculateNights(checkIn, checkOut);
-    const roomBaseAmount = Math.round(Number(roomType.basePrice) * nights * roomsNeeded);
-    const extraGuestCount = roomType.isSingleOccupancy
-      ? 0
-      : Math.max(0, guests - Number(roomType.baseOccupancy || 0) * roomsNeeded);
-    const extraGuestAmount = roomType.isSingleOccupancy
-      ? 0
-      : Math.round(Number(roomType.extraPersonPrice || 0) * extraGuestCount * nights);
-    const mealPlanAmount = Math.round(Number(mealPlan.pricePerPerson || 0) * guests * nights);
-    const { totalAmount, taxAmount } = buildPriceBreakdown({
-      baseAmount: roomBaseAmount,
-      mealPlanAmount,
-      extraGuestAmount,
+    const quote = quoteStay({
+      room: roomType,
+      tier,
+      guests,
+      roomsRequested,
+      nights,
     });
 
-    const booking = await prisma.booking.create({
-      data: {
-        userId,
-        bookingType: "STAY",
-        status: "PENDING",
-        roomId: availableRoom.id,
-        checkIn,
-        checkOut,
-        guests,
-        roomsBooked: roomsNeeded,
-        paymentStatus : "PENDING",
-        totalAmount,
-        currency: "INR",
-        mealPlanId: mealPlan.id,
-        mealPlanName: mealPlan.name,
-        mealPlanPrice: Number(mealPlan.pricePerPerson || 0),
-        extraGuestCount,
-        extraGuestPrice: roomType.isSingleOccupancy ? 0 : Number(roomType.extraPersonPrice || 0),
-      },
+    const occupancyError = stayOccupancyError(roomType, guests, quote.roomsNeeded);
+    if (occupancyError) {
+      return NextResponse.json(
+        { error: { code: "BAD_REQUEST", message: occupancyError } },
+        { status: 400 },
+      );
+    }
+
+    const booking = await createHeldStay({
+      userId,
+      roomTypeId,
+      checkIn,
+      checkOut,
+      guests,
+      roomsNeeded: quote.roomsNeeded,
+      totalAmount: quote.totalAmount,
+      mealPlanId: mealPlan?.id ?? null,
+      mealPlanName: mealTierLabel(tier),
+      extraGuestCount: quote.extraGuestCount,
+      extraGuestPrice: quote.extraGuestPrice,
+      quotedRoomAmount: quote.quotedRoomAmount,
+      quotedExtraGuestAmount: quote.quotedExtraGuestAmount,
     });
 
     return NextResponse.json(
@@ -170,18 +202,28 @@ export async function POST(request: Request) {
           status: booking.status,
           paymentStatus: booking.paymentStatus,
           totalAmount: booking.totalAmount,
-          taxAmount,
+          taxAmount: quote.taxAmount,
+          convenienceFeeAmount: quote.convenienceFeeAmount,
           currency: booking.currency,
-          expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+          expiresAt: stayHoldExpiry(booking.createdAt).toISOString(),
         },
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
+    if (error instanceof RoomsUnavailableError) {
+      return NextResponse.json(
+        {
+          error: { code: "CONFLICT", message: error.message },
+          data: { availableCount: error.availableCount, roomsNeeded: error.roomsNeeded },
+        },
+        { status: 409 },
+      );
+    }
     console.error("POST /api/bookings/stay failed", error);
     return NextResponse.json(
       { error: { code: "INTERNAL_ERROR", message: "Unable to create stay booking." } },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

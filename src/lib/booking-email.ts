@@ -33,6 +33,7 @@ function formatAmount(value: number, currency: string) {
 function formatDate(value?: Date | null) {
   if (!value) return "-";
   return new Date(value).toLocaleDateString("en-IN", {
+    timeZone: "Asia/Kolkata",
     weekday: "long",
     year: "numeric",
     month: "long",

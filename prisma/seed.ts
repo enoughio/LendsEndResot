@@ -242,7 +242,7 @@ async function main() {
         timing: visitPackage.timing,
         description: visitPackage.description,
         includes: visitPackage.includes,
-        minGroupSize: 4,
+        minGroupSize: 1,
         maxGroupSize: Math.max(existing?.maxGroupSize ?? 0, 30),
         status: "ACTIVE" as const,
       };

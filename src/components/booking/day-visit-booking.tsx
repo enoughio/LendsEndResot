@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { notifyError, notifyInfo, notifySuccess } from '@/lib/client-notify';
 import { CANCELLATION_POLICY } from '@/lib/house-rules';
 import { todayIndiaInput } from '@/lib/india-date';
-import { ASK_ON_ARRIVAL_NOTE, ONLINE_VISIT_MAX_GUESTS, RESORT_EMAIL, RESORT_PHONE_DISPLAY, RESORT_PHONE_TEL, STAY_ADDONS, splitIncludedAndAddons, visitMealsText } from '@/lib/resort-copy';
+import { ASK_ON_ARRIVAL_NOTE, RESORT_EMAIL, RESORT_PHONE_DISPLAY, RESORT_PHONE_TEL, SMALL_GROUP_MAX_GUESTS, STAY_ADDONS, splitIncludedAndAddons, visitMealsText } from '@/lib/resort-copy';
 import { buildPriceBreakdown, quoteVisit } from '@/lib/stay-pricing';
 
 interface DayVisitBookingProps {
@@ -59,7 +59,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(packageId);
   const [visitDate, setVisitDate] = useState('');
-  const [numGuests, setNumGuests] = useState(4);
+  const [numGuests, setNumGuests] = useState(1);
 
   const packages = useMemo(() => {
     const active = visitPackages.filter((item) => !item.status || item.status === 'ACTIVE');
@@ -75,11 +75,6 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
       || null;
   }, [packages, selectedId, type]);
 
-  const minGuests = selectedPackage?.minGroupSize || 4;
-  const packageMax = selectedPackage?.maxGroupSize && selectedPackage.maxGroupSize > 0
-    ? selectedPackage.maxGroupSize
-    : ONLINE_VISIT_MAX_GUESTS;
-  const maxGuests = Math.max(minGuests, Math.min(packageMax, ONLINE_VISIT_MAX_GUESTS));
   const quote = quoteVisit(Number(selectedPackage?.basePrice || 0), numGuests);
 
   useEffect(() => {
@@ -100,17 +95,12 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
     void loadCatalog();
   }, []);
 
-  useEffect(() => {
-    if (numGuests < minGuests) setNumGuests(minGuests);
-    if (numGuests > maxGuests) setNumGuests(maxGuests);
-  }, [minGuests, maxGuests, numGuests]);
-
   const missingRequirements = useMemo(() => {
     const missing: string[] = [];
     if (!visitDate) missing.push('Select visit date');
-    if (numGuests < minGuests) missing.push(`At least ${minGuests} guests`);
+    if (numGuests < 1) missing.push('At least 1 guest');
     return missing;
-  }, [minGuests, numGuests, visitDate]);
+  }, [numGuests, visitDate]);
 
   const choosePackage = (pkg: VisitPackageApi) => {
     setSelectedId(pkg.id);
@@ -161,7 +151,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
         <header className="mt-6 max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Land&apos;s End · The Last Resort</p>
           <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#1f3d2e] sm:text-5xl">Day visit</h1>
-          <p className="mt-4 text-base leading-7 text-stone-700">Choose a visit, then a date. Meals listed with the package are included. There is no extra meal-plan charge. From 4 guests, up to 10 online.</p>
+          <p className="mt-4 text-base leading-7 text-stone-700">Choose a date and how many guests are coming, then a visit. Meals listed with the package are included. One guest can book. A small group is {SMALL_GROUP_MAX_GUESTS} people or fewer.</p>
         </header>
         <figure className="relative mt-8 h-56 overflow-hidden sm:h-80">
           <Image
@@ -170,71 +160,13 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
             fill
             priority
             sizes="(min-width: 1152px) 1152px, 100vw"
-            className="object-cover"
+            className="object-cover object-[center_38%]"
           />
         </figure>
 
         {error && <p className="mt-8 border border-red-200 bg-red-50 p-4 text-red-700">{error}</p>}
         <div className="mt-10 grid gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
-            <section>
-              <h2 className="font-serif text-3xl font-medium text-[#1f3d2e]">Choose a visit</h2>
-              <div className="mt-4 grid gap-4">
-                {loading && <p className="text-sm text-stone-500">Loading visits...</p>}
-                {packages.map((pkg) => {
-                  const selected = selectedPackage?.id === pkg.id;
-                  return (
-                    <button
-                      key={pkg.id}
-                      type="button"
-                      onClick={() => choosePackage(pkg)}
-                      className={`bg-[#fffdf8] p-5 text-left ring-1 ${selected ? 'ring-[#1f3d2e]' : 'ring-[#e4d7c3]'}`}
-                    >
-                      <p className="font-serif text-2xl text-[#1f3d2e]">{pkg.name}</p>
-                      {selected && <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Selected</p>}
-                      <p className="mt-2 text-sm font-medium text-stone-800">Minimum 4 guests</p>
-                      <p className="mt-1 text-sm text-stone-600">{pkg.timing}</p>
-                      <p className="mt-3 font-serif text-3xl text-stone-900">
-                        {inr(pkg.basePrice)}
-                        <span className="ml-2 font-sans text-sm text-stone-600">per person</span>
-                      </p>
-                      <p className="mt-1 text-sm text-stone-600">
-                        About {inr(afterFees(pkg.basePrice))} after GST and the online fee
-                      </p>
-                    </button>
-                  );
-                })}
-                <p className="text-sm text-stone-700">
-                  <Link href="/booking/group" className="underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
-                    More than 10 guests? Send a group enquiry.
-                  </Link>
-                </p>
-              </div>
-            </section>
-
-            {selectedPackage && (
-              <section className="border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-6">
-                <div className="mb-4 flex flex-wrap gap-4 text-sm text-stone-700">
-                  <p className="inline-flex items-center gap-2"><Clock className="h-4 w-4 text-[#1f3d2e]" /> {selectedPackage.timing || `${selectedPackage.duration} hours`}</p>
-                  <p className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#1f3d2e]" /> Minimum {minGuests} guests</p>
-                </div>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Included</h3>
-                <ul className="mt-2 grid gap-1 text-sm leading-6 text-stone-700 sm:grid-cols-2">
-                  {splitIncludedAndAddons(selectedPackage.includes || []).included.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-                <h3 className="mt-4 text-sm font-medium text-stone-900">{ASK_ON_ARRIVAL_NOTE}</h3>
-                <ul className="mt-2 grid gap-1 text-sm leading-6 text-stone-700 sm:grid-cols-2">
-                  {STAY_ADDONS.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-                <h3 className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Meals</h3>
-                <p className="mt-2 text-sm leading-6 text-stone-700">{visitMealsText(selectedPackage.description, selectedPackage.packageType)}</p>
-              </section>
-            )}
-
             <section className="border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-6">
               <h2 className="font-serif text-2xl text-[#1f3d2e]">Visit details</h2>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -257,25 +189,79 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                     value={visitDate}
                     min={todayIndiaInput()}
                     onChange={(event) => setVisitDate(event.target.value)}
+                    onClick={(event) => event.stopPropagation()}
                     className="mt-3 w-full border border-[#e4d7c3] bg-white px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-[#1f3d2e]"
                   />
                 </div>
                 <div className="border border-[#e4d7c3] bg-[#f6f1e6] p-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Guests</p>
                   <div className="mt-3 flex items-center gap-3">
-                    <button type="button" className="h-10 w-10 border border-[#cbbfa8] text-lg text-stone-800 disabled:opacity-40" disabled={numGuests <= minGuests} onClick={() => setNumGuests((prev) => Math.max(minGuests, prev - 1))} aria-label="Decrease guests">-</button>
-                    <div className="flex-1 border border-[#e4d7c3] bg-white px-3 py-2 text-center text-stone-900">{numGuests} guests</div>
-                    <button type="button" className="h-10 w-10 border border-[#cbbfa8] text-lg text-stone-800 disabled:opacity-40" disabled={numGuests >= maxGuests} onClick={() => setNumGuests((prev) => Math.min(maxGuests, prev + 1))} aria-label="Increase guests">+</button>
+                    <button type="button" className="h-10 w-10 border border-[#cbbfa8] text-lg text-stone-800 disabled:opacity-40" disabled={numGuests <= 1} onClick={() => setNumGuests((prev) => Math.max(1, prev - 1))} aria-label="Decrease guests">-</button>
+                    <div className="flex-1 border border-[#e4d7c3] bg-white px-3 py-2 text-center text-stone-900">{numGuests} {numGuests === 1 ? 'guest' : 'guests'}</div>
+                    <button type="button" className="h-10 w-10 border border-[#cbbfa8] text-lg text-stone-800" onClick={() => setNumGuests((prev) => prev + 1)} aria-label="Increase guests">+</button>
                   </div>
-                  <p className="mt-2 text-xs text-stone-500">Minimum {minGuests}. The counter stops at {maxGuests}. Meals in the package are included.</p>
-                  <p className="mt-2 text-sm text-stone-700">
-                    <Link href="/booking/group" className="underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
-                      More than 10 guests? Send a group enquiry.
-                    </Link>
-                  </p>
+                  <p className="mt-2 text-xs text-stone-500">One guest can book. A small group is {SMALL_GROUP_MAX_GUESTS} people or fewer. Meals in the package are included.</p>
                 </div>
               </div>
             </section>
+
+            <section>
+              <h2 className="font-serif text-3xl font-medium text-[#1f3d2e]">Choose a visit</h2>
+              <div className="mt-4 grid gap-4">
+                {loading && <p className="text-sm text-stone-500">Loading visits...</p>}
+                {packages.map((pkg) => {
+                  const selected = selectedPackage?.id === pkg.id;
+                  return (
+                    <button
+                      key={pkg.id}
+                      type="button"
+                      onClick={() => choosePackage(pkg)}
+                      className={`bg-[#fffdf8] p-5 text-left ring-1 ${selected ? 'ring-[#1f3d2e]' : 'ring-[#e4d7c3]'}`}
+                    >
+                      <p className="font-serif text-2xl text-[#1f3d2e]">{pkg.name}</p>
+                      {selected && <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Selected</p>}
+                      <p className="mt-2 text-sm text-stone-600">{pkg.timing}</p>
+                      <p className="mt-3 font-serif text-3xl text-stone-900">
+                        {inr(pkg.basePrice)}
+                        <span className="ml-2 font-sans text-sm text-stone-600">per person</span>
+                      </p>
+                      <p className="mt-1 text-sm text-stone-600">
+                        About {inr(afterFees(pkg.basePrice))} after GST and the online fee
+                      </p>
+                    </button>
+                  );
+                })}
+                <p className="text-sm text-stone-700">
+                  <Link href="/booking/group" className="underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+                    More than {SMALL_GROUP_MAX_GUESTS} guests? Send a group enquiry.
+                  </Link>
+                </p>
+              </div>
+            </section>
+
+            {selectedPackage && (
+              <section className="border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-6">
+                <div className="mb-4 flex flex-wrap gap-4 text-sm text-stone-700">
+                  <p className="inline-flex items-center gap-2"><Clock className="h-4 w-4 text-[#1f3d2e]" /> {selectedPackage.timing || `${selectedPackage.duration} hours`}</p>
+                  <p className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#1f3d2e]" /> Small group: {SMALL_GROUP_MAX_GUESTS} people or fewer</p>
+                </div>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Included</h3>
+                <ul className="mt-2 grid gap-1 text-sm leading-6 text-stone-700 sm:grid-cols-2">
+                  {splitIncludedAndAddons(selectedPackage.includes || []).included.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                <h3 className="mt-4 text-sm font-medium text-stone-900">{ASK_ON_ARRIVAL_NOTE}</h3>
+                <ul className="mt-2 grid gap-1 text-sm leading-6 text-stone-700 sm:grid-cols-2">
+                  {STAY_ADDONS.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                <h3 className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Meals</h3>
+                <p className="mt-2 text-sm leading-6 text-stone-700">{visitMealsText(selectedPackage.description, selectedPackage.packageType)}</p>
+              </section>
+            )}
+
           </div>
 
           <aside className="lg:col-span-1">
@@ -283,7 +269,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Your visit</p>
               <h3 className="mt-2 font-serif text-2xl text-[#1f3d2e]">{selectedPackage?.name || 'Day visit'}</h3>
               <div className="mt-4 space-y-2 text-sm text-stone-700">
-                <div className="flex justify-between gap-3"><span>Visit ({numGuests} guests)</span><span>{inr(quote.quotedRoomAmount)}</span></div>
+                <div className="flex justify-between gap-3"><span>Visit ({numGuests} {numGuests === 1 ? 'guest' : 'guests'})</span><span>{inr(quote.quotedRoomAmount)}</span></div>
                 <div className="flex justify-between gap-3"><span>Meals</span><span>Included</span></div>
                 <div className="flex justify-between gap-3"><span>GST (5%)</span><span>{inr(quote.taxAmount)}</span></div>
                 <div className="flex justify-between gap-3"><span>Convenience fee (3%)</span><span>{inr(quote.convenienceFeeAmount)}</span></div>

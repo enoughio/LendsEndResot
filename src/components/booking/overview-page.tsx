@@ -217,7 +217,7 @@ export function OverviewPage() {
             fill
             priority
             sizes="(min-width: 1152px) 1152px, 100vw"
-            className="object-cover"
+            className="object-cover object-[center_38%]"
           />
         </figure>
 
@@ -236,7 +236,7 @@ export function OverviewPage() {
             className="bg-[#1f3d2e] px-6 py-6 text-left text-[#f6f1e6] transition hover:bg-[#173026]"
           >
             <span className="block font-serif text-3xl leading-none">Day Visit</span>
-            <span className="mt-3 block text-sm text-[#e7dcc6]">Small group</span>
+            <span className="mt-3 block text-sm text-[#e7dcc6]">Small group, up to 20</span>
           </button>
         </section>
 
@@ -288,11 +288,11 @@ export function OverviewPage() {
         <section className="mt-14">
           <h2 className="font-serif text-3xl font-medium text-[#1f3d2e]">Day visits</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
-            Per person, from 4 guests. Listed meals are included in the price. Online booking is for up to 10 guests.
+            Per person. Listed meals are included in the price. One guest can book. A small group is 20 people or fewer.
           </p>
           <p className="mt-1 text-sm text-stone-700">
             <Link href="/booking/group" className="underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
-              More than 10 guests? Send a group enquiry.
+              More than 20 guests? Send a group enquiry.
             </Link>
           </p>
           <div className="mt-6 grid gap-4 lg:grid-cols-3">
@@ -303,7 +303,7 @@ export function OverviewPage() {
                 <article key={visit.id} className="flex flex-col bg-[#fffdf8] p-5 ring-1 ring-[#e4d7c3]">
                   <h3 className="font-serif text-2xl text-[#1f3d2e]">{visit.name}</h3>
                   <p className="mt-2 text-sm text-stone-700">{hours}</p>
-                  <p className="text-sm text-stone-500">{visit.duration} hours · from {visit.minGroupSize || 4} guests</p>
+                  <p className="text-sm text-stone-500">{visit.duration} hours · 1 guest or more</p>
                   <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Included</p>
                   <ul className="mt-2 flex-1 space-y-1 text-sm leading-6 text-stone-700">
                     {parts.included.map((item) => (
@@ -349,7 +349,7 @@ export function OverviewPage() {
               Gatherings
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-stone-700">
-              A retreat led from outside the house, or a party of more than ten, is written to Land&apos;s End rather than paid for on this page. The resort receives the enquiry and replies.
+              A retreat led from outside the house is written to Land&apos;s End rather than paid for on this page. A day visit can be booked for any number of guests. A small group is 20 people or fewer.
             </p>
           </div>
           <div className="grid md:grid-cols-2">
@@ -369,7 +369,7 @@ export function OverviewPage() {
             <article className="px-5 py-6 sm:px-7">
               <h3 className="font-serif text-2xl text-[#1f3d2e]">Larger group</h3>
               <p className="mt-3 text-sm leading-7 text-stone-700">
-                For more than ten guests, either a day in the forest or a stay. Tell us which, and leave the group lead&apos;s name, email, mobile, the date, and an organization if there is one.
+                For more than 20 guests, either a day in the forest or a stay. Tell us which, and leave the group lead&apos;s name, email, mobile, the date, and an organization if there is one.
               </p>
               <p className="mt-3 text-sm leading-6 text-stone-600">An enquiry, not an instant booking. The house reads it and writes back.</p>
               <Link

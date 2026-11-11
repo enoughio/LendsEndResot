@@ -3,8 +3,6 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { HouseRulesAcceptance, saveHouseRulesConsent } from "@/components/booking/house-rules-acceptance";
-import { emptyHouseRulesAcceptance, isHouseRulesAcceptanceComplete, type ConsentPurpose, type HouseRulesAcceptanceValue } from "@/lib/house-rules";
 import { RESORT_EMAIL, RESORT_PHONE_DISPLAY, RESORT_PHONE_TEL, whatsAppLink } from "@/lib/resort-copy";
 
 type EnquiryKind = "RETREAT" | "GROUP";
@@ -20,7 +18,7 @@ const ENQUIRY_COPY = {
   },
   GROUP: {
     title: "Group booking",
-    lead: "This enquiry is for a group of more than ten, coming for a day visit or a stay at The Last Resort. It is not an instant booking, and nothing is paid when you send it.",
+    lead: "This enquiry is for a group of more than 20, coming for a day visit or a stay at The Last Resort. A smaller party can book a visit directly. It is not an instant booking, and nothing is paid when you send it.",
     detail:
       "Say whether the group wants a day visit or a stay, and leave the group lead’s name, an email, a mobile number, the date, and an organization if there is one. The resort receives the enquiry and replies.",
   },
@@ -28,9 +26,6 @@ const ENQUIRY_COPY = {
 
 export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
   const router = useRouter();
-  const purpose = kind as ConsentPurpose;
-  const [houseRules, setHouseRules] = useState<HouseRulesAcceptanceValue>(emptyHouseRulesAcceptance());
-  const [consentId, setConsentId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -58,22 +53,14 @@ export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
   );
 
   const submit = async () => {
-    if (!isHouseRulesAcceptanceComplete(houseRules)) {
-      setError("Please accept every house rule and sign before sending.");
-      return;
-    }
-
     try {
       setSubmitting(true);
       setError(null);
-      const activeConsent = consentId || (await saveHouseRulesConsent(purpose, houseRules));
-      setConsentId(activeConsent);
       const response = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           kind,
-          consentId: activeConsent,
           contactName,
           email,
           phone,
@@ -86,7 +73,6 @@ export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
       });
       const json = await response.json();
       if (!response.ok) {
-        if (response.status === 409) setConsentId(null);
         throw new Error(json?.error?.message || "Unable to send this enquiry.");
       }
       setDone(true);
@@ -193,7 +179,6 @@ export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
                 </label>
               )}
 
-              <HouseRulesAcceptance idPrefix={`enquiry-${kind}`} onChange={setHouseRules} />
               {error && <p className="border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
               <button type="submit" disabled={submitting} className="w-full bg-[#1f3d2e] px-4 py-3 font-semibold text-[#f6f1e6] hover:bg-[#173026] disabled:opacity-60">
                 {submitting ? "Sending..." : "Send enquiry"}

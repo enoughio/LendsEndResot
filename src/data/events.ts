@@ -26,7 +26,32 @@ export type Event = {
 
 export const events: Event[] = [
 
-  
+  {
+    id: "10",
+    slug: "antarvan-2026",
+    customPagePath: "/antarvan",
+    title: "Antarvan — An Ashtanga Yoga Retreat",
+    shortDescription:
+      "A three-day Ashtanga Yoga retreat through Patanjali's eight limbs. Eight limbs. One forest. Return to yourself.",
+    description:
+      "Antarvan — अंतर्वन, the forest within — follows Ashtanga in its original sense: Patanjali's eight limbs of yoga. Over three days in Sumiran Forest, you move from how you live, to the body, the breath and the senses, and finally to stillness. Each limb is introduced, then experienced in nature, guided by Alifia, therapeutic yoga instructor and founder of Aadhara Yoga.",
+    images: ["/events/antarvan/event-photo.png"],
+    startDate: "2026-12-11",
+    endDate: "2026-12-13",
+    time: "Three days, two nights",
+    location: "Land's End — The Last Resort, Sumiran Forest, Near Bhopal",
+    price: "From ₹11,200 per person",
+    contact: ["+91 89891 10232", "+91 81096 69604"],
+    includes: [
+      "Return travel from Bhopal",
+      "Two nights' stay",
+      "All meals, high tea and morning juice",
+      "All yoga, pranayama and meditation sessions",
+      "Guided forest walks, archery and target shooting",
+      "Bonfire evenings, storytelling and stargazing",
+    ],
+  },
+
   {
     id: "1",
     slug: "van-deepotsav-2026",

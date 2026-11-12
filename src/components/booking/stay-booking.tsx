@@ -780,6 +780,11 @@ export function StayBooking({}: StayBookingProps) {
             <p className={`border-t border-[#e4d7c3] px-4 py-3 text-sm leading-6 sm:px-5 ${checkInDate && checkOutDate && !datesReady ? 'text-amber-700' : 'text-stone-600'}`}>
               {checkInDate && checkOutDate && !datesReady ? 'Check-out has to be after check-in.' : ruleNote}
             </p>
+            {datesReady && !availabilitySettled && (
+              <p className="border-t-2 border-[#1f3d2e] bg-[#f6f1e6] px-4 py-3 text-sm font-semibold text-[#1f3d2e] sm:px-5" role="status">
+                Checking which rooms are free for these dates
+              </p>
+            )}
           </div>
         </section>
 
@@ -801,26 +806,22 @@ export function StayBooking({}: StayBookingProps) {
                 </p>
               )}
 
-              {datesReady && loading && (
-                <div className="mt-4 divide-y divide-[#e4d7c3] border-y border-[#e4d7c3]">
-                  {roomSkeletons.map((item) => (
-                    <div key={item} className="py-5">
-                      <div className="flex animate-pulse items-start gap-4">
-                        <div className="h-28 w-36 bg-[#e4d7c3] sm:h-32 sm:w-40" />
-                        <div className="flex-1 space-y-3">
+              {datesReady && !availabilitySettled && (
+                <div className="mt-4 border-2 border-[#1f3d2e] bg-[#fffdf8] px-4 py-4" role="status" aria-live="polite">
+                  <p className="text-sm font-semibold text-[#1f3d2e]">Checking which rooms are free for these dates</p>
+                  <div className="mt-4 space-y-3">
+                    {roomSkeletons.map((item) => (
+                      <div key={item} className="flex animate-pulse items-start gap-4 border border-[#e4d7c3] bg-[#fffdf8] p-3">
+                        <div className="h-20 w-28 shrink-0 bg-[#e4d7c3]" />
+                        <div className="flex-1 space-y-3 py-1">
                           <div className="h-4 w-2/5 bg-[#e4d7c3]" />
-                          <div className="h-3 w-full bg-[#f6f1e6]" />
-                          <div className="h-3 w-4/5 bg-[#f6f1e6]" />
-                          <div className="h-4 w-1/3 bg-[#e4d7c3]" />
+                          <div className="h-3 w-full bg-[#e4d7c3]" />
+                          <div className="h-3 w-4/5 bg-[#e4d7c3]" />
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              )}
-
-              {datesReady && !loading && !availabilitySettled && (
-                <p className="mt-4 text-sm text-stone-600">Checking which rooms are free for these dates.</p>
               )}
 
               {datesReady && availabilitySettled && availability?.failed && (
@@ -841,7 +842,7 @@ export function StayBooking({}: StayBookingProps) {
               )}
 
               {datesReady && availabilitySettled && availableRooms.length > 0 && (
-                <div className="mt-4 divide-y divide-[#e4d7c3] border-y border-[#e4d7c3]">
+                <div className="mt-4 divide-y divide-[#d9cbb4] border-2 border-[#1f3d2e] bg-[#fffdf8]">
                   {availableRooms.map((room) => {
                     const isSelected = selectedRoom === room.id;
                     const roomsLeft = availability?.counts[room.id] ?? 0;
@@ -860,7 +861,7 @@ export function StayBooking({}: StayBookingProps) {
                             selectRoom(room);
                           }
                         }}
-                        className={`cursor-pointer py-5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3d2e] ${isSelected ? 'bg-[#fffdf8] px-4 ring-1 ring-inset ring-[#1f3d2e]' : ''}`}
+                        className={`cursor-pointer px-4 py-5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3d2e] sm:px-5 ${isSelected ? 'bg-[#f3ecdc]' : 'bg-[#fffdf8]'}`}
                       >
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                           <RoomImageGallery roomName={room.name} onOpen={() => selectRoom(room)} />

@@ -203,12 +203,31 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                   <p className="mt-2 text-xs text-stone-500">One guest can book. A small group is {SMALL_GROUP_MAX_GUESTS} people or fewer. Meals in the package are included.</p>
                 </div>
               </div>
+              {visitDate && loading && (
+                <p className="mt-4 border border-[#1f3d2e] bg-[#f6f1e6] px-4 py-3 text-sm font-semibold text-[#1f3d2e]" role="status">
+                  Checking visits for this date
+                </p>
+              )}
             </section>
 
-            <section>
+            <section className="border-2 border-[#1f3d2e] bg-[#fffdf8] p-5 sm:p-6">
               <h2 className="font-serif text-3xl font-medium text-[#1f3d2e]">Choose a visit</h2>
               <div className="mt-4 grid gap-4">
-                {loading && <p className="text-sm text-stone-500">Loading visits...</p>}
+                {loading && (
+                  <div className="border border-[#1f3d2e] bg-[#fffdf8] px-4 py-4" role="status" aria-live="polite">
+                    <p className="text-sm font-semibold text-[#1f3d2e]">
+                      {visitDate ? 'Checking visits for this date' : 'Loading visits'}
+                    </p>
+                    <div className="mt-3 space-y-3">
+                      {[0, 1, 2].map((item) => (
+                        <div key={item} className="animate-pulse border border-[#e4d7c3] bg-white p-4">
+                          <div className="h-5 w-1/3 bg-[#e4d7c3]" />
+                          <div className="mt-3 h-3 w-1/2 bg-[#e4d7c3]" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {packages.map((pkg) => {
                   const selected = selectedPackage?.id === pkg.id;
                   return (
@@ -216,7 +235,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                       key={pkg.id}
                       type="button"
                       onClick={() => choosePackage(pkg)}
-                      className={`bg-[#fffdf8] p-5 text-left ring-1 ${selected ? 'ring-[#1f3d2e]' : 'ring-[#e4d7c3]'}`}
+                      className={`border bg-white p-5 text-left ${selected ? 'border-[#1f3d2e] ring-1 ring-[#1f3d2e]' : 'border-[#8d7350]'}`}
                     >
                       <p className="font-serif text-2xl text-[#1f3d2e]">{pkg.name}</p>
                       {selected && <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Selected</p>}

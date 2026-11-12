@@ -167,7 +167,12 @@ async function main() {
     throw new Error("DATABASE_URL is not set");
   }
 
-  const adapter = new PrismaPg({ connectionString });
+  const adapter = new PrismaPg({
+    connectionString: connectionString.replace(
+      /([?&])sslmode=(?:prefer|require|verify-ca)(?=&|$)/i,
+      "$1sslmode=verify-full",
+    ),
+  });
   const prisma = new PrismaClient({ adapter });
 
   try {

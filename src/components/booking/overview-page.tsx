@@ -284,15 +284,17 @@ export function OverviewPage() {
                     </div>
                   ))}
                 </dl>
-                <button
-                  type="button"
-                  onClick={() => router.push("/booking/stay")}
-                  className="shrink-0 bg-[#1f3d2e] px-5 py-2.5 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026]"
-                >
-                  Book
-                </button>
               </article>
             ))}
+          </div>
+          <div className="mt-5">
+            <button
+              type="button"
+              onClick={() => router.push("/booking/stay")}
+              className="w-full bg-[#1f3d2e] px-6 py-4 text-base font-semibold text-[#f6f1e6] hover:bg-[#173026]"
+            >
+              Book a stay
+            </button>
           </div>
         </section>
 

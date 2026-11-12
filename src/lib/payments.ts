@@ -2,10 +2,14 @@ import "server-only";
 import crypto from "node:crypto";
 import Razorpay from "razorpay";
 
+function readRazorpayEnv(name: string) {
+	return process.env[name]?.trim().replace(/^['"]+|['"]+$/g, "") || "";
+}
+
 // Centralized key lookup so all routes fail consistently when config is missing.
 export function getRazorpayKeys() {
-	const keyId = process.env.RAZORPAY_KEY_ID;
-	const keySecret = process.env.RAZORPAY_SECRET_KEY;
+	const keyId = readRazorpayEnv("RAZORPAY_KEY_ID");
+	const keySecret = readRazorpayEnv("RAZORPAY_SECRET_KEY");
 
 	if (!keyId || !keySecret) {
 		throw new Error("Razorpay keys are not configured.");

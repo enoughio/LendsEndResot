@@ -62,15 +62,6 @@ export function HouseRulesAcceptance({ idPrefix = "house-rules", value, onChange
         </h3>
         <p className="mt-1 text-sm text-stone-600">Every rule, the exit policy, and your name are required.</p>
       </div>
-      <label className="flex items-start gap-3 border border-[#e4d7c3] bg-[#fffdf8] p-3 text-sm font-medium text-stone-800">
-        <input
-          type="checkbox"
-          className="mt-0.5 h-4 w-4 accent-[#1f3d2e]"
-          checked={selectAll}
-          onChange={(event) => toggleSelectAll(event.target.checked)}
-        />
-        <span>Select all</span>
-      </label>
       {HOUSE_RULES.map((rule) => (
         <label key={rule.id} className="flex items-start gap-3 border border-[#e4d7c3] bg-[#fffdf8] p-3 text-sm text-stone-800">
           <input
@@ -90,6 +81,15 @@ export function HouseRulesAcceptance({ idPrefix = "house-rules", value, onChange
           onChange={(event) => onChange({ ...value, exitPolicyAccepted: event.target.checked })}
         />
         <span>{EXIT_POLICY_TEXT}</span>
+      </label>
+      <label className="flex items-start gap-3 border border-[#1f3d2e] bg-[#fffdf8] p-3 text-sm font-medium text-stone-800">
+        <input
+          type="checkbox"
+          className="mt-0.5 h-4 w-4 accent-[#1f3d2e]"
+          checked={selectAll}
+          onChange={(event) => toggleSelectAll(event.target.checked)}
+        />
+        <span>Select all</span>
       </label>
       <div>
         <label htmlFor={`${idPrefix}-signer-name`} className="mb-1 block text-sm font-medium text-stone-800">

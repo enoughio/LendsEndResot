@@ -48,7 +48,7 @@ export const STAY_ADDONS = [
 export const CHECK_IN_LABEL = "12:00 PM";
 export const CHECK_OUT_LABEL = "11:00 AM";
 
-export const ONLINE_VISIT_MAX_GUESTS = 10;
+export const SMALL_GROUP_MAX_GUESTS = 20;
 
 export const SHORT_VISIT_MEALS_COPY =
   "Tea and snacks are included. Buffet dining is available separately.";

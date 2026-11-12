@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { parseDate } from "@/lib/booking-utils";
 import { sendBookingEnquiryEmail } from "@/lib/enquiry-email";
-import { ConsentLinkError, linkHouseRulesConsent } from "@/lib/link-consent";
 
 function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -16,7 +15,6 @@ export async function POST(request: Request) {
     const email = String(body?.email || "").trim();
     const phone = String(body?.phone || "").trim();
     const preferredDate = parseDate(body?.preferredDate);
-    const consentId = String(body?.consentId || "").trim();
     const organization = String(body?.organization || "").trim();
     const natureOfRetreat = String(body?.natureOfRetreat || "").trim();
     const expectedParticipants = Number(body?.expectedParticipants || 0);
@@ -32,13 +30,6 @@ export async function POST(request: Request) {
     if (contactName.length < 2 || !isEmail(email) || phone.replace(/\D/g, "").length < 8 || !preferredDate) {
       return NextResponse.json(
         { error: { code: "BAD_REQUEST", message: "Name, email, mobile, and a preferred date are required." } },
-        { status: 400 },
-      );
-    }
-
-    if (!consentId) {
-      return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "Please accept the house rules before sending this enquiry." } },
         { status: 400 },
       );
     }
@@ -61,30 +52,20 @@ export async function POST(request: Request) {
       groupType = groupTypeRaw;
     }
 
-    const enquiry = await prisma.$transaction(async (tx) => {
-      const created = await tx.bookingEnquiry.create({
-        data: {
-          kind,
-          contactName,
-          email,
-          phone,
-          preferredDate,
-          natureOfRetreat: kind === "RETREAT" ? natureOfRetreat : null,
-          expectedParticipants: kind === "RETREAT" ? Math.round(expectedParticipants) : null,
-          groupType,
-          organization: organization || null,
-          status: "NEW",
-          emailSent: false,
-        },
-      });
-
-      await linkHouseRulesConsent(tx, {
-        consentId,
-        purpose: kind,
-        enquiryId: created.id,
-      });
-
-      return created;
+    const enquiry = await prisma.bookingEnquiry.create({
+      data: {
+        kind,
+        contactName,
+        email,
+        phone,
+        preferredDate,
+        natureOfRetreat: kind === "RETREAT" ? natureOfRetreat : null,
+        expectedParticipants: kind === "RETREAT" ? Math.round(expectedParticipants) : null,
+        groupType,
+        organization: organization || null,
+        status: "NEW",
+        emailSent: false,
+      },
     });
 
     let emailSent = false;
@@ -116,12 +97,6 @@ export async function POST(request: Request) {
       { status: 201 },
     );
   } catch (error) {
-    if (error instanceof ConsentLinkError) {
-      return NextResponse.json(
-        { error: { code: error.code, message: error.message } },
-        { status: error.status },
-      );
-    }
     console.error("POST /api/enquiries failed", error);
     return NextResponse.json(
       { error: { code: "INTERNAL_ERROR", message: "Unable to save this enquiry." } },

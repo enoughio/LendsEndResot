@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { verifyRazorpaySignature } from "@/lib/payments";
 import { sendBookingConfirmationEmail } from "@/lib/booking-email";
+import { RESORT_EMAIL } from "@/lib/resort-copy";
 import {
   ONLINE_BOOKING_ENABLED,
   ONLINE_BOOKING_UNAVAILABLE_MESSAGE,
@@ -22,6 +23,66 @@ function normalizeGuestList(value: unknown): Array<{ name: string; phone: string
 		.filter((guest): guest is { name: string; phone: string } => Boolean(guest));
 
 	return guests.length > 0 ? guests : undefined;
+}
+
+type ConfirmedBookingMail = {
+	id: string;
+	guestName: string | null;
+	guestEmail: string | null;
+	guestPhone: string | null;
+	bookingType: "STAY" | "VISIT";
+	totalAmount: number;
+	currency: string;
+	checkIn: Date | null;
+	checkOut: Date | null;
+	visitDate: Date | null;
+	roomsBooked: number;
+	guestList: unknown;
+	room: { roomType: { name: string } | null } | null;
+	visitPackage: { name: string } | null;
+};
+
+async function sendConfirmedBookingEmails(booking: ConfirmedBookingMail) {
+	const shared = {
+		guestName: booking.guestName || "Guest",
+		guestEmail: booking.guestEmail,
+		guestPhone: booking.guestPhone,
+		bookingId: booking.id,
+		bookingType: booking.bookingType,
+		totalAmount: Number(booking.totalAmount),
+		currency: booking.currency || "INR",
+		roomTypeName: booking.room?.roomType?.name,
+		packageName: booking.visitPackage?.name,
+		checkIn: booking.checkIn,
+		checkOut: booking.checkOut,
+		visitDate: booking.visitDate,
+		roomsBooked: booking.roomsBooked,
+		guestList: normalizeGuestList(booking.guestList),
+	};
+
+	const deliveries: Array<Promise<void>> = [];
+
+	if (booking.guestEmail) {
+		deliveries.push(
+			sendBookingConfirmationEmail({ ...shared, to: booking.guestEmail }).catch((mailError) => {
+				console.error("Guest booking confirmation email failed", mailError);
+			}),
+		);
+	} else {
+		console.error("Guest booking confirmation email skipped: booking has no guest email", booking.id);
+	}
+
+	deliveries.push(
+		sendBookingConfirmationEmail({
+			...shared,
+			to: RESORT_EMAIL,
+			internalCopy: true,
+		}).catch((mailError) => {
+			console.error("Resort booking confirmation email failed", mailError);
+		}),
+	);
+
+	await Promise.all(deliveries);
 }
 
 export async function POST(request: Request) {
@@ -59,6 +120,7 @@ export async function POST(request: Request) {
 				razorPayPaymentId: true,
 				guestName: true,
 				guestEmail: true,
+				guestPhone: true,
 				bookingType: true,
 				totalAmount: true,
 				currency: true,
@@ -124,57 +186,13 @@ export async function POST(request: Request) {
 			},
 		});
 
-		// Confirmation email is best-effort and must not fail the verified payment response.
-		if (booking.guestEmail) {
-			try {
-				const guestList = normalizeGuestList(booking.guestList);
-				await sendBookingConfirmationEmail({
-					to: booking.guestEmail,
-					guestName: booking.guestName || "Guest",
-					bookingId,
-					bookingType: booking.bookingType,
-					totalAmount: Number(booking.totalAmount),
-					currency: booking.currency || "INR",
-					roomTypeName: booking.room?.roomType?.name,
-					packageName: booking.visitPackage?.name,
-					checkIn: booking.checkIn,
-					checkOut: booking.checkOut,
-					visitDate: booking.visitDate,
-					roomsBooked: booking.roomsBooked,
-					guestList,
-				});
-			} catch (mailError) {
-				// Email failure should not block successful payment verification.
-				console.error("Booking confirmation email failed", mailError);
-			}
+		// Mail is best-effort. A failed send must not undo a confirmed booking.
+		// Already-verified payments return above, so each confirmation sends once.
+		try {
+			await sendConfirmedBookingEmails(booking);
+		} catch (mailError) {
+			console.error("Booking confirmation email failed", mailError);
 		}
-
-		const internalEmail = process.env.SMTP_TO;
-		if (internalEmail) {
-			try {
-				const guestList = normalizeGuestList(booking.guestList);
-				await sendBookingConfirmationEmail({
-					to: internalEmail,
-					guestName: booking.guestName || "Guest",
-					bookingId,
-					bookingType: booking.bookingType,
-					totalAmount: Number(booking.totalAmount),
-					currency: booking.currency || "INR",
-					roomTypeName: booking.room?.roomType?.name,
-					packageName: booking.visitPackage?.name,
-					checkIn: booking.checkIn,
-					checkOut: booking.checkOut,
-					visitDate: booking.visitDate,
-					roomsBooked: booking.roomsBooked,
-					guestList,
-					internalCopy: true,
-				});
-			} catch (mailError) {
-				console.error("Internal booking email failed", mailError);
-			}
-		}
-
-        
 
 		return NextResponse.json({ data: { verified: true, bookingId } });
 	} catch (error) {

@@ -8,6 +8,7 @@ import {
   getAvailableRoomCount,
   parseDate,
   stayHoldExpiry,
+  unblockedDuringStayWhere,
 } from "@/lib/booking-utils";
 import {
   ONLINE_BOOKING_ENABLED,
@@ -53,6 +54,7 @@ async function createHeldStay(input: HeldStayInput) {
               roomTypeId: input.roomTypeId,
               roomStatus: "AVAILABLE",
               bookings: { none: activeStayOverlapWhere(input.checkIn, input.checkOut) },
+              ...unblockedDuringStayWhere(input.checkIn, input.checkOut),
             },
             orderBy: { roomNo: "asc" },
             select: { id: true },

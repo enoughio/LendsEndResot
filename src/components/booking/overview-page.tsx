@@ -45,7 +45,7 @@ type VisitApi = {
 const ROOM_ORDER = ["sangat", "nikunj", "aranya", "vyom"];
 const VISIT_ORDER: VisitApi["packageType"][] = ["FULL_DAY", "HALF_DAY", "SHORT_VISIT"];
 const DEFAULT_ROOM_IMAGE = "/rooms/default.jpeg";
-const RESORT_PHOTO = "/gallery/building.jpeg";
+const RESORT_PHOTO = "/gallery/building-desktop.png";
 
 const FALLBACK_ROOMS: RoomApi[] = [
   {
@@ -210,9 +210,20 @@ export function OverviewPage() {
           <p className="mt-3 text-sm text-stone-800">{QUIET_STAY_NOTE}</p>
         </header>
 
-        <figure className="relative mt-8 h-56 overflow-hidden sm:h-80">
+        {/* <figure className="relative mt-8 h-56 overflow-hidden sm:h-80">
           <Image
-            src={RESORT_PHOTO}
+            src="/gallery/building-desktop.png"
+            alt="Land's End in Sumiran Forest"
+            fill
+            priority
+            sizes="(min-width: 1152px) 1152px, 100vw"
+            className="object-cover object-[center_38%]"
+          />
+        </figure> */}
+
+        <figure className="relative mt-8 aspect-video overflow-hidden">
+          <Image
+            src="/gallery/building-desktop.png"
             alt="Land's End in Sumiran Forest"
             fill
             priority

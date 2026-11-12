@@ -30,6 +30,7 @@ export async function sendBookingEnquiryEmail(input: EnquiryEmailInput): Promise
   const toEmail = process.env.SMTP_TO || fromEmail;
 
   if (!host || !port || !user || !pass || !fromEmail || !toEmail) {
+    console.error("Enquiry email not sent: SMTP configuration is missing. Set SMTP_HOST, SMTP_USER, SMTP_PASS, and SMTP_FROM.");
     return false;
   }
 

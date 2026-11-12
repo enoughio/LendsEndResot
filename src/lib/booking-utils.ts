@@ -1,8 +1,9 @@
 import { Prisma, type Activity, type BookingStatus } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
+import { calculateNights, formatIndiaDate, indiaDateKey, parseDate, todayIndiaInput } from "@/lib/india-date";
 
 export { buildPriceBreakdown, calculateConvenienceFee } from "@/lib/stay-pricing";
-export { calculateNights, formatIndiaDate, indiaDateKey, parseDate, todayIndiaInput } from "@/lib/india-date";
+export { calculateNights, formatIndiaDate, indiaDateKey, parseDate, todayIndiaInput };
 
 export type StayAvailabilityInput = {
   roomTypeId: string;
@@ -99,6 +100,40 @@ export function isValidStatus(status: string): status is BookingStatus {
   return ["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED", "REFUNDED", "FAILED"].includes(status);
 }
 
+/** India nights a stay occupies: check-in day inclusive, check-out day exclusive. */
+export function stayNightBounds(checkIn: Date, checkOut: Date): { start: Date; end: Date } | null {
+  const start = parseDate(indiaDateKey(checkIn));
+  const end = parseDate(indiaDateKey(checkOut));
+  if (!start || !end || end.getTime() <= start.getTime()) return null;
+  return { start, end };
+}
+
+/**
+ * Blocked rooms reduce availability by one each.
+ * A room that already has an active stay is left to the booking count, so a block on that room is not subtracted twice.
+ */
+export function availableRoomCount(input: {
+  totalRooms: number;
+  bookedCount: number;
+  blockedRoomIds: readonly string[];
+  bookedRoomIds: ReadonlySet<string>;
+}) {
+  const blockedExtra = input.blockedRoomIds.filter((roomId) => !input.bookedRoomIds.has(roomId)).length;
+  return Math.max(0, input.totalRooms - input.bookedCount - blockedExtra);
+}
+
+export function unblockedDuringStayWhere(checkIn: Date, checkOut: Date) {
+  const bounds = stayNightBounds(checkIn, checkOut);
+  if (!bounds) return {};
+  return {
+    blocks: {
+      none: {
+        date: { gte: bounds.start, lt: bounds.end },
+      },
+    },
+  };
+}
+
 export async function getAvailableRoomCount(
   { roomTypeId, checkIn, checkOut }: StayAvailabilityInput,
   db: BookingDb = prisma,
@@ -122,5 +157,33 @@ export async function getAvailableRoomCount(
   });
 
   const bookedCount = Number(overlappingBookedRooms._sum.roomsBooked || 0);
-  return Math.max(0, totalRooms - bookedCount);
+  const bounds = stayNightBounds(checkIn, checkOut);
+  const blockedRooms = bounds
+    ? await db.room.findMany({
+        where: {
+          roomTypeId,
+          roomStatus: "AVAILABLE",
+          blocks: {
+            some: {
+              date: { gte: bounds.start, lt: bounds.end },
+            },
+          },
+        },
+        select: {
+          id: true,
+          bookings: {
+            where: activeStayOverlapWhere(checkIn, checkOut, now),
+            select: { id: true },
+            take: 1,
+          },
+        },
+      })
+    : [];
+
+  return availableRoomCount({
+    totalRooms,
+    bookedCount,
+    blockedRoomIds: blockedRooms.map((room) => room.id),
+    bookedRoomIds: new Set(blockedRooms.filter((room) => room.bookings.length > 0).map((room) => room.id)),
+  });
 }

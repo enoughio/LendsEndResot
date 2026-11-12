@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import type { Booking, BookingActivity, Room, RoomType } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
 import { ensureAdmin } from "@/lib/admin-auth";
-import { toBookingDto } from "@/lib/admin-serializers";
+import { adminBookingInclude, toBookingDto } from "@/lib/admin-serializers";
 
 export async function GET(request: Request) {
   const unauthorized = ensureAdmin(request);
@@ -27,10 +26,7 @@ export async function GET(request: Request) {
     const [bookings, total] = await Promise.all([
       prisma.booking.findMany({
         where,
-        include: {
-          room: { include: { roomType: true } },
-          bookingActivities: { include: { activity: true } },
-        },
+        include: adminBookingInclude,
         orderBy: { createdAt: "desc" },
         skip,
         take: pageSize,
@@ -39,14 +35,7 @@ export async function GET(request: Request) {
     ]);
 
     return NextResponse.json({
-      data: bookings.map(
-        (
-          booking: Booking & {
-            room: (Room & { roomType: RoomType | null }) | null;
-            bookingActivities: Array<BookingActivity & { activity: { id: string; name: string; price: number } }>;
-          }
-        ) => toBookingDto(booking)
-      ),
+      data: bookings.map((booking) => toBookingDto(booking, { includeSignature: false })),
       meta: {
         page,
         pageSize,

@@ -63,6 +63,12 @@ enum ActivityStatus {
   INACTIVE
 }
 
+enum RoomBlockReason {
+  RETREAT
+  GROUP_BOOKING
+  MAINTENANCE
+}
+
 
 // Models
 model User {
@@ -118,6 +124,25 @@ model Room {
   updatedAt DateTime @updatedAt
 
   bookings Booking[]
+  blocks RoomBlock[]
+}
+
+// One row is one room on one night. groupId ties the nights from a single save.
+model RoomBlock {
+  id String @id @default(cuid())
+  roomId String
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  date DateTime
+  reason RoomBlockReason
+  note String?
+  groupId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([roomId, date])
+  @@index([roomId])
+  @@index([date])
+  @@index([groupId])
 }
 
 model Activity {

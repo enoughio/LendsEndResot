@@ -114,7 +114,7 @@ function BookedContent() {
         </header>
         <figure className="relative mt-8 h-56 overflow-hidden sm:h-80">
           <Image
-            src="/gallery/building.jpeg"
+            src="/gallery/building-desktop.png"
             alt="Land's End in Sumiran Forest"
             fill
             priority

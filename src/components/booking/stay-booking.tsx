@@ -590,7 +590,7 @@ export function StayBooking({}: StayBookingProps) {
         </header>
         <figure className="relative mt-8 aspect-video overflow-hidden">
           <Image
-            src="/gallery/building.jpeg"
+            src="/gallery/building-desktop.png"
             alt="Land's End in Sumiran Forest"
             fill
             priority

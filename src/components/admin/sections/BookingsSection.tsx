@@ -2,6 +2,13 @@ import { AlertCircle, Eye, Search } from 'lucide-react';
 import { PaymentBadge, StatusBadge } from '../badges';
 import { type Booking, type BookingStatus, type Room, type RoomType } from '../types';
 
+function visitBadge(booking: Booking) {
+  if (booking.visitType === 'full-day') return 'Full Day Visit';
+  if (booking.visitType === 'half-day') return 'Half Day Visit';
+  if (booking.visitType === 'short-visit') return 'Short Visit';
+  return 'Day Visit';
+}
+
 export function BookingsSection({
   bookings,
   roomTypes,
@@ -68,6 +75,9 @@ export function BookingsSection({
         {bookings.map(booking => {
           const roomType = booking.roomTypeId ? roomTypes.find(rt => rt.id === booking.roomTypeId) : undefined;
           const room = booking.roomId ? rooms.find(r => r.id === booking.roomId) : undefined;
+          const roomTypeName = booking.roomTypeName || roomType?.name || 'Room';
+          const roomNumber = booking.roomNumber || room?.roomNumber;
+          const roomsBooked = booking.roomsBooked ?? 1;
           return (
             <div
               key={booking.id}
@@ -78,17 +88,22 @@ export function BookingsSection({
                   <div className="flex flex-wrap items-center gap-2 mb-1">
                     <span className="text-stone-500 text-xs font-mono">#{booking.id}</span>
                     <span className={`text-xs px-2 py-0.5 rounded-full border ${booking.bookingType === 'stay' ? 'text-sky-400 bg-sky-400/10 border-sky-400/20' : 'text-violet-400 bg-violet-400/10 border-violet-400/20'}`}>
-                      {booking.bookingType === 'stay' ? 'Stay' : booking.visitType === 'full-day' ? 'Full Day Visit' : 'Half Day Visit'}
+                      {booking.bookingType === 'stay' ? 'Stay' : visitBadge(booking)}
                     </span>
                     <StatusBadge status={booking.status} />
                     <PaymentBadge status={booking.paymentStatus} />
+                    {booking.consent && (
+                      <span className="text-xs px-2 py-0.5 rounded-full border text-emerald-300 bg-emerald-400/10 border-emerald-400/20">
+                        House rules accepted
+                      </span>
+                    )}
                   </div>
                   <p className="text-white">{booking.guestName}</p>
                   <p className="text-stone-400 text-xs mt-0.5 truncate">{booking.guestEmail} · {booking.guestPhone}</p>
                   <p className="text-stone-500 text-xs mt-1">
                     {booking.bookingType === 'stay'
-                      ? `${roomType?.name ?? '—'} · Room #${room?.roomNumber ?? '—'} · ${booking.checkIn} → ${booking.checkOut} (${booking.nights}N)`
-                      : `Visit: ${booking.visitDate}`
+                      ? `${roomTypeName}${roomNumber ? ` · Room #${roomNumber}` : ''} · ${roomsBooked} room${roomsBooked === 1 ? '' : 's'} · ${booking.checkIn || '—'} → ${booking.checkOut || '—'} (${booking.nights ?? '—'}N)${booking.mealPlanName ? ` · ${booking.mealPlanName}` : ''}`
+                      : `${booking.visitPackageName || 'Visit'} · ${booking.visitDate || 'Date not set'}`
                     }
                   </p>
                 </div>

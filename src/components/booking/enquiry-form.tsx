@@ -97,7 +97,7 @@ export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
         <p className="mt-3 text-sm leading-7 text-stone-600">{copy.detail}</p>
         <figure className="relative mt-8 h-48 overflow-hidden sm:h-64">
           <Image
-            src="/gallery/building.jpeg"
+            src="/gallery/building-desktop.png"
             alt="Land's End in Sumiran Forest"
             fill
             sizes="(min-width: 672px) 672px, 100vw"

@@ -27,6 +27,21 @@ export type Room = {
 export type BookingStatus = 'confirmed' | 'pending' | 'checked-in' | 'completed' | 'cancelled';
 export type PaymentStatus = 'paid' | 'partial' | 'unpaid' | 'refunded';
 
+export type BookingGuest = {
+  name: string;
+  phone: string;
+};
+
+export type BookingConsent = {
+  signerName: string;
+  signatureData: string;
+  hasSignature: boolean;
+  acceptedRuleIds: string[];
+  exitPolicyAccepted: boolean;
+  purpose: string;
+  createdAt?: string;
+};
+
 export type Booking = {
   id: string;
   bookingType: 'stay' | 'day-visit';
@@ -41,14 +56,27 @@ export type Booking = {
   createdAt: string;
   roomId?: string;
   roomTypeId?: string;
+  roomTypeName?: string;
+  roomNumber?: string;
+  roomsBooked?: number;
   checkIn?: string;
   checkOut?: string;
   nights?: number;
   visitDate?: string;
-  visitType?: 'full-day' | 'half-day';
+  visitPackageId?: string;
+  visitPackageName?: string;
+  visitType?: 'full-day' | 'half-day' | 'short-visit';
+  mealPlanName?: string;
+  mealPlanPrice?: number;
+  extraGuestCount?: number;
+  extraGuestPrice?: number;
+  currency?: string;
+  guestList?: BookingGuest[];
   activities: string[];
   specialRequests?: string;
   paymentMethod?: string;
+  paymentReference?: string;
+  consent?: BookingConsent | null;
 };
 
 export type VisitPackageCategory = 'half-day' | 'full-day' | 'short-visit';
@@ -86,4 +114,4 @@ export type MealPlan = {
   isActive: boolean;
 };
 
-export type Section = 'overview' | 'room-types' | 'rooms' | 'visit-packages' | 'meal-plans' | 'activities' | 'bookings' | 'enquiries';
+export type Section = 'overview' | 'room-types' | 'rooms' | 'room-blocks' | 'visit-packages' | 'meal-plans' | 'activities' | 'bookings' | 'enquiries';

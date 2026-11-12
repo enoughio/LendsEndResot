@@ -24,16 +24,16 @@ export const metadata: Metadata = {
 /*  IMAGE PATHS — replace with your own hosted photos                  */
 /* ------------------------------------------------------------------ */
 const IMAGES = {
-  heroCanopy: "/images/edunic/forest-canopy.jpg",   // leafy forest archway (hero)
-  ropeBridge: "/images/edunic/rope-bridge.jpg",     // kids crossing rope bridge
-  lake: "/images/edunic/lake.jpg",                  // 60-acre lake / stream
-  archery: "/images/edunic/archery.jpg",            // student at archery
-  zipline: "/images/edunic/zipline.jpg",            // student in helmet + harness
-  highRopes: "/images/edunic/high-ropes.jpg",       // high ropes structure
-  stargazing: "/images/edunic/stargazing.jpg",      // night sky / telescope
-  trail: "/images/edunic/forest-trail.jpg",         // wet forest trail
-  property: "/images/edunic/property-dusk.jpg",     // the stay at dusk
-  group: "/images/edunic/group.jpg",                // students together in forest
+  heroCanopy: "/events/edunic/forest-canopy.jpeg",   // leafy forest archway (hero)
+  ropeBridge: "/events/edunic/rope-bridge.jpeg",     // kids crossing rope bridge
+  lake: "/events/edunic/lake.jpeg",                  // 60-acre lake / stream
+  zipline: "/events/edunic/zipline.jpeg",            // student in helmet + harness
+  stargazing: "/events/edunic/stargazing.jpeg",      // night sky / telescope
+  starryNight: "/events/edunic/starrynight.jpeg",    // the stay under a starry sky
+  stoneCircle: "/events/edunic/stone-circle.jpeg",   // stone circle in the clearing
+  trail: "/events/edunic/forest-trail.jpeg",         // wet forest trail
+  property: "/events/edunic/property-dusk.jpeg",     // the stay at dusk
+  group: "/events/edunic/group.jpeg",                // students together in forest
 };
 
 /* ------------------------------------------------------------------ */
@@ -183,12 +183,13 @@ const DOCS = [
 ];
 
 const GALLERY = [
-  { src: IMAGES.archery, alt: "Student at archery", feature: true },
+  { src: IMAGES.group, alt: "Students together in the forest", feature: true },
   { src: IMAGES.zipline, alt: "Student on the zipline" },
   { src: IMAGES.lake, alt: "The forest lake" },
-  { src: IMAGES.highRopes, alt: "High ropes course" },
   { src: IMAGES.ropeBridge, alt: "Crossing the rope bridge" },
+  { src: IMAGES.stoneCircle, alt: "Stone circle in a forest clearing" },
   { src: IMAGES.stargazing, alt: "Stargazing at night" },
+  { src: IMAGES.starryNight, alt: "The stay under a starry sky" },
   { src: IMAGES.trail, alt: "Forest trail" },
   { src: IMAGES.property, alt: "The stay at dusk" },
 ];

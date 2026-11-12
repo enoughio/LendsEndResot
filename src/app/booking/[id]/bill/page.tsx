@@ -95,6 +95,8 @@ export default function BookingDetailsPage() {
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [holdExpired, setHoldExpired] = useState(false);
   const [houseRules, setHouseRules] = useState<HouseRulesAcceptanceValue>(emptyHouseRulesAcceptance());
+  const [houseRulesOpen, setHouseRulesOpen] = useState(false);
+  const houseRulesDialogRef = useRef<HTMLDivElement>(null);
   const [consentId, setConsentId] = useState<string | null>(null);
   const houseRulesRef = useRef(houseRules);
   const consentIdRef = useRef<string | null>(null);
@@ -186,6 +188,21 @@ export default function BookingDetailsPage() {
     return () => window.clearTimeout(timer);
   }, [expiresAt]);
 
+  useEffect(() => {
+    if (!houseRulesOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setHouseRulesOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    houseRulesDialogRef.current?.focus();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [houseRulesOpen]);
+
   const partialOptionalGuests = useMemo(() => {
     return guestDetails.flatMap((guest, index) => {
       const hasName = Boolean(guest.name.trim());
@@ -206,7 +223,7 @@ export default function BookingDetailsPage() {
     if (!fullName.trim()) missing.push("your full name");
     if (!email.trim()) missing.push("your email");
     if (!phone.trim()) missing.push("your mobile number");
-    if (!houseRulesComplete) missing.push("the house rules and your signature");
+    if (!houseRulesComplete) missing.push("the house rules");
     return [...missing, ...partialOptionalGuests];
   }, [fullName, email, phone, houseRulesComplete, partialOptionalGuests]);
 
@@ -597,7 +614,21 @@ export default function BookingDetailsPage() {
                 <p className="mt-4 text-sm leading-6 text-stone-700">{CANCELLATION_POLICY}</p>
 
                 <div className="mt-4 border-t border-[#e4d7c3] pt-4">
-                  <HouseRulesAcceptance idPrefix="bill" onChange={setHouseRules} />
+                  <div className="flex items-center justify-between gap-4 border border-[#e4d7c3] bg-[#fffdf8] p-4">
+                    <div>
+                      <p className="text-sm font-medium text-[#1f3d2e]">House rules</p>
+                      <p className="mt-1 text-sm text-stone-600">
+                        {houseRulesComplete ? "Accepted" : "Not accepted yet"}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setHouseRulesOpen(true)}
+                      className="shrink-0 bg-[#1f3d2e] px-4 py-2.5 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026]"
+                    >
+                      {houseRulesComplete ? "Review" : "Read and accept"}
+                    </button>
+                  </div>
                 </div>
 
                 {holdExpired && (
@@ -641,6 +672,49 @@ export default function BookingDetailsPage() {
           </section>
         </div>
       </div>
+
+      {houseRulesOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1f3d2e]/40 px-4 py-6"
+          onClick={() => setHouseRulesOpen(false)}
+        >
+          <div
+            ref={houseRulesDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="bill-house-rules-title"
+            tabIndex={-1}
+            className="flex max-h-full w-full max-w-xl flex-col border border-[#e4d7c3] bg-[#fffdf8] outline-none"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-center justify-end border-b border-[#e4d7c3] px-4 py-3">
+              <button
+                type="button"
+                onClick={() => setHouseRulesOpen(false)}
+                className="text-sm font-medium text-[#1f3d2e] underline decoration-stone-400 underline-offset-4 hover:text-[#173026]"
+              >
+                Close
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+              <HouseRulesAcceptance idPrefix="bill-house-rules" value={houseRules} onChange={setHouseRules} />
+            </div>
+            <div className="border-t border-[#e4d7c3] px-5 py-4">
+              <button
+                type="button"
+                disabled={!houseRulesComplete}
+                onClick={() => {
+                  if (!houseRulesComplete) return;
+                  setHouseRulesOpen(false);
+                }}
+                className="inline-flex w-full items-center justify-center bg-[#1f3d2e] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Accept
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isFinalizingPayment && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1f3d2e]/40 px-4">

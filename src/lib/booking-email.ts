@@ -1,5 +1,6 @@
 import "server-only";
 import nodemailer from "nodemailer";
+import { RESORT_EMAIL } from "@/lib/resort-copy";
 import {
   EMAIL_SERVICE_ENABLED,
   EMAIL_SERVICE_UNAVAILABLE_MESSAGE,
@@ -19,6 +20,8 @@ type BookingConfirmationInput = {
   visitDate?: Date | null;
   roomsBooked?: number | null;
   guestList?: Array<{ name: string; phone: string }>;
+  guestEmail?: string | null;
+  guestPhone?: string | null;
   internalCopy?: boolean;
 };
 
@@ -70,7 +73,7 @@ export async function sendBookingConfirmationEmail(input: BookingConfirmationInp
   const fromEmail = process.env.SMTP_FROM || user;
 
   if (!host || !user || !pass || !fromEmail) {
-    throw new Error("SMTP configuration is missing.");
+    throw new Error("SMTP configuration is missing. Set SMTP_HOST, SMTP_USER, SMTP_PASS, and SMTP_FROM.");
   }
 
   const secure = port === 465;
@@ -87,7 +90,7 @@ export async function sendBookingConfirmationEmail(input: BookingConfirmationInp
       : `Visit: ${input.packageName || "Package"} on ${formatDate(input.visitDate)}`;
 
   const baseUrl = getBaseUrl();
-  const supportEmail = "landsend.sumiran@gmail.com";
+  const supportEmail = RESORT_EMAIL;
   const supportPhone = "+91 8871317382";
   const logoUrl = `${baseUrl}/landsend.svg`;
   const bookingDetailsUrl = `${baseUrl}/booking/${input.bookingId}/booked`;
@@ -112,6 +115,22 @@ export async function sendBookingConfirmationEmail(input: BookingConfirmationInp
     : "";
   const subjectPrefix = input.internalCopy ? "New Booking" : "Booking Confirmed";
   const greetingName = input.internalCopy ? "Team" : safeGuestName;
+  const contactLines = input.internalCopy
+    ? [
+        input.guestEmail ? `Guest email: ${input.guestEmail}` : "",
+        input.guestPhone ? `Guest phone: ${input.guestPhone}` : "",
+      ].filter(Boolean)
+    : [];
+  const contactHtml = input.internalCopy
+    ? [
+        input.guestEmail
+          ? `<tr><td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#475569;">Guest email</td><td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;" align="right">${escapeHtml(input.guestEmail)}</td></tr>`
+          : "",
+        input.guestPhone
+          ? `<tr><td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#475569;">Guest phone</td><td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#0f172a;" align="right">${escapeHtml(input.guestPhone)}</td></tr>`
+          : "",
+      ].join("")
+    : "";
 
   await transporter.sendMail({
     from: `Land's End Resort at Sumiran <${fromEmail}>`,
@@ -120,9 +139,10 @@ export async function sendBookingConfirmationEmail(input: BookingConfirmationInp
     subject: `${subjectPrefix} - ${input.bookingId}`,
     text: `Hi ${input.internalCopy ? "Team" : input.guestName},
 
-Your booking has been confirmed.
+${input.internalCopy ? "A new booking has been confirmed." : "Your booking has been confirmed."}
 
-Booking Reference: ${input.bookingId}
+Guest: ${input.guestName || "Guest"}
+${contactLines.length ? `${contactLines.join("\n")}\n` : ""}Booking Reference: ${input.bookingId}
 ${bookingTypeLabel} Details: ${bookingLine}
 Amount Paid: ${amountPaid}
   ${guestListText ? `\nGuest List:\n${guestListText}\n` : ""}
@@ -162,6 +182,11 @@ Thank you for choosing Land's End Resort at Sumiran.
                     </p>
 
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#f8fafc;margin-bottom:18px;">
+                      <tr>
+                        <td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#475569;">Guest</td>
+                        <td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;font-weight:700;color:#0f172a;" align="right">${safeGuestName}</td>
+                      </tr>
+                      ${contactHtml}
                       <tr>
                         <td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;color:#475569;">Booking Reference</td>
                         <td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;font-weight:700;color:#0f172a;" align="right">${safeBookingId}</td>

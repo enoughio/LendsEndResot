@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { BedDouble, Building2, CalendarCheck, ChevronRight, Inbox, LayoutDashboard, Leaf, Menu, Sun } from 'lucide-react';
+import { BedDouble, Building2, CalendarCheck, CalendarOff, ChevronRight, Inbox, LayoutDashboard, Leaf, Menu, Sun } from 'lucide-react';
 import { BookingDetailModal } from './modals/BookingDetailModal';
 import { DeleteConfirm } from './modals/DeleteConfirm';
 import { ActivityModal } from './modals/ActivityModal';
@@ -15,11 +15,13 @@ import { BookingsSection } from './sections/BookingsSection';
 import { OverviewSection } from './sections/OverviewSection';
 import { RoomTypesSection } from './sections/RoomTypesSection';
 import { RoomsSection } from './sections/RoomsSection';
+import { RoomBlocksSection } from './sections/RoomBlocksSection';
 import { VisitPackagesSection } from './sections/VisitPackagesSection';
 import { EnquiriesSection } from './sections/EnquiriesSection';
 import { type Activity, type Booking, type BookingStatus, type MealPlan, type Room, type RoomType, type Section, type VisitPackage } from './types';
 import { notifyError, notifySuccess } from '@/lib/client-notify';
 import { calculateNights, indiaDateKey } from '@/lib/india-date';
+import { signatureImageSrc } from '@/lib/signature-data';
 
 type ApiResponse<T> = { data: T; meta?: { total: number; page: number; pageSize: number } };
 
@@ -74,13 +76,35 @@ type BookingApi = {
   phone?: string | null;
   roomId?: string | null;
   roomTypeId?: string | null;
+  roomType?: string | null;
+  roomNo?: string | null;
+  roomsBooked?: number;
+  visitPackageId?: string | null;
+  visitPackageName?: string | null;
+  visitPackageType?: string | null;
   checkIn?: string | null;
   checkOut?: string | null;
   visitDate?: string | null;
   guests?: number;
+  extraGuestCount?: number;
+  extraGuestPrice?: number;
+  mealPlanName?: string | null;
+  mealPlanPrice?: number;
+  guestList?: Array<{ name: string; phone: string }>;
   totalAmount: number;
+  currency?: string;
+  paymentReference?: string | null;
   specialRequest?: string | null;
   activities?: Array<{ id: string; name: string }>;
+  consent?: {
+    signerName: string;
+    signatureData: string;
+    hasSignature: boolean;
+    acceptedRuleIds: string[];
+    exitPolicyAccepted: boolean;
+    purpose: string;
+    createdAt?: string;
+  } | null;
   createdAt: string;
 };
 
@@ -124,6 +148,66 @@ function mapPaymentStatus(status: BookingApi['paymentStatus']): Booking['payment
   if (status === 'PAID') return 'paid';
   if (status === 'REFUNDED') return 'refunded';
   return 'unpaid';
+}
+
+function mapVisitType(packageType?: string | null): Booking['visitType'] {
+  if (packageType === 'FULL_DAY') return 'full-day';
+  if (packageType === 'HALF_DAY') return 'half-day';
+  if (packageType === 'SHORT_VISIT') return 'short-visit';
+  return undefined;
+}
+
+function mapBookingApi(item: BookingApi): Booking {
+  const checkIn = item.checkIn ? new Date(item.checkIn) : null;
+  const checkOut = item.checkOut ? new Date(item.checkOut) : null;
+  const nights = checkIn && checkOut ? calculateNights(checkIn, checkOut) : undefined;
+
+  return {
+    id: item.bookingId,
+    bookingType: item.type === 'STAY' ? 'stay' : 'day-visit',
+    guestName: item.name || 'Guest',
+    guestEmail: item.email || '-',
+    guestPhone: item.phone || '-',
+    guests: Number(item.guests || 1),
+    status: mapBookingStatus(item.status),
+    paymentStatus: mapPaymentStatus(item.paymentStatus),
+    totalAmount: Number(item.totalAmount || 0),
+    paidAmount: item.paymentStatus === 'PAID' ? Number(item.totalAmount || 0) : 0,
+    createdAt: new Date(item.createdAt).toISOString().slice(0, 10),
+    roomId: item.roomId || undefined,
+    roomTypeId: item.roomTypeId || undefined,
+    roomTypeName: item.roomType || undefined,
+    roomNumber: item.roomNo || undefined,
+    roomsBooked: Number(item.roomsBooked || 1),
+    checkIn: checkIn ? indiaDateKey(checkIn) : undefined,
+    checkOut: checkOut ? indiaDateKey(checkOut) : undefined,
+    nights,
+    visitDate: item.visitDate ? indiaDateKey(new Date(item.visitDate)) : undefined,
+    visitPackageId: item.visitPackageId || undefined,
+    visitPackageName: item.visitPackageName || undefined,
+    visitType: mapVisitType(item.visitPackageType),
+    mealPlanName: item.mealPlanName || undefined,
+    mealPlanPrice: Number(item.mealPlanPrice || 0),
+    extraGuestCount: Number(item.extraGuestCount || 0),
+    extraGuestPrice: Number(item.extraGuestPrice || 0),
+    currency: item.currency || 'INR',
+    guestList: (item.guestList || []).filter((guest) => guest.name || guest.phone),
+    activities: (item.activities || []).map((activity) => activity.name),
+    specialRequests: item.specialRequest || undefined,
+    paymentMethod: item.paymentReference ? 'Razorpay' : undefined,
+    paymentReference: item.paymentReference || undefined,
+    consent: item.consent
+      ? {
+          signerName: item.consent.signerName,
+          signatureData: item.consent.signatureData || '',
+          hasSignature: Boolean(item.consent.hasSignature) || Boolean(signatureImageSrc(item.consent.signatureData)),
+          acceptedRuleIds: item.consent.acceptedRuleIds || [],
+          exitPolicyAccepted: Boolean(item.consent.exitPolicyAccepted),
+          purpose: item.consent.purpose,
+          createdAt: item.consent.createdAt,
+        }
+      : null,
+  };
 }
 
 export function AdminDashboard({ onExit }: { onExit: () => void }) {
@@ -247,37 +331,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
         }))
       );
 
-      setBookings(
-        bookingsRes.data.map((item) => {
-          const checkIn = item.checkIn ? new Date(item.checkIn) : null;
-          const checkOut = item.checkOut ? new Date(item.checkOut) : null;
-          const nights = checkIn && checkOut ? calculateNights(checkIn, checkOut) : undefined;
-
-          return {
-            id: item.bookingId,
-            bookingType: item.type === 'STAY' ? 'stay' : 'day-visit',
-            guestName: item.name || 'Guest',
-            guestEmail: item.email || '-',
-            guestPhone: item.phone || '-',
-            guests: Number(item.guests || 1),
-            status: mapBookingStatus(item.status),
-            paymentStatus: mapPaymentStatus(item.paymentStatus),
-            totalAmount: Number(item.totalAmount || 0),
-            paidAmount: item.paymentStatus === 'PAID' ? Number(item.totalAmount || 0) : 0,
-            createdAt: new Date(item.createdAt).toISOString().slice(0, 10),
-            roomId: item.roomId || undefined,
-            roomTypeId: item.roomTypeId || undefined,
-            checkIn: checkIn ? indiaDateKey(checkIn) : undefined,
-            checkOut: checkOut ? indiaDateKey(checkOut) : undefined,
-            nights,
-            visitDate: item.visitDate ? indiaDateKey(new Date(item.visitDate)) : undefined,
-            visitType: 'half-day',
-            activities: (item.activities || []).map((activity) => activity.name),
-            specialRequests: item.specialRequest || undefined,
-            paymentMethod: undefined,
-          } as Booking;
-        })
-      );
+      setBookings(bookingsRes.data.map(mapBookingApi));
 
       setActivities(
         activitiesRes.data.map((item) => ({
@@ -524,6 +578,18 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     }
   };
 
+  const openBooking = useCallback((booking: Booking) => {
+    setViewingBooking(booking);
+    void (async () => {
+      try {
+        const response = await fetchJson<ApiResponse<BookingApi>>(`/api/admin/bookings/${booking.id}`);
+        setViewingBooking((current) => (current?.id === booking.id ? mapBookingApi(response.data) : current));
+      } catch (err) {
+        notifyError(err, 'Could not load the full booking');
+      }
+    })();
+  }, [fetchJson]);
+
   const changeBookingStatus = async (id: string, status: BookingStatus) => {
     try {
       await fetchJson(`/api/admin/bookings/${id}`, {
@@ -553,6 +619,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
     { id: 'overview', label: 'Overview', icon: <LayoutDashboard size={18} /> },
     { id: 'room-types', label: 'Room Types', icon: <Building2 size={18} /> },
     { id: 'rooms', label: 'Rooms', icon: <BedDouble size={18} /> },
+    { id: 'room-blocks', label: 'Room Blocking', icon: <CalendarOff size={18} /> },
     { id: 'visit-packages', label: 'Visit Packages', icon: <Sun size={18} /> },
     { id: 'meal-plans', label: 'Meal Plans', icon: <Sun size={18} /> },
     { id: 'activities', label: 'Activities', icon: <Leaf size={18} /> },
@@ -679,6 +746,10 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
             />
           )}
 
+          {section === 'room-blocks' && (
+            <RoomBlocksSection rooms={rooms} roomTypes={roomTypes} />
+          )}
+
           {section === 'visit-packages' && (
             <VisitPackagesSection
               visitPackages={visitPackages}
@@ -718,7 +789,7 @@ export function AdminDashboard({ onExit }: { onExit: () => void }) {
               onBookingSearchChange={setBookingSearch}
               onBookingTypeFilterChange={setBookingTypeFilter}
               onBookingStatusFilterChange={setBookingStatusFilter}
-              onViewBooking={setViewingBooking}
+              onViewBooking={openBooking}
             />
           )}
 

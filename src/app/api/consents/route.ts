@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import {
   HOUSE_RULES,
-  MAX_SIGNATURE_DATA_URL_LENGTH,
   isConsentPurpose,
 } from "@/lib/house-rules";
 
@@ -10,7 +9,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const signerName = String(body?.signerName || "").trim();
-    const signatureData = String(body?.signatureData || "").trim();
     const purpose = String(body?.purpose || "").trim();
     const acceptedRuleIds = Array.isArray(body?.acceptedRuleIds)
       ? body.acceptedRuleIds.map((item: unknown) => String(item))
@@ -40,17 +38,10 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!signatureData.startsWith("data:image/png;base64,") || signatureData.length > MAX_SIGNATURE_DATA_URL_LENGTH) {
-      return NextResponse.json(
-        { error: { code: "BAD_REQUEST", message: "Please draw a signature before continuing." } },
-        { status: 400 },
-      );
-    }
-
     const consent = await prisma.houseRulesConsent.create({
       data: {
         signerName,
-        signatureData,
+        signatureData: "",
         acceptedRuleIds: requiredIds,
         exitPolicyAccepted: true,
         purpose,

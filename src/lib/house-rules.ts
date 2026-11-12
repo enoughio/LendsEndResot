@@ -19,8 +19,6 @@ export const CANCELLATION_POLICY =
 export const CONSENT_PURPOSES = ["STAY", "VISIT", "RETREAT", "GROUP"] as const;
 export type ConsentPurpose = (typeof CONSENT_PURPOSES)[number];
 
-export const MAX_SIGNATURE_DATA_URL_LENGTH = 450_000;
-
 export function consentStorageKey(purpose: ConsentPurpose) {
   return `landsend-house-rules:${purpose}`;
 }
@@ -70,7 +68,6 @@ export function isHouseRulesAcceptanceComplete(value: HouseRulesAcceptanceValue)
   return (
     HOUSE_RULES.every((rule) => accepted.has(rule.id)) &&
     value.exitPolicyAccepted &&
-    value.signerName.trim().length >= 2 &&
-    Boolean(value.signatureData)
+    value.signerName.trim().length >= 2
   );
 }

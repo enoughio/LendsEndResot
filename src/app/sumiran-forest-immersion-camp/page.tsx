@@ -356,7 +356,7 @@ export default function SumiranCampPage() {
       <section className="hero">
         <div
           className="hero-bg"
-          style={{ backgroundImage: "url('/gallery/building.jpeg')" }}
+          style={{ backgroundImage: "url('/gallery/building-desktop.png')" }}
         />
         <div className="hero-overlay" />
         <div className="hero-content">
@@ -459,7 +459,7 @@ export default function SumiranCampPage() {
           <div className="gallery-grid">
             {[
               { src: '/gallery/circle-stones.jpg', alt: 'Natural stone seating circle', caption: 'The natural amphitheatre — where stories are told' },
-              { src: '/gallery/building.jpeg', alt: "Land's End main building", caption: "Land's End — where children stay" },
+              { src: '/gallery/building-desktop.png', alt: "Land's End main building", caption: "Land's End — where children stay" },
               { src: '/gallery/garden.jpeg', alt: 'Dense forest interior', caption: "Deep inside Sumiran's living forest" },
               { src: '/gallery/kids.jpeg', alt: 'Group of children at Sumiran', caption: 'Children who have been here before' },
               { src: '/gallery/lake_sumiran2.jpeg', alt: 'Natural Lake at sumiran', caption: 'Natural Lake at sumiran' },

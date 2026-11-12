@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { ensureAdmin } from "@/lib/admin-auth";
-import { toBookingDto } from "@/lib/admin-serializers";
+import { adminBookingInclude, toBookingDto } from "@/lib/admin-serializers";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -16,10 +16,7 @@ export async function GET(request: Request, { params }: Params) {
 
     const booking = await prisma.booking.findFirst({
       where: { id, deletedAt: null },
-      include: {
-        room: { include: { roomType: true } },
-        bookingActivities: { include: { activity: true } },
-      },
+      include: adminBookingInclude,
     });
 
     if (!booking) {
@@ -77,10 +74,7 @@ export async function PUT(request: Request, { params }: Params) {
         guestPhone,
         specialRequest,
       },
-      include: {
-        room: { include: { roomType: true } },
-        bookingActivities: { include: { activity: true } },
-      },
+      include: adminBookingInclude,
     });
 
     return NextResponse.json({ data: toBookingDto(updated) });

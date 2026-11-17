@@ -140,7 +140,7 @@ const CollagePage = () => {
     <section className=" py-8 pt-25 md:py-20 md:pb-0">
       <header className="mb-8 px-[3vw]">
         <h1 className="text-5xl md:text-6xl leading-tight">Gallery Collage</h1>
-        <div className="mt-3 w-14 h-2 bg-[#067C0B]" />
+        <div className="mt-3 w-14 h-2 bg-[#3d6b4f]" />
         <p className="mt-4 max-w-2xl text-sm md:text-base text-neutral-600">
           Explore a curated collage of moments from the Nature and Resort. 
         </p>

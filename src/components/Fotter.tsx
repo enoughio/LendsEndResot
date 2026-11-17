@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Fotter = () => {
   return (
-    <footer className="relative bg-green-500 text-white overflow-hidden mt-10 w-full">
+    <footer className="relative bg-[#3d6b4f] text-[#f6f1e6] overflow-hidden mt-10 w-full">
       {/* Background Image with Overlay */}
       {/* <div className="absolute inset-0 z-0">
         <Image
@@ -23,7 +23,7 @@ const Fotter = () => {
 
 
         {/* Footer Links */}
-        <div className="px-4 md:px-8 lg:px-16 py-12 border-t border-white/10">
+        <div className="px-4 md:px-8 lg:px-16 py-12 border-t border-[#e7dcc6]/20">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 ">
               {/* Social Media */}
@@ -52,10 +52,10 @@ const Fotter = () => {
               <div>
                 <h4 className="font-semibold text-lg mb-4">Our Activities</h4>
                 <ul className="space-y-2">
-                  <li><Link href="/events" className="text-gray-300 hover:text-white transition-colors">Events</Link></li>
-                  <li><Link href="/gallery" className="text-gray-300 hover:text-white transition-colors">Gallery</Link></li>
-                  <li><Link href="/booking" className="text-gray-300 hover:text-white transition-colors">Book a Stay</Link></li>
-                  <li><Link href="/booking/visit" className="text-gray-300 hover:text-white transition-colors">Day Visits</Link></li>
+                  <li><Link href="/events" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Events</Link></li>
+                  <li><Link href="/gallery" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Gallery</Link></li>
+                  <li><Link href="/booking" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Book a Stay</Link></li>
+                  <li><Link href="/booking/visit" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Day Visits</Link></li>
                 </ul>
               </div>
 
@@ -63,8 +63,8 @@ const Fotter = () => {
               <div>
                 <h4 className="font-semibold text-lg mb-4">About Us</h4>
                 <ul className="space-y-2">
-                  <li><Link href="/about" className="text-gray-300 hover:text-white transition-colors">Our Story</Link></li>
-                  <li><Link href="/about/work-with-us" className="text-gray-300 hover:text-white transition-colors">Work with us</Link></li>
+                  <li><Link href="/about" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Our Story</Link></li>
+                  <li><Link href="/about/work-with-us" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Work with us</Link></li>
                 </ul>
               </div>
 
@@ -72,19 +72,19 @@ const Fotter = () => {
               <div>
                 <h4 className="font-semibold text-lg mb-4">Contact Us</h4>
                 <ul className="space-y-2">
-                  <li><Link href="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</Link></li>
-                  <li><Link href="/booking" className="text-gray-300 hover:text-white transition-colors">Bookings</Link></li>
-                  <li><a href="tel:+918109669604" className="text-gray-300 hover:text-white transition-colors">+91 8109669604</a></li>
-                  <li><a href="mailto:landsend.sumiran@gmail.com" className="text-gray-300 hover:text-white transition-colors">landsend.sumiran@gmail.com</a></li>
+                  <li><Link href="/contact" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Contact</Link></li>
+                  <li><Link href="/booking" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Bookings</Link></li>
+                  <li><a href="tel:+918109669604" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">+91 8109669604</a></li>
+                  <li><a href="mailto:landsend.sumiran@gmail.com" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">landsend.sumiran@gmail.com</a></li>
                 </ul>
               </div>
             </div>
 
-            <div className="mt-10 border-t border-white/10 pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-gray-400">© {new Date().getFullYear()} Land&apos;s End Resort at Sumiran. All rights reserved.</p>
+            <div className="mt-10 border-t border-[#e7dcc6]/20 pt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-[#e7dcc6]">© {new Date().getFullYear()} Land&apos;s End Resort at Sumiran. All rights reserved.</p>
               <div className="flex items-center gap-4 text-sm">
-                <Link href="/terms-and-conditions" className="text-gray-300 hover:text-white transition-colors">Terms &amp; Conditions</Link>
-                <Link href="/privacy-policy" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</Link>
+                <Link href="/terms-and-conditions" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Terms &amp; Conditions</Link>
+                <Link href="/privacy-policy" className="text-[#e7dcc6] hover:text-[#f6f1e6] transition-colors">Privacy Policy</Link>
               </div>
             </div>
           </div>

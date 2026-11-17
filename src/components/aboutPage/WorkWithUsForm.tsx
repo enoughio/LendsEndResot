@@ -88,10 +88,10 @@ const WorkWithUsForm: React.FC = () => {
 
   if (submitSuccess) {
     return (
-      <div className="space-y-4 rounded-md border border-green-200 bg-green-50 p-6">
-        <h3 className="text-xl font-semibold text-green-800">Application sent</h3>
-        <p className="text-green-700">Thanks for your interest. We&apos;ll review and contact you soon.</p>
-        <button onClick={() => setSubmitSuccess(false)} className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-md">
+      <div className="space-y-4 rounded-md border border-[#e4d7c3] bg-[#f6f1e6] p-6">
+        <h3 className="text-xl font-semibold text-[#3d6b4f]">Application sent</h3>
+        <p className="text-[#3d6b4f]">Thanks for your interest. We&apos;ll review and contact you soon.</p>
+        <button onClick={() => setSubmitSuccess(false)} className="bg-[#3d6b4f] hover:bg-[#315a41] text-[#f6f1e6] font-semibold px-6 py-3 rounded-md">
           Send another
         </button>
       </div>
@@ -102,30 +102,30 @@ const WorkWithUsForm: React.FC = () => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <input name="name" value={formData.name} onChange={handleChange} placeholder="Your Name *" className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors ${errors.name ? "border-red-500" : "border-gray-300"}`} />
+          <input name="name" value={formData.name} onChange={handleChange} placeholder="Your Name *" className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-[#3d6b4f] transition-colors ${errors.name ? "border-red-500" : "border-gray-300"}`} />
           {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
         </div>
         <div>
-          <input name="email" value={formData.email} onChange={handleChange} placeholder="Your Email *" className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors ${errors.email ? "border-red-500" : "border-gray-300"}`} />
+          <input name="email" value={formData.email} onChange={handleChange} placeholder="Your Email *" className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-[#3d6b4f] transition-colors ${errors.email ? "border-red-500" : "border-gray-300"}`} />
           {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
         </div>
         <div>
-          <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Your Phone *" className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors ${errors.phone ? "border-red-500" : "border-gray-300"}`} />
+          <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Your Phone *" className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-[#3d6b4f] transition-colors ${errors.phone ? "border-red-500" : "border-gray-300"}`} />
           {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
         </div>
       </div>
 
       <div>
-        <input name="position" value={formData.position} onChange={handleChange} placeholder="Position you&apos;re interested in (optional)" className="w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors border-gray-300" />
+        <input name="position" value={formData.position} onChange={handleChange} placeholder="Position you&apos;re interested in (optional)" className="w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-[#3d6b4f] transition-colors border-gray-300" />
       </div>
 
       <div>
-        <textarea name="message" value={formData.message} onChange={handleChange} rows={6} placeholder="Tell us about yourself *" className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-green-600 transition-colors resize-none ${errors.message ? "border-red-500" : "border-gray-300"}`} />
+        <textarea name="message" value={formData.message} onChange={handleChange} rows={6} placeholder="Tell us about yourself *" className={`w-full px-4 py-3 bg-white border-2 rounded-md focus:outline-none focus:border-[#3d6b4f] transition-colors resize-none ${errors.message ? "border-red-500" : "border-gray-300"}`} />
         {errors.message && <p className="mt-1 text-sm text-red-600">{errors.message}</p>}
       </div>
 
       <div className="flex justify-end">
-        <button type="submit" disabled={isSubmitting} className="bg-green-600 hover:bg-green-700 text-white font-semibold px-12 py-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        <button type="submit" disabled={isSubmitting} className="bg-[#3d6b4f] hover:bg-[#315a41] text-[#f6f1e6] font-semibold px-12 py-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
           {isSubmitting ? "Sending..." : "Send Application"}
         </button>
       </div>

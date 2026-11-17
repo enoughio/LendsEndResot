@@ -16,14 +16,14 @@ export default function EventsPage() {
     .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())[0];
 
   return (
-    <div className="min-h-screen bg-[#f6f6f1]">
+    <div className="min-h-screen bg-[#f6f1e6]">
       {/* Hero */}
       <section className="relative h-[280px] md:h-[420px] overflow-hidden">
         <div className="absolute inset-0">
           <Image src="/about/aboutHero.png" alt="Events" fill className="object-cover scale-[1.03]" />
           <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/45 to-black/35"></div>
           <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-amber-200/20 blur-3xl" />
-          <div className="absolute -top-20 right-10 h-64 w-64 rounded-full bg-green-300/20 blur-3xl" />
+          <div className="absolute -top-20 right-10 h-64 w-64 rounded-full bg-[#3d6b4f]/20 blur-3xl" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center">
           <div className="text-white max-w-3xl">
@@ -49,13 +49,13 @@ export default function EventsPage() {
       </section>
 
       <main className="relative max-w-7xl mx-auto px-4 md:px-6 py-10 md:py-16 md:pb-50">
-        <div className="absolute inset-x-0 top-8 -z-10 h-48 bg-linear-to-r from-green-100/60 via-amber-50/70 to-transparent blur-2xl" />
+        <div className="absolute inset-x-0 top-8 -z-10 h-48 bg-linear-to-r from-[#f6f1e6] via-[#e4d7c3]/70 to-transparent blur-2xl" />
 
-        <section className="rounded-3xl border border-green-200/80 bg-white/90 p-5 md:p-8 shadow-[0_20px_45px_-30px_rgba(0,0,0,0.35)] backdrop-blur-sm">
+        <section className="rounded-3xl border border-[#e4d7c3] bg-[#fffdf8]/95 p-5 md:p-8 shadow-[0_20px_45px_-30px_rgba(0,0,0,0.35)] backdrop-blur-sm">
           <div className="mb-6">
             <h2 className="text-gray-900 text-2xl md:text-3xl font-semibold">Events</h2>
             {/* <h2 className="text-gray-900 text-2xl md:text-3xl font-semibold">Upcoming Events</h2> */}
-            <div className="w-16 h-1 bg-linear-to-r from-green-600 to-amber-500 mt-2 rounded-full"></div>
+            <div className="w-16 h-1 bg-linear-to-r from-[#3d6b4f] to-[#6d5a38] mt-2 rounded-full"></div>
           </div>
 
           {/* Intro / description about events */}
@@ -67,7 +67,7 @@ export default function EventsPage() {
               Retreats may be single-day or multi-day. Every listing includes dates, timing, location and ticketing details so you can plan your stay with ease.
             </p>
 
-            <div className="w-full h-px bg-linear-to-r from-green-200 via-amber-200 to-transparent my-8" />
+            <div className="w-full h-px bg-linear-to-r from-[#e4d7c3] via-[#f6f1e6] to-transparent my-8" />
           </section>
 
           <div className="space-y-5 md:space-y-7">

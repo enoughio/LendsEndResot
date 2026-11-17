@@ -25,7 +25,7 @@ input[type="date"] {
 .shine-text {
   position: relative;
   display: inline-block;
-  color: white;
+  color: #f6f1e6;
   overflow: hidden;
 }
 

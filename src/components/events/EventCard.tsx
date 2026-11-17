@@ -93,7 +93,7 @@ export default function EventCard({
       tabIndex={0}
       onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
-      className="group flex flex-col md:flex-row rounded-3xl border border-green-200 bg-white overflow-hidden shadow-[0_15px_40px_-30px_rgba(0,0,0,0.65)] hover:shadow-[0_28px_50px_-30px_rgba(15,23,42,0.5)] transition-all duration-300 cursor-pointer"
+      className="group flex flex-col md:flex-row rounded-3xl border border-[#e4d7c3] bg-[#fffdf8] overflow-hidden shadow-[0_15px_40px_-30px_rgba(0,0,0,0.65)] hover:shadow-[0_28px_50px_-30px_rgba(61,107,79,0.35)] transition-all duration-300 cursor-pointer"
     >
       <div className="relative w-full md:w-[40%] h-80 md:h-auto shrink-0">
         <Image
@@ -106,11 +106,11 @@ export default function EventCard({
         <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
         <div className="absolute left-4 top-4 rounded-2xl bg-white/95 border border-white shadow-md px-3 py-2 text-center min-w-16">
           <p className="text-xl font-semibold leading-none text-gray-900">{formatDay(startDate)}</p>
-          <p className="text-[10px] tracking-[0.14em] font-medium text-green-800">{formatMonth(startDate)}</p>
+          <p className="text-[10px] tracking-[0.14em] font-medium text-[#3d6b4f]">{formatMonth(startDate)}</p>
         </div>
       </div>
 
-      <div className="p-5 md:p-7 flex-1 flex flex-col justify-between bg-linear-to-br from-white to-green-50/40">
+      <div className="p-5 md:p-7 flex-1 flex flex-col justify-between bg-linear-to-br from-[#fffdf8] to-[#f6f1e6]">
         <div>
           <h3 className="text-gray-900 text-xl md:text-2xl font-semibold leading-snug">{title}</h3>
           <p className="mt-3 text-gray-700 text-sm md:text-base leading-relaxed">{shortDescription}</p>
@@ -133,7 +133,7 @@ export default function EventCard({
                 <span className="text-gray-900 font-medium min-w-16">Tickets</span>
                 {earlyPrice ? (
                   <span className="inline-flex flex-wrap items-baseline gap-2">
-                    <span className="bg-green-100 text-green-900 border border-green-200 px-2 py-0.5 rounded-full text-xs font-semibold">Early Bird {earlyPrice}</span>
+                    <span className="bg-[#f6f1e6] text-[#3d6b4f] border border-[#e4d7c3] px-2 py-0.5 rounded-full text-xs font-semibold">Early Bird {earlyPrice}</span>
                     {regularPrice && <span className="text-gray-500 text-sm line-through">{regularPrice}</span>}
                   </span>
                 ) : (
@@ -155,13 +155,13 @@ export default function EventCard({
           </div>
         </div>
 
-        <div className="mt-5 md:mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-green-100 pt-4">
+        <div className="mt-5 md:mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-[#e4d7c3] pt-4">
           <div className="flex items-center gap-3">
             <Link
               href={href}
               target={openInNewTab ? "_blank" : undefined}
               rel={openInNewTab ? "noopener noreferrer" : undefined}
-              className="inline-block bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-2xl text-sm font-medium transition-colors"
+              className="inline-block bg-[#3d6b4f] hover:bg-[#315a41] text-[#f6f1e6] px-4 py-2 rounded-2xl text-sm font-medium transition-colors"
             >
               View details
             </Link>
@@ -170,7 +170,7 @@ export default function EventCard({
                 href={registrationLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-white border border-green-700 text-green-800 px-4 py-2 rounded-2xl text-sm font-medium hover:bg-green-50 transition-colors"
+                className="inline-block bg-[#fffdf8] border border-[#3d6b4f] text-[#3d6b4f] px-4 py-2 rounded-2xl text-sm font-medium hover:bg-[#f6f1e6] transition-colors"
               >
                 Register
               </a>

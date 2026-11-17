@@ -34,7 +34,7 @@ export default function Home() {
       <Dining />
       <Gallery />
       <Location />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Fotter />
     </div>
   );

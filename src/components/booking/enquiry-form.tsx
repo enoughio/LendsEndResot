@@ -7,7 +7,7 @@ import { RESORT_EMAIL, RESORT_PHONE_DISPLAY, RESORT_PHONE_TEL, whatsAppLink } fr
 
 type EnquiryKind = "RETREAT" | "GROUP";
 
-const inputClass = "w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#1f3d2e] focus:ring-2";
+const inputClass = "w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#3d6b4f] focus:ring-2";
 
 const ENQUIRY_COPY = {
   RETREAT: {
@@ -88,11 +88,11 @@ export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
   return (
     <div className="min-h-screen bg-[#f6f1e6] px-4 pb-16 pt-24 text-stone-800 sm:px-6">
       <div className="mx-auto max-w-2xl">
-        <button type="button" onClick={() => router.push("/booking")} className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+        <button type="button" onClick={() => router.push("/booking")} className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#3d6b4f]">
           Back to booking
         </button>
         <p className="mt-6 text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Land&apos;s End · The Last Resort</p>
-        <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#1f3d2e]">{copy.title}</h1>
+        <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#3d6b4f]">{copy.title}</h1>
         <p className="mt-4 text-base leading-7 text-stone-700">{copy.lead}</p>
         <p className="mt-3 text-sm leading-7 text-stone-600">{copy.detail}</p>
         <figure className="relative mt-8 h-48 overflow-hidden sm:h-64">
@@ -107,14 +107,14 @@ export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
         <div className="mt-8 bg-[#fffdf8] p-5 ring-1 ring-[#e4d7c3] sm:p-7">
 
           {done ? (
-            <div className="border border-[#d7c7ae] bg-[#f6f1e6] p-4 text-[#1f3d2e]">
+            <div className="border border-[#d7c7ae] bg-[#f6f1e6] p-4 text-[#3d6b4f]">
               <p className="font-semibold">We have your enquiry.</p>
               <p className="mt-2 text-sm">The resort has it, and will reply. You can also send the same note on WhatsApp.</p>
               <a
                 href={whatsappHref}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-3 inline-flex font-semibold text-[#1f3d2e] underline decoration-stone-400 underline-offset-4"
+                className="mt-3 inline-flex font-semibold text-[#3d6b4f] underline decoration-stone-400 underline-offset-4"
               >
                 WhatsApp {RESORT_PHONE_DISPLAY}
               </a>
@@ -135,8 +135,8 @@ export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
                       ["DAY_VISIT", "Day visit"],
                       ["STAY", "Stay with us"],
                     ] as const).map(([value, label]) => (
-                      <label key={value} className={`border px-3 py-3 text-sm ${groupType === value ? "border-[#1f3d2e] bg-[#f6f1e6]" : "border-[#e4d7c3] bg-white"}`}>
-                        <input type="radio" name="groupType" className="mr-2 accent-[#1f3d2e]" checked={groupType === value} onChange={() => setGroupType(value)} />
+                      <label key={value} className={`border px-3 py-3 text-sm ${groupType === value ? "border-[#3d6b4f] bg-[#f6f1e6]" : "border-[#e4d7c3] bg-white"}`}>
+                        <input type="radio" name="groupType" className="mr-2 accent-[#3d6b4f]" checked={groupType === value} onChange={() => setGroupType(value)} />
                         {label}
                       </label>
                     ))}
@@ -180,16 +180,16 @@ export function EnquiryForm({ kind }: { kind: EnquiryKind }) {
               )}
 
               {error && <p className="border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
-              <button type="submit" disabled={submitting} className="w-full bg-[#1f3d2e] px-4 py-3 font-semibold text-[#f6f1e6] hover:bg-[#173026] disabled:opacity-60">
+              <button type="submit" disabled={submitting} className="w-full bg-[#3d6b4f] px-4 py-3 font-semibold text-[#f6f1e6] hover:bg-[#315a41] disabled:opacity-60">
                 {submitting ? "Sending..." : "Send enquiry"}
               </button>
             </form>
           )}
 
           <p className="mt-5 text-sm text-stone-600">
-            <a className="font-medium text-[#1f3d2e]" href={`tel:${RESORT_PHONE_TEL}`}>{RESORT_PHONE_DISPLAY}</a>
+            <a className="font-medium text-[#3d6b4f]" href={`tel:${RESORT_PHONE_TEL}`}>{RESORT_PHONE_DISPLAY}</a>
             {" · "}
-            <a className="font-medium text-[#1f3d2e]" href={`mailto:${RESORT_EMAIL}`}>{RESORT_EMAIL}</a>
+            <a className="font-medium text-[#3d6b4f]" href={`mailto:${RESORT_EMAIL}`}>{RESORT_EMAIL}</a>
           </p>
         </div>
       </div>

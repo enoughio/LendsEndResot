@@ -42,7 +42,7 @@ export default function Error({
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <button
             onClick={reset}
-            className="inline-flex items-center gap-2 bg-[#067C0B] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#055a08] transition-colors"
+            className="inline-flex items-center gap-2 bg-[#3d6b4f] text-[#f6f1e6] px-6 py-3 rounded-lg font-semibold hover:bg-[#315a41] transition-colors"
           >
             <RefreshCcw size={20} />
             Try Again
@@ -50,7 +50,7 @@ export default function Error({
           
           <Link 
             href="/"
-            className="inline-flex items-center gap-2 border-2 border-[#067C0B] text-[#067C0B] px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
+            className="inline-flex items-center gap-2 border-2 border-[#3d6b4f] text-[#3d6b4f] px-6 py-3 rounded-lg font-semibold hover:bg-[#f6f1e6] transition-colors"
           >
             <Home size={20} />
             Go to Homepage

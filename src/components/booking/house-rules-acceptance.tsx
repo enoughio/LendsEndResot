@@ -57,7 +57,7 @@ export function HouseRulesAcceptance({ idPrefix = "house-rules", value, onChange
   return (
     <section aria-labelledby={`${idPrefix}-title`} className="space-y-3">
       <div>
-        <h3 id={`${idPrefix}-title`} className="font-serif text-2xl font-medium text-[#1f3d2e]">
+        <h3 id={`${idPrefix}-title`} className="font-serif text-2xl font-medium text-[#3d6b4f]">
           House rules
         </h3>
         <p className="mt-1 text-sm text-stone-600">Every rule, the exit policy, and your name are required.</p>
@@ -66,7 +66,7 @@ export function HouseRulesAcceptance({ idPrefix = "house-rules", value, onChange
         <label key={rule.id} className="flex items-start gap-3 border border-[#e4d7c3] bg-[#fffdf8] p-3 text-sm text-stone-800">
           <input
             type="checkbox"
-            className="mt-0.5 h-4 w-4 accent-[#1f3d2e]"
+            className="mt-0.5 h-4 w-4 accent-[#3d6b4f]"
             checked={accepted.has(rule.id)}
             onChange={(event) => toggleRule(rule.id, event.target.checked)}
           />
@@ -76,16 +76,16 @@ export function HouseRulesAcceptance({ idPrefix = "house-rules", value, onChange
       <label className="flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-3 text-sm font-medium text-stone-800">
         <input
           type="checkbox"
-          className="mt-0.5 h-4 w-4 accent-[#1f3d2e]"
+          className="mt-0.5 h-4 w-4 accent-[#3d6b4f]"
           checked={value.exitPolicyAccepted}
           onChange={(event) => onChange({ ...value, exitPolicyAccepted: event.target.checked })}
         />
         <span>{EXIT_POLICY_TEXT}</span>
       </label>
-      <label className="flex items-start gap-3 border border-[#1f3d2e] bg-[#fffdf8] p-3 text-sm font-medium text-stone-800">
+      <label className="flex items-start gap-3 border border-[#3d6b4f] bg-[#fffdf8] p-3 text-sm font-medium text-stone-800">
         <input
           type="checkbox"
-          className="mt-0.5 h-4 w-4 accent-[#1f3d2e]"
+          className="mt-0.5 h-4 w-4 accent-[#3d6b4f]"
           checked={selectAll}
           onChange={(event) => toggleSelectAll(event.target.checked)}
         />
@@ -99,7 +99,7 @@ export function HouseRulesAcceptance({ idPrefix = "house-rules", value, onChange
           id={`${idPrefix}-signer-name`}
           value={value.signerName}
           onChange={(event) => onChange({ ...value, signerName: event.target.value })}
-          className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#1f3d2e] focus:ring-2"
+          className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#3d6b4f] focus:ring-2"
           placeholder="Type your full name"
           autoComplete="name"
         />

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40">
+    <div className="min-h-screen bg-[#f6f1e6]">
       {/* Header */}
 
       {/* Hero Section */}
@@ -39,7 +39,7 @@ export default function AboutPage() {
             width={1920}
             height={600}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#07180f]/80 via-[#0d2b1b]/45 to-black/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#315a41]/80 via-[#3d6b4f]/45 to-black/35"></div>
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center">
           <div className="text-white max-w-2xl">
@@ -57,14 +57,14 @@ export default function AboutPage() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-16 space-y-8 md:space-y-10">
         {/* Our Story Section */}
-        <section className="rounded-2xl border border-emerald-100 bg-linear-to-br from-white to-emerald-50/45 p-6 shadow-sm md:p-8">
+        <section className="rounded-2xl border border-[#e4d7c3] bg-linear-to-br from-[#fffdf8] to-[#f6f1e6] p-6 shadow-sm md:p-8">
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             <div className="order-2 md:order-1">
               <div className="mb-4 md:mb-6">
                 <h2 className="text-gray-900 text-2xl md:text-4xl">
                   Our Story
                 </h2>
-                <div className="w-12 h-1 bg-green-600 mt-1"></div>
+                <div className="w-12 h-1 bg-[#3d6b4f] mt-1"></div>
               </div>
               <p className="text-gray-700 leading-6.5 md:leading-relaxed mb-4 md:mb-6 text-md md:text-base">
                 Our story begins deep inside a 300-acre community-conserved
@@ -102,30 +102,30 @@ export default function AboutPage() {
         </section>
 
         {/* Mission & Vision */}
-        <section className="rounded-2xl border border-slate-200 bg-linear-to-br from-white via-slate-50/40 to-emerald-50/30 p-6 shadow-sm md:p-8">
+        <section className="rounded-2xl border border-[#e4d7c3] bg-linear-to-br from-[#fffdf8] via-[#f6f1e6] to-[#f6f1e6] p-6 shadow-sm md:p-8">
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             {/* Mission */}
-            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-xl p-6 md:p-8 text-white shadow-sm">
+            <div className="bg-[#3d6b4f] rounded-xl p-6 md:p-8 text-[#f6f1e6] shadow-sm">
               <div className="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-full flex items-center justify-center mb-4 md:mb-6">
                 <Target className="w-6 h-6 md:w-7 md:h-7 text-white" />
               </div>
               <h3 className="text-white mb-3 md:mb-4 text-xl md:text-2xl">
                 Our Mission
               </h3>
-              <p className="text-green-50 leading-relaxed text-md md:text-base">
+              <p className="text-[#f6f1e6] leading-relaxed text-md md:text-base">
                 At Land’s End – The Last Resort, dining is rooted in simplicity and respect for the land. Our kitchen serves simple, organic, home-style food, drawing from local cuisines and forest-inspired delicacies. Ingredients are sourced from nearby farms and grown organically, keeping meals fresh, seasonal, and deeply nourishing.
               </p>
             </div>
 
             {/* Vision */}
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 md:p-8 text-white shadow-sm">
+            <div className="bg-[#315a41] rounded-xl p-6 md:p-8 text-[#f6f1e6] shadow-sm">
               <div className="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-full flex items-center justify-center mb-4 md:mb-6">
                 <Eye className="w-6 h-6 md:w-7 md:h-7 text-white" />
               </div>
               <h3 className="text-white mb-3 md:mb-4 text-xl md:text-2xl">
                 Our Vision
               </h3>
-              <p className="text-gray-200 leading-relaxed text-md md:text-base">
+              <p className="text-[#e7dcc6] leading-relaxed text-md md:text-base">
               Every dish here carries a story, of the soil it grew in, the hands that nurtured it, and the traditions it comes from. Meals are unhurried, shared, and mindful, inviting guests to slow down, listen, and reconnect; through food, nature, and conversation.
               </p>
             </div>
@@ -136,7 +136,7 @@ export default function AboutPage() {
         {/* <section className="mb-12 md:mb-20">
           <div className="bg-gray-50 rounded-lg p-6 md:p-12">
             <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6 mb-4 md:mb-6">
-              <Quote className="w-10 h-10 md:w-12 md:h-12 text-green-600 flex-shrink-0" />
+              <Quote className="w-10 h-10 md:w-12 md:h-12 text-[#3d6b4f] flex-shrink-0" />
               <div>
                 <h2 className="text-gray-900 mb-4 md:mb-6 text-xl md:text-3xl">
                   A Message from Our Founder
@@ -186,18 +186,18 @@ export default function AboutPage() {
         </section> */}
 
         {/* Core Values */}
-        <section className="rounded-2xl border border-emerald-100 bg-linear-to-br from-white to-sky-50/35 p-6 shadow-sm md:p-8">
+        <section className="rounded-2xl border border-[#e4d7c3] bg-linear-to-br from-[#fffdf8] to-[#f6f1e6] p-6 shadow-sm md:p-8">
           <div className="mb-6 md:mb-8">
             <h2 className="text-gray-900 text-2xl md:text-4xl">
               What Defines Us
             </h2>
-            <div className="w-12 h-1 bg-green-600 mt-1"></div>
+            <div className="w-12 h-1 bg-[#3d6b4f] mt-1"></div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-white to-emerald-50/45 hover:border-green-500 transition-colors">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
-                <Leaf className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-[#fffdf8] to-[#f6f1e6] hover:border-[#3d6b4f] transition-colors">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-[#f6f1e6] rounded-full flex items-center justify-center mb-3 md:mb-4">
+                <Leaf className="w-5 h-5 md:w-6 md:h-6 text-[#3d6b4f]" />
               </div>
               <h3 className="text-gray-900 mb-2 md:mb-3 text-base md:text-lg">
                 Conservation First
@@ -209,9 +209,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-white to-sky-50/45 hover:border-green-500 transition-colors">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
-                <Heart className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-[#fffdf8] to-[#f6f1e6] hover:border-[#3d6b4f] transition-colors">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-[#f6f1e6] rounded-full flex items-center justify-center mb-3 md:mb-4">
+                <Heart className="w-5 h-5 md:w-6 md:h-6 text-[#3d6b4f]" />
               </div>
               <h3 className="text-gray-900 mb-2 md:mb-3 text-base md:text-lg">
                 Slow, Mindful Living
@@ -223,9 +223,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-white to-emerald-50/35 hover:border-green-500 transition-colors">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
-                <Users className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-[#fffdf8] to-[#f6f1e6] hover:border-[#3d6b4f] transition-colors">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-[#f6f1e6] rounded-full flex items-center justify-center mb-3 md:mb-4">
+                <Users className="w-5 h-5 md:w-6 md:h-6 text-[#3d6b4f]" />
               </div>
               <h3 className="text-gray-900 mb-2 md:mb-3 text-base md:text-lg">
                 Community-Led Stewardship
@@ -237,9 +237,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-white to-sky-50/35 hover:border-green-500 transition-colors">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-full flex items-center justify-center mb-3 md:mb-4">
-                <Shield className="w-5 h-5 md:w-6 md:h-6 text-green-600" />
+            <div className="p-5 md:p-6 border border-gray-200 rounded-xl bg-linear-to-br from-[#fffdf8] to-[#f6f1e6] hover:border-[#3d6b4f] transition-colors">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-[#f6f1e6] rounded-full flex items-center justify-center mb-3 md:mb-4">
+                <Shield className="w-5 h-5 md:w-6 md:h-6 text-[#3d6b4f]" />
               </div>
               <h3 className="text-gray-900 mb-2 md:mb-3 text-base md:text-lg">
                 Low-Impact Hospitality
@@ -259,12 +259,12 @@ export default function AboutPage() {
             <h2 className="text-gray-900 text-2xl md:text-4xl">
               Awards & Recognition
             </h2>
-            <div className="w-12 h-1 bg-green-600 mt-1"></div>
+            <div className="w-12 h-1 bg-[#3d6b4f] mt-1"></div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            <div className="p-5 md:p-6 bg-green-50 rounded-lg">
-              <Award className="w-8 h-8 md:w-10 md:h-10 text-green-600 mb-3 md:mb-4" />
+            <div className="p-5 md:p-6 bg-[#f6f1e6] rounded-lg">
+              <Award className="w-8 h-8 md:w-10 md:h-10 text-[#3d6b4f] mb-3 md:mb-4" />
               <h4 className="text-gray-900 mb-2 text-md md:text-base">
                 Best Eco-Resort 2023
               </h4>
@@ -277,8 +277,8 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 bg-green-50 rounded-lg">
-              <Award className="w-8 h-8 md:w-10 md:h-10 text-green-600 mb-3 md:mb-4" />
+            <div className="p-5 md:p-6 bg-[#f6f1e6] rounded-lg">
+              <Award className="w-8 h-8 md:w-10 md:h-10 text-[#3d6b4f] mb-3 md:mb-4" />
               <h4 className="text-gray-900 mb-2 text-md md:text-base">
                 Wildlife Conservation Award
               </h4>
@@ -291,8 +291,8 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 bg-green-50 rounded-lg">
-              <Award className="w-8 h-8 md:w-10 md:h-10 text-green-600 mb-3 md:mb-4" />
+            <div className="p-5 md:p-6 bg-[#f6f1e6] rounded-lg">
+              <Award className="w-8 h-8 md:w-10 md:h-10 text-[#3d6b4f] mb-3 md:mb-4" />
               <h4 className="text-gray-900 mb-2 text-md md:text-base">
                 Sustainable Business Leader
               </h4>
@@ -305,8 +305,8 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 bg-green-50 rounded-lg">
-              <Award className="w-8 h-8 md:w-10 md:h-10 text-green-600 mb-3 md:mb-4" />
+            <div className="p-5 md:p-6 bg-[#f6f1e6] rounded-lg">
+              <Award className="w-8 h-8 md:w-10 md:h-10 text-[#3d6b4f] mb-3 md:mb-4" />
               <h4 className="text-gray-900 mb-2 text-md md:text-base">
                 Community Impact Award
               </h4>
@@ -319,8 +319,8 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 bg-green-50 rounded-lg">
-              <Award className="w-8 h-8 md:w-10 md:h-10 text-green-600 mb-3 md:mb-4" />
+            <div className="p-5 md:p-6 bg-[#f6f1e6] rounded-lg">
+              <Award className="w-8 h-8 md:w-10 md:h-10 text-[#3d6b4f] mb-3 md:mb-4" />
               <h4 className="text-gray-900 mb-2 text-md md:text-base">
                 Excellence in Hospitality
               </h4>
@@ -333,8 +333,8 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="p-5 md:p-6 bg-green-50 rounded-lg">
-              <Award className="w-8 h-8 md:w-10 md:h-10 text-green-600 mb-3 md:mb-4" />
+            <div className="p-5 md:p-6 bg-[#f6f1e6] rounded-lg">
+              <Award className="w-8 h-8 md:w-10 md:h-10 text-[#3d6b4f] mb-3 md:mb-4" />
               <h4 className="text-gray-900 mb-2 text-md md:text-base">
                 Heritage Conservation
               </h4>
@@ -355,7 +355,7 @@ export default function AboutPage() {
             <h2 className="text-gray-900 text-2xl md:text-4xl">
               Meet Our Team
             </h2>
-            <div className="w-12 h-1 bg-green-600 mt-1"></div>
+            <div className="w-12 h-1 bg-[#3d6b4f] mt-1"></div>
             <p className="text-gray-600 mt-3 md:mt-4 text-md md:text-base">
               Behind every memorable experience at Sumiran is a dedicated team
               of professionals who share a deep passion for nature and
@@ -432,7 +432,7 @@ export default function AboutPage() {
             <h2 className="text-gray-900 text-2xl md:text-4xl">
               Our Conservation Impact
             </h2>
-            <div className="w-12 h-1 bg-green-600 mt-1"></div>
+            <div className="w-12 h-1 bg-[#3d6b4f] mt-1"></div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
@@ -447,7 +447,7 @@ export default function AboutPage() {
               <div className="space-y-4 md:space-y-6">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="text-2xl md:text-3xl text-green-600">
+                    <div className="text-2xl md:text-3xl text-[#3d6b4f]">
                       10,000+
                     </div>
                   </div>
@@ -462,7 +462,7 @@ export default function AboutPage() {
 
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="text-2xl md:text-3xl text-green-600">
+                    <div className="text-2xl md:text-3xl text-[#3d6b4f]">
                       5 km
                     </div>
                   </div>
@@ -476,7 +476,7 @@ export default function AboutPage() {
 {/* 
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="text-2xl md:text-3xl text-green-600">
+                    <div className="text-2xl md:text-3xl text-[#3d6b4f]">
                       500+
                     </div>
                   </div>
@@ -491,7 +491,7 @@ export default function AboutPage() {
 
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="text-2xl md:text-3xl text-green-600">
+                    <div className="text-2xl md:text-3xl text-[#3d6b4f]">
                       100%
                     </div>
                   </div>
@@ -518,12 +518,12 @@ export default function AboutPage() {
         <section className="mb-12 md:mb-20">
           <div className="mb-6 md:mb-8">
             <h2 className="text-gray-900 text-2xl md:text-4xl">Where We Are</h2>
-            <div className="w-12 h-1 bg-green-600 mt-1"></div>
+            <div className="w-12 h-1 bg-[#3d6b4f] mt-1"></div>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-5 md:p-8">
             <div className="flex items-start gap-3 md:gap-4">
-              <MapPin className="w-5 h-5 md:w-6 md:h-6 text-green-600 flex-shrink-0 mt-1" />
+              <MapPin className="w-5 h-5 md:w-6 md:h-6 text-[#3d6b4f] flex-shrink-0 mt-1" />
               <div>
                 <h3 className="text-gray-900 mb-2 md:mb-3 text-lg md:text-xl">
                   Land&apos;s End Resort, Sumiran Forest
@@ -548,12 +548,12 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-emerald-100 bg-linear-to-br from-white to-emerald-50/35 p-6 shadow-sm md:p-8">
+        <section className="rounded-2xl border border-[#e4d7c3] bg-linear-to-br from-[#fffdf8] to-[#f6f1e6] p-6 shadow-sm md:p-8">
           <div className="mb-6">
             <h2 className="text-gray-900 text-2xl md:text-4xl">
               Frequently Asked Questions
             </h2>
-            <div className="w-12 h-1 bg-green-600 mt-1"></div>
+            <div className="w-12 h-1 bg-[#3d6b4f] mt-1"></div>
             <p className="mt-3 text-gray-600 text-sm md:text-base max-w-3xl">
               Quick answers about Land&apos;s End Resort in Sumiran Forest, including location, stays, day visits, and
               eco-friendly practices near Bhopal.
@@ -612,21 +612,21 @@ export default function AboutPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="bg-gradient-to-r from-green-600 to-green-700 rounded-xl md:rounded-2xl p-6 md:p-12 text-center text-white">
-          <h2 className="text-white mb-3 md:mb-4 text-xl md:text-3xl">
+        <section className="bg-[#3d6b4f] rounded-xl md:rounded-2xl p-6 md:p-12 text-center text-[#f6f1e6]">
+          <h2 className="mb-3 md:mb-4 text-xl text-[#f6f1e6] md:text-3xl">
             Become Part of Our Story
           </h2>
-          <p className="text-base md:text-xl text-green-50 mb-6 md:mb-8 max-w-2xl mx-auto">
+          <p className="text-base md:text-xl text-[#f6f1e6] mb-6 md:mb-8 max-w-2xl mx-auto">
             Join us in our mission to protect nature while creating
             unforgettable memories. Your visit directly supports conservation
             efforts and local communities.
           </p>  
           <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-4">
-            {/* <button className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 bg-white text-green-600 rounded-lg hover:bg-gray-100 transition-colors text-md md:text-base">
+            {/* <button className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 bg-white text-[#3d6b4f] rounded-lg hover:bg-gray-100 transition-colors text-md md:text-base">
               Plan Your Visit
             </button> */}
             <Link href={'/contact'}>
-            <button  className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors text-md md:text-base">
+            <button  className="w-full md:w-auto px-6 md:px-8 py-2.5 md:py-3 border-2 border-[#f6f1e6] text-[#f6f1e6] rounded-lg hover:bg-[#315a41] transition-colors text-md md:text-base">
               Contact Us
             </button>
             </Link>

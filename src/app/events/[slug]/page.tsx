@@ -26,7 +26,7 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#f6f1e6]">
       {/* Banner */}
       <section className="relative h-[320px] md:h-[480px] overflow-hidden">
         <Image src={event.images[0]} alt={event.title} fill className="object-cover" />
@@ -106,7 +106,7 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
                   <div className="mt-2">
                     {event.earlyPrice ? (
                       <div className="flex items-baseline gap-3">
-                        <div className="text-lg font-semibold text-green-700">Early bird {event.earlyPrice}</div>
+                        <div className="text-lg font-semibold text-[#3d6b4f]">Early bird {event.earlyPrice}</div>
                         {event.regularPrice && <div className="text-sm text-gray-500 line-through">{event.regularPrice}</div>}
                       </div>
                     ) : (
@@ -124,7 +124,7 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
                 href={event.registrationLink ?? '#'}
                 target={event.registrationLink ? "_blank" : undefined}
                 rel={event.registrationLink ? "noopener noreferrer" : undefined}
-                className="block w-full text-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+                className="block w-full text-center bg-[#3d6b4f] hover:bg-[#315a41] text-[#f6f1e6] px-4 py-2 rounded-md"
               >
                 {event.registrationLink ? 'Book tickets' : 'Book tickets'}
               </a>
@@ -142,7 +142,7 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
                       const href = isEmail ? `mailto:${c}` : `tel:${c.replace(/\s+/g, "")}`;
                       return (
                         <div key={c}>
-                          <a href={href} className="text-green-700">{c}</a>
+                          <a href={href} className="text-[#3d6b4f]">{c}</a>
                         </div>
                       );
                     })}

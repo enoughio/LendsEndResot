@@ -9,7 +9,8 @@ export const metadata = {
 
 export default function WorkWithUsPage() {
   return (
-    <main className="max-w-7xl mx-auto px-4 md:px-8 py-12 md:pt-25 ">
+    <main className="min-h-screen bg-[#f6f1e6]">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-12 md:pt-25">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <section>
           <h1 className="text-3xl font-bold mb-4">Work with us</h1>
@@ -26,11 +27,12 @@ export default function WorkWithUsPage() {
         </section>
 
         <section>
-          <div className="bg-white p-6 rounded-md shadow">
+          <div className="bg-[#fffdf8] border border-[#e4d7c3] p-6 rounded-md shadow">
             <h2 className="text-2xl font-semibold mb-4">Apply / Enquire</h2>
             <WorkWithUsForm />
           </div>
         </section>
+      </div>
       </div>
     </main>
   );

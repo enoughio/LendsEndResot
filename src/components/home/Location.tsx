@@ -11,7 +11,7 @@ const Location = () => {
             <h2 className="text-5xl md:text-6xl text-gray-900 mb-2">
               Location
             </h2>
-            <div className="h-1 w-32 bg-green-600"></div>
+            <div className="h-1 w-32 bg-[#3d6b4f]"></div>
           </div>
 
           <Link href={"https://maps.app.goo.gl/BNvC131L8wwmBHbi8"}>

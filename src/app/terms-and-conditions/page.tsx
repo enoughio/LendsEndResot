@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function TermsAndConditionsPage() {
   return (
-    <main className="min-h-screen bg-linear-to-b from-emerald-50/40 via-white to-sky-50/40 px-4 py-10 sm:px-6">
-      <div className="mx-auto max-w-4xl rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+    <main className="min-h-screen bg-[#f6f1e6] px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-4xl rounded-2xl border border-[#e4d7c3] bg-[#fffdf8] p-6 shadow-sm sm:p-8">
         <h1 className="text-3xl font-semibold text-gray-900">Terms & Conditions</h1>
         <p className="mt-2 text-sm text-gray-600">Last updated: March 12, 2026</p>
 

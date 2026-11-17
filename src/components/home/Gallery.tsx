@@ -15,7 +15,7 @@ const Gallery = () => {
       {/* Heading */}
       <div className="mb-6 md:mb-8">
         <h2 className="text-5xl md:text-6xl leading-tight">Gallery</h2>
-        <div className="w-12 md:w-16 h-2 bg-[#067C0B]" />
+        <div className="w-12 md:w-16 h-2 bg-[#3d6b4f]" />
       </div>
 
       {/* Top hero image */}

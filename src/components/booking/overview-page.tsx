@@ -203,7 +203,7 @@ export function OverviewPage() {
       <div className="mx-auto max-w-6xl">
         <header className="max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Land&apos;s End · The Last Resort</p>
-          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#1f3d2e] sm:text-5xl">Reservations</h1>
+          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#3d6b4f] sm:text-5xl">Reservations</h1>
           <p className="mt-4 text-base leading-7 text-stone-700">
             Stay the night, or come for the day. Meal plans are already inside the nightly stay rate.
           </p>
@@ -236,7 +236,7 @@ export function OverviewPage() {
           <button
             type="button"
             onClick={() => router.push("/booking/stay")}
-            className="bg-[#1f3d2e] px-6 py-6 text-left text-[#f6f1e6] transition hover:bg-[#173026]"
+            className="bg-[#3d6b4f] px-6 py-6 text-left text-[#f6f1e6] transition hover:bg-[#315a41]"
           >
             <span className="block font-serif text-3xl leading-none">Stay With Us</span>
             <span className="mt-3 block text-sm text-[#e7dcc6]">Individual or small group</span>
@@ -244,7 +244,7 @@ export function OverviewPage() {
           <button
             type="button"
             onClick={() => router.push(dayVisitHref)}
-            className="bg-[#1f3d2e] px-6 py-6 text-left text-[#f6f1e6] transition hover:bg-[#173026]"
+            className="bg-[#3d6b4f] px-6 py-6 text-left text-[#f6f1e6] transition hover:bg-[#315a41]"
           >
             <span className="block font-serif text-3xl leading-none">Day Visit</span>
             <span className="mt-3 block text-sm text-[#e7dcc6]">Small group, up to 20</span>
@@ -254,7 +254,7 @@ export function OverviewPage() {
         <section className="mt-14">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-serif text-3xl font-medium text-[#1f3d2e]">Rooms</h2>
+              <h2 className="font-serif text-3xl font-medium text-[#3d6b4f]">Rooms</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
                 Nightly rate for the meal plan. Meals are not added again per guest.
               </p>
@@ -291,7 +291,7 @@ export function OverviewPage() {
             <button
               type="button"
               onClick={() => router.push("/booking/stay")}
-              className="w-full bg-[#1f3d2e] px-6 py-4 text-base font-semibold text-[#f6f1e6] hover:bg-[#173026]"
+              className="w-full bg-[#3d6b4f] px-6 py-4 text-base font-semibold text-[#f6f1e6] hover:bg-[#315a41]"
             >
               Book a stay
             </button>
@@ -299,12 +299,12 @@ export function OverviewPage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="font-serif text-3xl font-medium text-[#1f3d2e]">Day visits</h2>
+          <h2 className="font-serif text-3xl font-medium text-[#3d6b4f]">Day visits</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
             Per person. Listed meals are included in the price. One guest can book. A small group is 20 people or fewer.
           </p>
           <p className="mt-1 text-sm text-stone-700">
-            <Link href="/booking/group" className="underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+            <Link href="/booking/group" className="underline decoration-stone-400 underline-offset-4 hover:text-[#3d6b4f]">
               More than 20 guests? Send a group enquiry.
             </Link>
           </p>
@@ -314,7 +314,7 @@ export function OverviewPage() {
               const hours = visit.timing || `${visit.duration} hours`;
               return (
                 <article key={visit.id} className="flex flex-col bg-[#fffdf8] p-5 ring-1 ring-[#e4d7c3]">
-                  <h3 className="font-serif text-2xl text-[#1f3d2e]">{visit.name}</h3>
+                  <h3 className="font-serif text-2xl text-[#3d6b4f]">{visit.name}</h3>
                   <p className="mt-2 text-sm text-stone-700">{hours}</p>
                   <p className="text-sm text-stone-500">{visit.duration} hours · 1 guest or more</p>
                   <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Included</p>
@@ -345,7 +345,7 @@ export function OverviewPage() {
                   <button
                     type="button"
                     onClick={() => router.push(`/booking/visit?type=${visitTypeParam(visit.packageType)}&packageId=${visit.id}`)}
-                    className="mt-5 bg-[#1f3d2e] px-4 py-2.5 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026]"
+                    className="mt-5 bg-[#3d6b4f] px-4 py-2.5 text-sm font-semibold text-[#f6f1e6] hover:bg-[#315a41]"
                   >
                     Book
                   </button>
@@ -358,7 +358,7 @@ export function OverviewPage() {
         <section aria-labelledby="gatherings-heading" className="mt-10 border border-[#e4d7c3] bg-[#fffdf8]">
           <div className="border-b border-[#e4d7c3] px-5 py-6 sm:px-7">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Sumiran forest</p>
-            <h2 id="gatherings-heading" className="mt-2 font-serif text-3xl font-medium text-[#1f3d2e]">
+            <h2 id="gatherings-heading" className="mt-2 font-serif text-3xl font-medium text-[#3d6b4f]">
               Gatherings
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-stone-700">
@@ -367,27 +367,27 @@ export function OverviewPage() {
           </div>
           <div className="grid md:grid-cols-2">
             <article className="border-b border-[#e4d7c3] px-5 py-6 sm:px-7 md:border-b-0 md:border-r">
-              <h3 className="font-serif text-2xl text-[#1f3d2e]">Retreat</h3>
+              <h3 className="font-serif text-2xl text-[#3d6b4f]">Retreat</h3>
               <p className="mt-3 text-sm leading-7 text-stone-700">
                 For a facilitator hosting a retreat at The Last Resort. The form asks for your name, email and mobile, the retreat date, the nature of the retreat, and how many people you expect.
               </p>
               <p className="mt-3 text-sm leading-6 text-stone-600">An enquiry, not an instant booking. Nothing is charged when you send it.</p>
               <Link
                 href="/booking/retreat"
-                className="mt-5 inline-block border border-[#1f3d2e] px-5 py-2.5 text-sm font-semibold text-[#1f3d2e] hover:bg-[#1f3d2e] hover:text-[#f6f1e6]"
+                className="mt-5 inline-block border border-[#3d6b4f] px-5 py-2.5 text-sm font-semibold text-[#3d6b4f] hover:bg-[#3d6b4f] hover:text-[#f6f1e6]"
               >
                 Retreat enquiry
               </Link>
             </article>
             <article className="px-5 py-6 sm:px-7">
-              <h3 className="font-serif text-2xl text-[#1f3d2e]">Larger group</h3>
+              <h3 className="font-serif text-2xl text-[#3d6b4f]">Larger group</h3>
               <p className="mt-3 text-sm leading-7 text-stone-700">
                 For more than 20 guests, either a day in the forest or a stay. Tell us which, and leave the group lead&apos;s name, email, mobile, the date, and an organization if there is one.
               </p>
               <p className="mt-3 text-sm leading-6 text-stone-600">An enquiry, not an instant booking. The house reads it and writes back.</p>
               <Link
                 href="/booking/group"
-                className="mt-5 inline-block border border-[#1f3d2e] px-5 py-2.5 text-sm font-semibold text-[#1f3d2e] hover:bg-[#1f3d2e] hover:text-[#f6f1e6]"
+                className="mt-5 inline-block border border-[#3d6b4f] px-5 py-2.5 text-sm font-semibold text-[#3d6b4f] hover:bg-[#3d6b4f] hover:text-[#f6f1e6]"
               >
                 Group enquiry
               </Link>
@@ -397,7 +397,7 @@ export function OverviewPage() {
 
         <section className="mt-14 grid gap-8 border-t border-[#e4d7c3] pt-8 md:grid-cols-2">
           <div>
-            <h2 className="font-serif text-2xl text-[#1f3d2e]">Included with every stay</h2>
+            <h2 className="font-serif text-2xl text-[#3d6b4f]">Included with every stay</h2>
             <ul className="mt-3 space-y-1 text-sm leading-6 text-stone-700">
               {STAY_INCLUSIONS.map((item) => (
                 <li key={item}>{item}</li>
@@ -405,7 +405,7 @@ export function OverviewPage() {
             </ul>
           </div>
           <div>
-            <h2 className="font-serif text-2xl text-[#1f3d2e]">Add-ons</h2>
+            <h2 className="font-serif text-2xl text-[#3d6b4f]">Add-ons</h2>
             <p className="mt-3 text-sm font-medium text-stone-800">{ASK_ON_ARRIVAL_NOTE}</p>
             <ul className="mt-2 space-y-1 text-sm leading-6 text-stone-700">
               {STAY_ADDONS.map((item) => (
@@ -417,17 +417,17 @@ export function OverviewPage() {
 
         <section className="mt-10 border-t border-[#e4d7c3] pt-8 text-sm leading-6 text-stone-700">
           <div className="flex items-center gap-2 text-stone-900">
-            <CalendarRange className="h-4 w-4 text-[#1f3d2e]" />
-            <h2 className="font-serif text-2xl font-medium text-[#1f3d2e]">Before you book</h2>
+            <CalendarRange className="h-4 w-4 text-[#3d6b4f]" />
+            <h2 className="font-serif text-2xl font-medium text-[#3d6b4f]">Before you book</h2>
           </div>
           <p className="mt-3">Check-in {CHECK_IN_LABEL} · Check-out {CHECK_OUT_LABEL}. Discounted tariffs on longer stays on request.</p>
           <p>{STAY_DINING_NOTE}</p>
           <p>5% GST extra. A 3% online convenience fee is added at checkout.</p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:gap-6">
-            <a href={`tel:${RESORT_PHONE_TEL}`} className="inline-flex items-center gap-2 font-medium text-[#1f3d2e]">
+            <a href={`tel:${RESORT_PHONE_TEL}`} className="inline-flex items-center gap-2 font-medium text-[#3d6b4f]">
               <Phone className="h-4 w-4" /> {RESORT_PHONE_DISPLAY}
             </a>
-            <a href={`mailto:${RESORT_EMAIL}`} className="inline-flex items-center gap-2 font-medium text-[#1f3d2e]">
+            <a href={`mailto:${RESORT_EMAIL}`} className="inline-flex items-center gap-2 font-medium text-[#3d6b4f]">
               <Mail className="h-4 w-4" /> {RESORT_EMAIL}
             </a>
           </div>

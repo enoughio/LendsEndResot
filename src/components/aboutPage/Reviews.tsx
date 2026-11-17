@@ -83,7 +83,7 @@ const HotelReviews: React.FC = () => {
     <div className="w-full">
       <div className="flex justify-between items-center">
         <UnderlinedHeading title="Reviews" />
-        <button className="bg-[#067C0B] text-sm h-fit hover:bg-green-800 text-white font-semibold p-3 xl:py-3 rounded-md transition-colors whitespace-nowrap">
+        <button className="bg-[#3d6b4f] text-sm h-fit hover:bg-[#315a41] text-[#f6f1e6] font-semibold p-3 xl:py-3 rounded-md transition-colors whitespace-nowrap">
           Give your review
         </button>
       </div>

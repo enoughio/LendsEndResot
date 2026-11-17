@@ -145,12 +145,12 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
   return (
     <div className="min-h-screen bg-[#f6f1e6] px-4 pb-20 pt-24 text-stone-800 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-6xl">
-        <button type="button" onClick={() => router.push('/booking')} className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+        <button type="button" onClick={() => router.push('/booking')} className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#3d6b4f]">
           Back to booking
         </button>
         <header className="mt-6 max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Land&apos;s End · The Last Resort</p>
-          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#1f3d2e] sm:text-5xl">Day visit</h1>
+          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#3d6b4f] sm:text-5xl">Day visit</h1>
           <p className="mt-4 text-base leading-7 text-stone-700">Choose a date and how many guests are coming, then a visit. Meals listed with the package are included. One guest can book. A small group is {SMALL_GROUP_MAX_GUESTS} people or fewer.</p>
         </header>
         <figure className="relative mt-8 h-56 overflow-hidden sm:h-80">
@@ -168,7 +168,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
         <div className="mt-10 grid gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
             <section className="border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-6">
-              <h2 className="font-serif text-2xl text-[#1f3d2e]">Visit details</h2>
+              <h2 className="font-serif text-2xl text-[#3d6b4f]">Visit details</h2>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <div
                   role="button"
@@ -182,7 +182,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                   }}
                   className="border border-[#e4d7c3] bg-[#f6f1e6] p-4"
                 >
-                  <p className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Visit date <Calendar className="h-4 w-4 text-[#1f3d2e]" /></p>
+                  <p className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Visit date <Calendar className="h-4 w-4 text-[#3d6b4f]" /></p>
                   <input
                     ref={visitDateInputRef}
                     type="date"
@@ -190,7 +190,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                     min={todayIndiaInput()}
                     onChange={(event) => setVisitDate(event.target.value)}
                     onClick={(event) => event.stopPropagation()}
-                    className="mt-3 w-full border border-[#e4d7c3] bg-white px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-[#1f3d2e]"
+                    className="mt-3 w-full border border-[#e4d7c3] bg-white px-3 py-2 text-stone-900 outline-none focus:ring-2 focus:ring-[#3d6b4f]"
                   />
                 </div>
                 <div className="border border-[#e4d7c3] bg-[#f6f1e6] p-4">
@@ -204,18 +204,18 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                 </div>
               </div>
               {visitDate && loading && (
-                <p className="mt-4 border border-[#1f3d2e] bg-[#f6f1e6] px-4 py-3 text-sm font-semibold text-[#1f3d2e]" role="status">
+                <p className="mt-4 border border-[#3d6b4f] bg-[#f6f1e6] px-4 py-3 text-sm font-semibold text-[#3d6b4f]" role="status">
                   Checking visits for this date
                 </p>
               )}
             </section>
 
-            <section className="border-2 border-[#1f3d2e] bg-[#fffdf8] p-5 sm:p-6">
-              <h2 className="font-serif text-3xl font-medium text-[#1f3d2e]">Choose a visit</h2>
+            <section className="border-2 border-[#3d6b4f] bg-[#fffdf8] p-5 sm:p-6">
+              <h2 className="font-serif text-3xl font-medium text-[#3d6b4f]">Choose a visit</h2>
               <div className="mt-4 grid gap-4">
                 {loading && (
-                  <div className="border border-[#1f3d2e] bg-[#fffdf8] px-4 py-4" role="status" aria-live="polite">
-                    <p className="text-sm font-semibold text-[#1f3d2e]">
+                  <div className="border border-[#3d6b4f] bg-[#fffdf8] px-4 py-4" role="status" aria-live="polite">
+                    <p className="text-sm font-semibold text-[#3d6b4f]">
                       {visitDate ? 'Checking visits for this date' : 'Loading visits'}
                     </p>
                     <div className="mt-3 space-y-3">
@@ -235,9 +235,9 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                       key={pkg.id}
                       type="button"
                       onClick={() => choosePackage(pkg)}
-                      className={`border bg-white p-5 text-left ${selected ? 'border-[#1f3d2e] ring-1 ring-[#1f3d2e]' : 'border-[#8d7350]'}`}
+                      className={`border bg-white p-5 text-left ${selected ? 'border-[#3d6b4f] ring-1 ring-[#3d6b4f]' : 'border-[#8d7350]'}`}
                     >
-                      <p className="font-serif text-2xl text-[#1f3d2e]">{pkg.name}</p>
+                      <p className="font-serif text-2xl text-[#3d6b4f]">{pkg.name}</p>
                       {selected && <p className="mt-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Selected</p>}
                       <p className="mt-2 text-sm text-stone-600">{pkg.timing}</p>
                       <p className="mt-3 font-serif text-3xl text-stone-900">
@@ -251,7 +251,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                   );
                 })}
                 <p className="text-sm text-stone-700">
-                  <Link href="/booking/group" className="underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+                  <Link href="/booking/group" className="underline decoration-stone-400 underline-offset-4 hover:text-[#3d6b4f]">
                     More than {SMALL_GROUP_MAX_GUESTS} guests? Send a group enquiry.
                   </Link>
                 </p>
@@ -261,8 +261,8 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
             {selectedPackage && (
               <section className="border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-6">
                 <div className="mb-4 flex flex-wrap gap-4 text-sm text-stone-700">
-                  <p className="inline-flex items-center gap-2"><Clock className="h-4 w-4 text-[#1f3d2e]" /> {selectedPackage.timing || `${selectedPackage.duration} hours`}</p>
-                  <p className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#1f3d2e]" /> Small group: {SMALL_GROUP_MAX_GUESTS} people or fewer</p>
+                  <p className="inline-flex items-center gap-2"><Clock className="h-4 w-4 text-[#3d6b4f]" /> {selectedPackage.timing || `${selectedPackage.duration} hours`}</p>
+                  <p className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-[#3d6b4f]" /> Small group: {SMALL_GROUP_MAX_GUESTS} people or fewer</p>
                 </div>
                 <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Included</h3>
                 <ul className="mt-2 grid gap-1 text-sm leading-6 text-stone-700 sm:grid-cols-2">
@@ -286,7 +286,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
           <aside className="lg:col-span-1">
             <div className="sticky top-24 border border-[#e4d7c3] bg-[#fffdf8] p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Your visit</p>
-              <h3 className="mt-2 font-serif text-2xl text-[#1f3d2e]">{selectedPackage?.name || 'Day visit'}</h3>
+              <h3 className="mt-2 font-serif text-2xl text-[#3d6b4f]">{selectedPackage?.name || 'Day visit'}</h3>
               <div className="mt-4 space-y-2 text-sm text-stone-700">
                 <div className="flex justify-between gap-3"><span>Visit ({numGuests} {numGuests === 1 ? 'guest' : 'guests'})</span><span>{inr(quote.quotedRoomAmount)}</span></div>
                 <div className="flex justify-between gap-3"><span>Meals</span><span>Included</span></div>
@@ -301,7 +301,7 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
                 type="button"
                 disabled={submitting || !selectedPackage}
                 onClick={() => void handleConfirmBooking()}
-                className="mt-5 w-full bg-[#1f3d2e] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026] disabled:opacity-60"
+                className="mt-5 w-full bg-[#3d6b4f] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#315a41] disabled:opacity-60"
               >
                 {submitting ? 'Confirming...' : 'Confirm booking'}
               </button>
@@ -315,13 +315,13 @@ export function DayVisitBooking({ type = 'full', packageId = null }: DayVisitBoo
         </div>
 
         <section className="mt-14 border-t border-[#e4d7c3] pt-8 text-sm leading-6 text-stone-700">
-          <h2 className="font-serif text-2xl font-medium text-[#1f3d2e]">Cancellation</h2>
+          <h2 className="font-serif text-2xl font-medium text-[#3d6b4f]">Cancellation</h2>
           <p className="mt-3">{CANCELLATION_POLICY}</p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:gap-6">
-            <a href={`tel:${RESORT_PHONE_TEL}`} className="inline-flex items-center gap-2 font-medium text-[#1f3d2e]">
+            <a href={`tel:${RESORT_PHONE_TEL}`} className="inline-flex items-center gap-2 font-medium text-[#3d6b4f]">
               <PhoneCall className="h-4 w-4" /> {RESORT_PHONE_DISPLAY}
             </a>
-            <a href={`mailto:${RESORT_EMAIL}`} className="inline-flex items-center gap-2 font-medium text-[#1f3d2e]">
+            <a href={`mailto:${RESORT_EMAIL}`} className="inline-flex items-center gap-2 font-medium text-[#3d6b4f]">
               {RESORT_EMAIL}
             </a>
           </div>

@@ -13,7 +13,7 @@ const AboutSerenity = () => {
             <br /> Resort
           </span>
         </h2>
-        <div className="w-12 h-2 bg-[#067C0B]"></div>
+        <div className="w-12 h-2 bg-[#3d6b4f]"></div>
       </div>
 
       {/* Grid for Desktop (Image + Text + Heading) */}
@@ -30,7 +30,7 @@ const AboutSerenity = () => {
                 The Last Resort
               </span>
             </h2>
-            <div className="w-16 h-3 md:h-2 bg-[#067C0B]"></div>
+            <div className="w-16 h-3 md:h-2 bg-[#3d6b4f]"></div>
           </div>
 
           {/* Text Content */}

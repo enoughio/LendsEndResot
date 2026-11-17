@@ -116,17 +116,17 @@ const ContactForm: React.FC = () => {
   /* Right Column - Contact Form */
   if (submitSuccess) {
     return (
-      <div className="space-y-4 rounded-xl border border-green-200 bg-green-50 p-6">
-        <h3 className="text-xl font-semibold text-green-800">
+      <div className="space-y-4 rounded-xl border border-[#e4d7c3] bg-[#f6f1e6] p-6">
+        <h3 className="text-xl font-semibold text-[#3d6b4f]">
           Message sent successfully
         </h3>
-        <p className="text-green-700">
+        <p className="text-[#3d6b4f]">
           Thanks for reaching out. We received your message and will contact you within 24 hours.
         </p>
         <button
           type="button"
           onClick={() => setSubmitSuccess(false)}
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+          className="bg-[#3d6b4f] hover:bg-[#315a41] text-[#f6f1e6] font-semibold px-6 py-3 rounded-lg transition-colors"
         >
           Send another message
         </button>
@@ -150,7 +150,7 @@ const ContactForm: React.FC = () => {
               placeholder="Your Name *"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100 transition-all ${
+              className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-[#3d6b4f] focus:ring-2 focus:ring-[#e4d7c3] transition-all ${
                 errors.name ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -165,7 +165,7 @@ const ContactForm: React.FC = () => {
               placeholder="Your Email *"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100 transition-all ${
+              className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-[#3d6b4f] focus:ring-2 focus:ring-[#e4d7c3] transition-all ${
                 errors.email ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -180,7 +180,7 @@ const ContactForm: React.FC = () => {
               placeholder="Your Phone *"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100 transition-all ${
+              className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-[#3d6b4f] focus:ring-2 focus:ring-[#e4d7c3] transition-all ${
                 errors.phone ? "border-red-500" : "border-gray-300"
               }`}
             />
@@ -198,7 +198,7 @@ const ContactForm: React.FC = () => {
             value={formData.message}
             onChange={handleChange}
             rows={7}
-            className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-100 transition-all resize-none ${
+            className={`w-full px-4 py-3 bg-white border rounded-lg focus:outline-none focus:border-[#3d6b4f] focus:ring-2 focus:ring-[#e4d7c3] transition-all resize-none ${
               errors.message ? "border-red-500" : "border-gray-300"
             }`}
           ></textarea>
@@ -212,7 +212,7 @@ const ContactForm: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold px-10 py-3.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full md:w-auto bg-[#3d6b4f] hover:bg-[#315a41] text-[#f6f1e6] font-semibold px-10 py-3.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </button>

@@ -15,7 +15,7 @@ const Dining = () => {
         <h2 className="text-5xl md:text-7xl leading-tight">
           Dining <span className="font-light">&amp; Cuisine</span>
         </h2>
-        <div className="w-12 md:w-16 h-2 bg-[#067C0B]" />
+        <div className="w-12 md:w-16 h-2 bg-[#3d6b4f]" />
         {/* Decorative leaf for mobile */}
         <div className="md:hidden absolute -right-4 md:right-0  top-8 md:top-0 translate-y-[-40%] w-[20vw] md:w-[38vw] max-w-[220px] ">
           <Image
@@ -82,7 +82,7 @@ const Dining = () => {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-[#0A2816]/70" />
+          <div className="absolute inset-0 bg-[#315a41]/70" />
           <div className="relative grid grid-cols-12 gap-4 md:gap-8 px-10 py-14 xl:py-20">
             {/* Text Column */}
             <div className="col-span-12 lg:col-span-7 text-white flex flex-col justify-center max-w-[720px]">

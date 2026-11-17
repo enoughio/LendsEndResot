@@ -13,9 +13,9 @@ const ContactInfo = () => {
           {/* Left Column - Contact Info */}
           <div className="space-y-5">
             {/* Call To Us Section */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border border-[#e4d7c3] bg-[#fffdf8] p-6 shadow-sm">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-[#3d6b4f] rounded-full flex items-center justify-center flex-shrink-0">
                   <div className="relative w-6 h-6">
                     <Image
                       src="/icons/call.png"
@@ -38,9 +38,9 @@ const ContactInfo = () => {
             </div>
 
             {/* Write To Us Section */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border border-[#e4d7c3] bg-[#fffdf8] p-6 shadow-sm">
               <div className="flex items-center gap-4 mb-6 ">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-[#3d6b4f] rounded-full flex items-center justify-center flex-shrink-0">
                   <div className="relative w-6 h-6">
                     <Image
                       src="/icons/email.png"
@@ -60,15 +60,15 @@ const ContactInfo = () => {
                 </p>
                 <p className="text-base">Email: landsend.sumiran@gmail.com</p>
                 <p className="text-base">Website: sumiran.org</p>
-                <div className="flex flex-wrap gap-3 pt-1 text-sm text-green-700">
-                  <Link href="/terms-and-conditions" className="hover:text-green-800">Terms &amp; Conditions</Link>
-                  <Link href="/privacy-policy" className="hover:text-green-800">Privacy Policy</Link>
+                <div className="flex flex-wrap gap-3 pt-1 text-sm text-[#3d6b4f]">
+                  <Link href="/terms-and-conditions" className="hover:text-[#315a41]">Terms &amp; Conditions</Link>
+                  <Link href="/privacy-policy" className="hover:text-[#315a41]">Privacy Policy</Link>
                 </div>
               </div>
             </div>
           </div>
           {/* Right Column - Contact form */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-[#e4d7c3] bg-[#fffdf8] p-6 shadow-sm">
             <ContactForm />
           </div>
         </div>

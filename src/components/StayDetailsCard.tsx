@@ -35,11 +35,11 @@ export default StayDetailsCard;
 {
   /* <div className="w-[90%] md:w-fit flex items-center justify-center gap-2 md:gap-5 text-[12px] lg:text-sm">
 
-          <Link href={'/booking'}  className="w-full bg-[#067C0B] text-white rounded-sm p-3 inline-flex items-center justify-center gap-1 lg:mr-3 hover:bg-green-800 active:bg-green-800 hover:cursor-pointer hover:scale-105 active:scale-100 transition-transform duration-200">
+          <Link href={'/booking'}  className="w-full bg-[#3d6b4f] text-[#f6f1e6] rounded-sm p-3 inline-flex items-center justify-center gap-1 lg:mr-3 hover:bg-[#315a41] active:bg-[#315a41] hover:cursor-pointer hover:scale-105 active:scale-100 transition-transform duration-200">
             <Image src={"/building icon.svg"} alt="" width={16} height={16} />
             Book a Stay at Land's End
           </Link>
-          <Link href={'/booking'}  className="w-full bg-[#067C0B] text-white text-nowrap rounded-sm p-3 inline-flex items-center justify-center gap-1 lg:mr-3 hover:bg-green-800 active:bg-green-800 hover:cursor-pointer hover:scale-105 active:scale-100 transition-transform duration-200">
+          <Link href={'/booking'}  className="w-full bg-[#3d6b4f] text-[#f6f1e6] text-nowrap rounded-sm p-3 inline-flex items-center justify-center gap-1 lg:mr-3 hover:bg-[#315a41] active:bg-[#315a41] hover:cursor-pointer hover:scale-105 active:scale-100 transition-transform duration-200">
             <Image src={"/building icon.svg"} alt="" width={16} height={16} />
             Book a day long visit at Land's End
           </Link>

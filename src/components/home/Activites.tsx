@@ -16,21 +16,21 @@ const Activities = () => {
       description: "Storytelling retreats and creative gatherings.",
       image: "/gallery/stargazing.jpeg",
       className: "md:col-span-2",
-      overlay: "bg-indigo-950/40",
+      overlay: "bg-[#315a41]/45",
     },
     {
       title: "Wellness Retreats",
       description: "Wellness, mindfulness and meditation retreats.",
       image: "/gallery/bird.jpeg",
       className: "md:col-span-2",
-      overlay: "bg-emerald-950/40",
+      overlay: "bg-[#315a41]/50",
     },
     {
       title: "Learning Circles",
       description: "Deep conversations, learning circles and healing spaces.",
       image: "/gallery/WhatsApp Image 2026-02-04 at 8.32.06 PM.jpeg",
       className: "md:col-span-2",
-      overlay: "bg-emerald-900/45",
+      overlay: "bg-[#3d6b4f]/55",
     },
     {
       title: "Forest Walks",
@@ -44,7 +44,7 @@ const Activities = () => {
       description: "Natural mud baths and simple earth-based experiences.",
       image: "/gallery/flowers_sumiran.jpeg",
       className: "md:col-span-3",
-      overlay: "bg-slate-900/40",
+      overlay: "bg-[#315a41]/45",
     },
     {
       title: "Artists & Thinkers",
@@ -69,7 +69,7 @@ const Activities = () => {
               priority
             />
           </div>
-          <p className="inline-flex w-fit rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+          <p className="inline-flex w-fit rounded-full bg-[#f6f1e6] px-3 py-1 text-xs font-medium text-[#3d6b4f]">
             Signature Experiences
           </p>
           <h2 className="text-3xl sm:text-5xl md:text-6xl leading-tight text-neutral-900">
@@ -83,7 +83,7 @@ const Activities = () => {
             and simple earth-based experiences, and spaces for artists, writers and thinkers seeking inspiration.
             It is a place to stay still, breathe deeply, and grow.
           </p>
-          <div className="h-1.5 w-20 bg-[#067C0B]" />
+          <div className="h-1.5 w-20 bg-[#3d6b4f]" />
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:hidden">
@@ -143,7 +143,7 @@ const Activities = () => {
           </p>
           <Link
             href="/booking"
-            className="inline-flex items-center justify-center rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-800"
+            className="inline-flex items-center justify-center rounded-full bg-[#3d6b4f] px-5 py-2.5 text-sm font-medium text-[#f6f1e6] transition-colors hover:bg-[#315a41]"
           >
             Plan Your Experience
           </Link>

@@ -104,12 +104,12 @@ function BookedContent() {
   return (
     <div className="min-h-screen bg-[#f6f1e6] px-4 pb-20 pt-24 text-stone-800 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-5xl">
-        <Link href="/booking" className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+        <Link href="/booking" className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#3d6b4f]">
           Back to booking
         </Link>
         <header className="mt-6 max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Land&apos;s End · The Last Resort</p>
-          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#1f3d2e] sm:text-5xl">Booking confirmed</h1>
+          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#3d6b4f] sm:text-5xl">Booking confirmed</h1>
           <p className="mt-4 text-base leading-7 text-stone-700">{details.description}</p>
         </header>
         <figure className="relative mt-8 h-56 overflow-hidden sm:h-80">
@@ -127,7 +127,7 @@ function BookedContent() {
         <div className="mt-8 border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-8">
           <div className="mb-6">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">{details.subtitle}</p>
-            <h2 className="mt-2 font-serif text-3xl text-[#1f3d2e]">{details.title}</h2>
+            <h2 className="mt-2 font-serif text-3xl text-[#3d6b4f]">{details.title}</h2>
           </div>
 
           {loading ? (
@@ -145,7 +145,7 @@ function BookedContent() {
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
-                <Calendar className="mt-1 h-4 w-4 text-[#1f3d2e]" />
+                <Calendar className="mt-1 h-4 w-4 text-[#3d6b4f]" />
                 <div>
                   <p className="text-stone-600 text-sm">{booking?.type === 'VISIT' ? 'Visit date' : 'Check-in'}</p>
                   <p className="text-stone-900">
@@ -163,7 +163,7 @@ function BookedContent() {
               </div>
 
               <div className="flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
-                <MapPin className="mt-1 h-4 w-4 text-[#1f3d2e]" />
+                <MapPin className="mt-1 h-4 w-4 text-[#3d6b4f]" />
                 <div>
                   <p className="text-stone-600 text-sm">Location</p>
                   <p className="text-stone-900">Land&apos;s End Resort at Sumiran Ecological Foundation</p>
@@ -172,7 +172,7 @@ function BookedContent() {
                     href="https://maps.app.goo.gl/BNvC131L8wwmBHbi8"
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-1 inline-block text-sm text-[#1f3d2e] underline decoration-stone-400 underline-offset-4"
+                    className="mt-1 inline-block text-sm text-[#3d6b4f] underline decoration-stone-400 underline-offset-4"
                   >
                     Open in Google Maps
                   </a>
@@ -182,7 +182,7 @@ function BookedContent() {
 
             <div className="space-y-4">
               <div className="flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
-                <Mail className="mt-1 h-4 w-4 text-[#1f3d2e]" />
+                <Mail className="mt-1 h-4 w-4 text-[#3d6b4f]" />
                 <div>
                   <p className="text-stone-600 text-sm">Confirmation Email</p>
                   <p className="text-stone-900">{details.emailText}</p>
@@ -190,7 +190,7 @@ function BookedContent() {
               </div>
 
               <div className="flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
-                <Phone className="mt-1 h-4 w-4 text-[#1f3d2e]" />
+                <Phone className="mt-1 h-4 w-4 text-[#3d6b4f]" />
                 <div>
                   <p className="text-stone-600 text-sm">Contact Support</p>
                   <p className="text-stone-900"></p>
@@ -203,7 +203,7 @@ function BookedContent() {
 
           {booking?.type === 'STAY' && (
             <div className="mt-6 flex items-start gap-3 border border-[#e4d7c3] bg-[#f6f1e6] p-4">
-              <Calendar className="mt-1 h-4 w-4 text-[#1f3d2e]" />
+              <Calendar className="mt-1 h-4 w-4 text-[#3d6b4f]" />
               <div>
                 <p className="text-stone-600 text-sm">Check-out</p>
                 <p className="text-stone-900">{formatIndiaDate(booking.stayDetails?.checkOut, { weekday: 'long' }) || 'Date to be confirmed'}</p>
@@ -221,7 +221,7 @@ function BookedContent() {
 
         {booking && (
           <div className="mt-8 border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-8">
-            <h3 className="font-serif text-2xl text-[#1f3d2e]">On the day</h3>
+            <h3 className="font-serif text-2xl text-[#3d6b4f]">On the day</h3>
             {booking.type === 'STAY' ? (
               <p className="mt-2 text-sm text-stone-700">
                 Check-in {booking.checkInTime || CHECK_IN_LABEL}. Check-out {booking.checkOutTime || CHECK_OUT_LABEL}.
@@ -267,7 +267,7 @@ function BookedContent() {
         )}
 
         <section className="mt-8 border-t border-[#e4d7c3] pt-8">
-          <h3 className="font-serif text-2xl text-[#1f3d2e]">What&apos;s next</h3>
+          <h3 className="font-serif text-2xl text-[#3d6b4f]">What&apos;s next</h3>
           <ul className="mt-3 space-y-2 text-sm leading-6 text-stone-700">
             <li>Check your email for booking confirmation and details</li>
             <li>We&apos;ll contact you 24 hours before your visit with final instructions</li>
@@ -282,13 +282,13 @@ function BookedContent() {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link
             href="/booking"
-            className="inline-flex items-center justify-center bg-[#1f3d2e] px-6 py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026]"
+            className="inline-flex items-center justify-center bg-[#3d6b4f] px-6 py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#315a41]"
           >
             Book Another Experience
           </Link>
           <Link
             href="/"
-            className="inline-flex items-center justify-center border border-[#1f3d2e] px-6 py-3 text-sm font-semibold text-[#1f3d2e] hover:bg-[#1f3d2e] hover:text-[#f6f1e6]"
+            className="inline-flex items-center justify-center border border-[#3d6b4f] px-6 py-3 text-sm font-semibold text-[#3d6b4f] hover:bg-[#3d6b4f] hover:text-[#f6f1e6]"
           >
             Return to Home
           </Link>

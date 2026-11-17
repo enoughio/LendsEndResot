@@ -194,7 +194,7 @@ const Testimonials = () => {
         {/* Heading and Navigation */}
         <div className="flex justify-between items-end mb-8">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-white max-w-3xl">
-            Our clients are <span className="text-green-400">always satisfied</span>
+            Our clients are <span className="text-[#e7dcc6]">always satisfied</span>
           </h2>
 
           {/* Navigation Buttons - Hidden on mobile */}
@@ -243,12 +243,12 @@ const Testimonials = () => {
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className="bg-green-500/90 backdrop-blur-sm rounded-2xl p-4 md:p-6 flex flex-col justify-between min-h-[180px] md:min-h-[200px] hover:bg-green-500 transition-colors shrink-0"
+                className="bg-[#3d6b4f]/95 backdrop-blur-sm rounded-2xl p-4 md:p-6 flex flex-col justify-between min-h-[180px] md:min-h-[200px] hover:bg-[#315a41] transition-colors shrink-0"
                 style={{
                   width: `calc((100% - ${(cardsPerView - 1) * (typeof window !== 'undefined' && window.innerWidth < 768 ? 16 : 24)}px) / ${cardsPerView})`
                 }}
               >
-                <p className="text-gray-900 text-sm md:text-base leading-relaxed mb-6 md:mb-8 select-none">
+                <p className="text-[#f6f1e6] text-sm md:text-base leading-relaxed mb-6 md:mb-8 select-none">
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
 
@@ -263,8 +263,8 @@ const Testimonials = () => {
                     />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900 text-sm md:text-base">{testimonial.name}</p>
-                    <p className="text-xs md:text-sm text-gray-800">{testimonial.service}</p>
+                    <p className="font-semibold text-[#f6f1e6] text-sm md:text-base">{testimonial.name}</p>
+                    <p className="text-xs md:text-sm text-[#e7dcc6]">{testimonial.service}</p>
                   </div>
                 </div>
               </div>

@@ -307,7 +307,7 @@ export default function BookingDetailsPage() {
           bookingId,
         },
         theme: {
-          color: "#1f3d2e",
+          color: "#3d6b4f",
         },
 
 		//step 3
@@ -369,12 +369,12 @@ export default function BookingDetailsPage() {
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
 
       <div className="mx-auto max-w-6xl">
-        <Link href="/booking" className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+        <Link href="/booking" className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#3d6b4f]">
           Back to booking
         </Link>
         <header className="mt-6 max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Land&apos;s End · The Last Resort</p>
-          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#1f3d2e] sm:text-5xl">
+          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#3d6b4f] sm:text-5xl">
             Guest details and bill
           </h1>
           <p className="mt-4 text-base leading-7 text-stone-700">
@@ -387,7 +387,7 @@ export default function BookingDetailsPage() {
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
           <section className="border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-7">
-            <h2 className="mb-4 font-serif text-2xl text-[#1f3d2e]">
+            <h2 className="mb-4 font-serif text-2xl text-[#3d6b4f]">
               Guest form
             </h2>
 
@@ -400,7 +400,7 @@ export default function BookingDetailsPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Enter full name"
-                  className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#1f3d2e] focus:ring-2"
+                  className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#3d6b4f] focus:ring-2"
                 />
               </div>
 
@@ -413,7 +413,7 @@ export default function BookingDetailsPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter email"
-                  className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#1f3d2e] focus:ring-2"
+                  className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#3d6b4f] focus:ring-2"
                 />
               </div>
 
@@ -425,7 +425,7 @@ export default function BookingDetailsPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="Enter mobile number"
-                  className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#1f3d2e] focus:ring-2"
+                  className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#3d6b4f] focus:ring-2"
                 />
               </div>
 
@@ -437,7 +437,7 @@ export default function BookingDetailsPage() {
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                   placeholder="Enter city"
-                  className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#1f3d2e] focus:ring-2"
+                  className="w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#3d6b4f] focus:ring-2"
                 />
               </div>
 
@@ -449,7 +449,7 @@ export default function BookingDetailsPage() {
                   value={specialRequest}
                   onChange={(e) => setSpecialRequest(e.target.value)}
                   placeholder="Add any special request"
-                  className="min-h-24 w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#1f3d2e] focus:ring-2"
+                  className="min-h-24 w-full border border-[#e4d7c3] bg-white px-3 py-2.5 text-stone-900 outline-none ring-[#3d6b4f] focus:ring-2"
                 />
               </div>
 
@@ -487,7 +487,7 @@ export default function BookingDetailsPage() {
                               })
                             }
                             placeholder="Optional"
-                            className="w-full border border-[#e4d7c3] bg-white px-3 py-2 text-sm text-stone-900 outline-none ring-[#1f3d2e] focus:ring-2"
+                            className="w-full border border-[#e4d7c3] bg-white px-3 py-2 text-sm text-stone-900 outline-none ring-[#3d6b4f] focus:ring-2"
                           />
                         </div>
                         <div>
@@ -502,7 +502,7 @@ export default function BookingDetailsPage() {
                               })
                             }
                             placeholder="Optional"
-                            className="w-full border border-[#e4d7c3] bg-white px-3 py-2 text-sm text-stone-900 outline-none ring-[#1f3d2e] focus:ring-2"
+                            className="w-full border border-[#e4d7c3] bg-white px-3 py-2 text-sm text-stone-900 outline-none ring-[#3d6b4f] focus:ring-2"
                           />
                         </div>
                       </div>
@@ -517,7 +517,7 @@ export default function BookingDetailsPage() {
           <section className="border border-[#e4d7c3] bg-[#fffdf8] p-5 sm:p-7">
             <div className="mb-4">
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">Charges</p>
-              <h2 className="mt-2 font-serif text-2xl text-[#1f3d2e]">Final bill</h2>
+              <h2 className="mt-2 font-serif text-2xl text-[#3d6b4f]">Final bill</h2>
             </div>
 
             {loadingBill ? (
@@ -537,7 +537,7 @@ export default function BookingDetailsPage() {
               <div className="space-y-3">
                 {payError && <p className="border border-red-200 bg-red-50 p-3 text-sm text-red-700">{payError}</p>}
                 {paySuccess && (
-                  <p className="border border-[#e4d7c3] bg-[#f6f1e6] p-3 text-sm text-[#1f3d2e]">{paySuccess}</p>
+                  <p className="border border-[#e4d7c3] bg-[#f6f1e6] p-3 text-sm text-[#3d6b4f]">{paySuccess}</p>
                 )}
 
                 <div className="flex items-center justify-between text-stone-700">
@@ -616,7 +616,7 @@ export default function BookingDetailsPage() {
                 <div className="mt-4 border-t border-[#e4d7c3] pt-4">
                   <div className="flex items-center justify-between gap-4 border border-[#e4d7c3] bg-[#fffdf8] p-4">
                     <div>
-                      <p className="text-sm font-medium text-[#1f3d2e]">House rules</p>
+                      <p className="text-sm font-medium text-[#3d6b4f]">House rules</p>
                       <p className="mt-1 text-sm text-stone-600">
                         {houseRulesComplete ? "Accepted" : "Not accepted yet"}
                       </p>
@@ -624,7 +624,7 @@ export default function BookingDetailsPage() {
                     <button
                       type="button"
                       onClick={() => setHouseRulesOpen(true)}
-                      className="shrink-0 bg-[#1f3d2e] px-4 py-2.5 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026]"
+                      className="shrink-0 bg-[#3d6b4f] px-4 py-2.5 text-sm font-semibold text-[#f6f1e6] hover:bg-[#315a41]"
                     >
                       {houseRulesComplete ? "Review" : "Read and accept"}
                     </button>
@@ -634,7 +634,7 @@ export default function BookingDetailsPage() {
                 {holdExpired && (
                   <div className="mt-4 border border-[#e4d7c3] bg-[#f6f1e6] p-3 text-sm text-stone-800" role="alert">
                     This room hold has expired.{" "}
-                    <Link href="/booking/stay" className="font-medium text-[#1f3d2e] underline decoration-stone-400 underline-offset-4">
+                    <Link href="/booking/stay" className="font-medium text-[#3d6b4f] underline decoration-stone-400 underline-offset-4">
                       Choose your dates again.
                     </Link>
                   </div>
@@ -655,14 +655,14 @@ export default function BookingDetailsPage() {
                   type="button"
                   onClick={startCheckout}
                   disabled={!canPay || paying || isFinalizingPayment}
-                  className="mt-4 inline-flex w-full items-center justify-center gap-2 bg-[#1f3d2e] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 bg-[#3d6b4f] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#315a41] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <CreditCard className="h-4 w-4" />
                   {isFinalizingPayment ? "Finalizing Payment..." : paying ? "Processing..." : "Pay Securely"}
                 </button>
 
                 <div className="mt-4 border border-[#e4d7c3] bg-[#f6f1e6] p-3 text-xs text-stone-700">
-                  <p className="inline-flex items-center gap-2 font-medium text-[#1f3d2e]">
+                  <p className="inline-flex items-center gap-2 font-medium text-[#3d6b4f]">
                     <ShieldCheck className="h-4 w-4" />
                     Your payment is encrypted and securely processed.
                   </p>
@@ -675,7 +675,7 @@ export default function BookingDetailsPage() {
 
       {houseRulesOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-[#1f3d2e]/40 px-4 py-6"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#3d6b4f]/40 px-4 py-6"
           onClick={() => setHouseRulesOpen(false)}
         >
           <div
@@ -691,7 +691,7 @@ export default function BookingDetailsPage() {
               <button
                 type="button"
                 onClick={() => setHouseRulesOpen(false)}
-                className="text-sm font-medium text-[#1f3d2e] underline decoration-stone-400 underline-offset-4 hover:text-[#173026]"
+                className="text-sm font-medium text-[#3d6b4f] underline decoration-stone-400 underline-offset-4 hover:text-[#315a41]"
               >
                 Close
               </button>
@@ -707,7 +707,7 @@ export default function BookingDetailsPage() {
                   if (!houseRulesComplete) return;
                   setHouseRulesOpen(false);
                 }}
-                className="inline-flex w-full items-center justify-center bg-[#1f3d2e] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center bg-[#3d6b4f] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#315a41] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Accept
               </button>
@@ -717,12 +717,12 @@ export default function BookingDetailsPage() {
       )}
 
       {isFinalizingPayment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1f3d2e]/40 px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#3d6b4f]/40 px-4">
           <div className="w-full max-w-md border border-[#e4d7c3] bg-[#fffdf8] p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#6d5a38]">
               Payment completed
             </p>
-            <h3 className="mt-3 font-serif text-2xl text-[#1f3d2e]">Please wait while we confirm your booking</h3>
+            <h3 className="mt-3 font-serif text-2xl text-[#3d6b4f]">Please wait while we confirm your booking</h3>
             <p className="mt-2 text-sm leading-6 text-stone-600">We are verifying your payment and redirecting you to your booked page.</p>
 
             <div className="mt-4 space-y-2 animate-pulse">

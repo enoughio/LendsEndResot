@@ -283,7 +283,7 @@ function CountControl({
         onClick={onDecrease}
         disabled={decreaseDisabled}
         aria-label={decreaseLabel}
-        className="h-9 w-9 shrink-0 border border-[#cbbfa8] text-lg leading-none text-stone-800 hover:border-[#1f3d2e] disabled:opacity-40"
+        className="h-9 w-9 shrink-0 border border-[#cbbfa8] text-lg leading-none text-stone-800 hover:border-[#3d6b4f] disabled:opacity-40"
       >
         -
       </button>
@@ -293,7 +293,7 @@ function CountControl({
         onClick={onIncrease}
         disabled={increaseDisabled}
         aria-label={increaseLabel}
-        className="h-9 w-9 shrink-0 border border-[#cbbfa8] text-lg leading-none text-stone-800 hover:border-[#1f3d2e] disabled:opacity-40"
+        className="h-9 w-9 shrink-0 border border-[#cbbfa8] text-lg leading-none text-stone-800 hover:border-[#3d6b4f] disabled:opacity-40"
       >
         +
       </button>
@@ -580,12 +580,12 @@ export function StayBooking({}: StayBookingProps) {
   return (
     <div className="min-h-screen bg-[#f6f1e6] px-4 pb-20 pt-24 text-stone-800 sm:px-6 lg:px-10">
       <div className="mx-auto max-w-6xl">
-        <button type="button" onClick={handleBack} className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#1f3d2e]">
+        <button type="button" onClick={handleBack} className="text-sm text-stone-600 underline decoration-stone-400 underline-offset-4 hover:text-[#3d6b4f]">
           Back to booking
         </button>
         <header className="mt-6 max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6d5a38]">Land&apos;s End · The Last Resort</p>
-          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#1f3d2e] sm:text-5xl">Stay at Sumiran</h1>
+          <h1 className="mt-3 font-serif text-4xl font-medium tracking-tight text-[#3d6b4f] sm:text-5xl">Stay at Sumiran</h1>
           <p className="mt-4 text-base leading-7 text-stone-700">Choose your dates and guests, then a room and the meal price that suits you.</p>
         </header>
         <figure className="relative mt-8 aspect-video overflow-hidden">
@@ -600,7 +600,7 @@ export function StayBooking({}: StayBookingProps) {
         </figure>
 
         <section className="mt-8" aria-labelledby="stay-dates-heading">
-          <h2 id="stay-dates-heading" className="font-serif text-3xl font-medium text-[#1f3d2e]">Dates and guests</h2>
+          <h2 id="stay-dates-heading" className="font-serif text-3xl font-medium text-[#3d6b4f]">Dates and guests</h2>
           <p className="mt-2 text-sm leading-6 text-stone-600">Check-in, check-out, and who is coming, in one booking bar.</p>
           <div className="mt-4 border border-[#e4d7c3] bg-[#fffdf8]">
             <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.25fr)]">
@@ -611,7 +611,7 @@ export function StayBooking({}: StayBookingProps) {
                 <label htmlFor="stay-check-in" className="block">
                   <span className="flex items-center justify-between gap-3">
                     <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6d5a38]">Check-in</span>
-                    <Calendar className="h-4 w-4 text-[#1f3d2e]" aria-hidden="true" />
+                    <Calendar className="h-4 w-4 text-[#3d6b4f]" aria-hidden="true" />
                   </span>
                   <input
                     ref={checkInInputRef}
@@ -624,7 +624,7 @@ export function StayBooking({}: StayBookingProps) {
                       event.stopPropagation();
                       openDatePicker(checkInInputRef.current);
                     }}
-                    className="mt-2 w-full cursor-pointer bg-transparent font-serif text-lg text-[#1f3d2e] outline-none [color-scheme:light]"
+                    className="mt-2 w-full cursor-pointer bg-transparent font-serif text-lg text-[#3d6b4f] outline-none [color-scheme:light]"
                   />
                 </label>
               </div>
@@ -636,7 +636,7 @@ export function StayBooking({}: StayBookingProps) {
                 <label htmlFor="stay-check-out" className="block">
                   <span className="flex items-center justify-between gap-3">
                     <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#6d5a38]">Check-out</span>
-                    <Calendar className="h-4 w-4 text-[#1f3d2e]" aria-hidden="true" />
+                    <Calendar className="h-4 w-4 text-[#3d6b4f]" aria-hidden="true" />
                   </span>
                   <input
                     ref={checkOutInputRef}
@@ -649,7 +649,7 @@ export function StayBooking({}: StayBookingProps) {
                       event.stopPropagation();
                       openDatePicker(checkOutInputRef.current);
                     }}
-                    className="mt-2 w-full cursor-pointer bg-transparent font-serif text-lg text-[#1f3d2e] outline-none [color-scheme:light]"
+                    className="mt-2 w-full cursor-pointer bg-transparent font-serif text-lg text-[#3d6b4f] outline-none [color-scheme:light]"
                   />
                 </label>
               </div>
@@ -668,7 +668,7 @@ export function StayBooking({}: StayBookingProps) {
                     >
                       <CircleQuestionMark className="h-5 w-5" />
                     </button>
-                    <Users className="h-4 w-4 text-[#1f3d2e]" aria-hidden="true" />
+                    <Users className="h-4 w-4 text-[#3d6b4f]" aria-hidden="true" />
                   </div>
                 </div>
 
@@ -781,7 +781,7 @@ export function StayBooking({}: StayBookingProps) {
               {checkInDate && checkOutDate && !datesReady ? 'Check-out has to be after check-in.' : ruleNote}
             </p>
             {datesReady && !availabilitySettled && (
-              <p className="border-t-2 border-[#1f3d2e] bg-[#f6f1e6] px-4 py-3 text-sm font-semibold text-[#1f3d2e] sm:px-5" role="status">
+              <p className="border-t-2 border-[#3d6b4f] bg-[#f6f1e6] px-4 py-3 text-sm font-semibold text-[#3d6b4f] sm:px-5" role="status">
                 Checking which rooms are free for these dates
               </p>
             )}
@@ -793,7 +793,7 @@ export function StayBooking({}: StayBookingProps) {
             {error && <p className="border border-red-200 bg-red-50 p-4 text-red-700">{error}</p>}
 
             <section aria-labelledby="available-rooms-heading">
-              <h2 id="available-rooms-heading" className="font-serif text-3xl font-medium text-[#1f3d2e]">Available rooms</h2>
+              <h2 id="available-rooms-heading" className="font-serif text-3xl font-medium text-[#3d6b4f]">Available rooms</h2>
               {datesReady ? (
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
                   {formatIndiaDate(checkInDate, { month: 'short' })} to {formatIndiaDate(checkOutDate, { month: 'short' })}
@@ -807,8 +807,8 @@ export function StayBooking({}: StayBookingProps) {
               )}
 
               {datesReady && !availabilitySettled && (
-                <div className="mt-4 border-2 border-[#1f3d2e] bg-[#fffdf8] px-4 py-4" role="status" aria-live="polite">
-                  <p className="text-sm font-semibold text-[#1f3d2e]">Checking which rooms are free for these dates</p>
+                <div className="mt-4 border-2 border-[#3d6b4f] bg-[#fffdf8] px-4 py-4" role="status" aria-live="polite">
+                  <p className="text-sm font-semibold text-[#3d6b4f]">Checking which rooms are free for these dates</p>
                   <div className="mt-4 space-y-3">
                     {roomSkeletons.map((item) => (
                       <div key={item} className="flex animate-pulse items-start gap-4 border border-[#e4d7c3] bg-[#fffdf8] p-3">
@@ -830,7 +830,7 @@ export function StayBooking({}: StayBookingProps) {
                   <button
                     type="button"
                     onClick={() => setAvailabilityAttempt((attempt) => attempt + 1)}
-                    className="mt-3 text-sm font-medium text-[#1f3d2e] underline decoration-stone-400 underline-offset-4"
+                    className="mt-3 text-sm font-medium text-[#3d6b4f] underline decoration-stone-400 underline-offset-4"
                   >
                     Try again
                   </button>
@@ -842,7 +842,7 @@ export function StayBooking({}: StayBookingProps) {
               )}
 
               {datesReady && availabilitySettled && availableRooms.length > 0 && (
-                <div className="mt-4 divide-y divide-[#d9cbb4] border-2 border-[#1f3d2e] bg-[#fffdf8]">
+                <div className="mt-4 divide-y divide-[#d9cbb4] border-2 border-[#3d6b4f] bg-[#fffdf8]">
                   {availableRooms.map((room) => {
                     const isSelected = selectedRoom === room.id;
                     const roomsLeft = availability?.counts[room.id] ?? 0;
@@ -861,7 +861,7 @@ export function StayBooking({}: StayBookingProps) {
                             selectRoom(room);
                           }
                         }}
-                        className={`cursor-pointer px-4 py-5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3d2e] sm:px-5 ${isSelected ? 'bg-[#f3ecdc]' : 'bg-[#fffdf8]'}`}
+                        className={`cursor-pointer px-4 py-5 outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d6b4f] sm:px-5 ${isSelected ? 'bg-[#f3ecdc]' : 'bg-[#fffdf8]'}`}
                       >
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                           <RoomImageGallery roomName={room.name} onOpen={() => selectRoom(room)} />
@@ -914,10 +914,10 @@ export function StayBooking({}: StayBookingProps) {
                                       event.stopPropagation();
                                       chooseStay(room, tier.id);
                                     }}
-                                    className={`px-3 py-2 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1f3d2e] ${
+                                    className={`px-3 py-2 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3d6b4f] ${
                                       chosen
-                                        ? 'border border-[#1f3d2e] bg-white ring-1 ring-[#1f3d2e]'
-                                        : 'border border-[#e4d7c3] bg-[#f6f1e6] hover:border-[#1f3d2e]'
+                                        ? 'border border-[#3d6b4f] bg-white ring-1 ring-[#3d6b4f]'
+                                        : 'border border-[#e4d7c3] bg-[#f6f1e6] hover:border-[#3d6b4f]'
                                     }`}
                                   >
                                     <p className="text-[11px] uppercase tracking-wide text-stone-500">{tier.label}</p>
@@ -946,12 +946,12 @@ export function StayBooking({}: StayBookingProps) {
 
           <div className="lg:col-span-1">
             <div className="sticky top-24 border border-[#e4d7c3] bg-[#fffdf8] p-6">
-              <h3 className="font-serif text-2xl text-[#1f3d2e]">Price summary</h3>
+              <h3 className="font-serif text-2xl text-[#3d6b4f]">Price summary</h3>
               {showPricedSummary && selectedRoomData && selectedTier ? (
                 <>
                   <div className="mt-4">
                     <RoomImageGallery roomName={selectedRoomData.name} compact />
-                    <h4 className="mt-4 font-serif text-2xl text-[#1f3d2e]">{selectedRoomData.name}</h4>
+                    <h4 className="mt-4 font-serif text-2xl text-[#3d6b4f]">{selectedRoomData.name}</h4>
                     <p className="text-sm text-stone-600">Land&apos;s End The Last Resort</p>
                     <p className="mt-2 font-serif text-2xl text-stone-900">
                       ₹{nightlyRateForTier(selectedRoomData, selectedTier).toLocaleString('en-IN')}
@@ -973,7 +973,7 @@ export function StayBooking({}: StayBookingProps) {
                   {quote && (
                     <>
                       <div className="mb-4 mt-4 border-b border-[#e4d7c3] pb-4">
-                        <h4 className="mb-3 font-serif text-xl text-[#1f3d2e]">Price details</h4>
+                        <h4 className="mb-3 font-serif text-xl text-[#3d6b4f]">Price details</h4>
                         <div className="space-y-2">
                           <div className="flex justify-between gap-3 text-stone-700">
                             <span>
@@ -1022,7 +1022,7 @@ export function StayBooking({}: StayBookingProps) {
                     type="button"
                     disabled={!canContinue}
                     onClick={handleConfirmBooking}
-                    className="w-full bg-[#1f3d2e] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#173026] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full bg-[#3d6b4f] py-3 text-sm font-semibold text-[#f6f1e6] hover:bg-[#315a41] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {submitting ? 'Continuing...' : !availabilitySettled ? 'Checking availability...' : 'Continue to payment'}
                   </button>
@@ -1041,54 +1041,54 @@ export function StayBooking({}: StayBookingProps) {
               )}
 
               <div className="mt-4 space-y-2 border-t border-[#e4d7c3] pt-4 text-xs text-stone-600">
-                <p className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#1f3d2e]" /> Secure booking and payment flow</p>
-                <p className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-[#1f3d2e]" /> Instant confirmation after successful payment</p>
+                <p className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#3d6b4f]" /> Secure booking and payment flow</p>
+                <p className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-[#3d6b4f]" /> Instant confirmation after successful payment</p>
               </div>
             </div>
           </div>
         </div>
 
         <section className="mt-14 border-t border-[#e4d7c3] pt-8">
-          <h2 className="font-serif text-2xl font-medium text-[#1f3d2e]">Important booking information</h2>
+          <h2 className="font-serif text-2xl font-medium text-[#3d6b4f]">Important booking information</h2>
           <p className="mt-2 text-sm leading-6 text-stone-600">Please review these details before confirming your stay.</p>
 
           <div className="mt-6 grid gap-8 md:grid-cols-2">
             <div>
-              <h3 className="font-serif text-xl text-[#1f3d2e]">Check-in / check-out</h3>
+              <h3 className="font-serif text-xl text-[#3d6b4f]">Check-in / check-out</h3>
               <p className="mt-2 text-sm leading-6 text-stone-700">Check-in is at {CHECK_IN_LABEL} and check-out is by {CHECK_OUT_LABEL}.</p>
             </div>
 
             <div>
-              <h3 className="font-serif text-xl text-[#1f3d2e]">Cancellation policy</h3>
+              <h3 className="font-serif text-xl text-[#3d6b4f]">Cancellation policy</h3>
               <p className="mt-2 text-sm leading-6 text-stone-700">{CANCELLATION_POLICY}</p>
             </div>
 
             <div>
-              <h3 className="font-serif text-xl text-[#1f3d2e]">Activities and safety</h3>
+              <h3 className="font-serif text-xl text-[#3d6b4f]">Activities and safety</h3>
               <p className="mt-2 text-sm leading-6 text-stone-700">Guided activities are weather dependent. Follow guide instructions and use provided safety equipment.</p>
             </div>
 
             <div>
-              <h3 className="font-serif text-xl text-[#1f3d2e]">Need help?</h3>
+              <h3 className="font-serif text-xl text-[#3d6b4f]">Need help?</h3>
               <p className="mt-2 text-sm leading-6 text-stone-700">Our team can help with room selection and custom group requests.</p>
-              <p className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-[#1f3d2e]">
+              <p className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-[#3d6b4f]">
                 <PhoneCall className="h-4 w-4" />
                 <a href={`tel:${RESORT_PHONE_TEL}`}>{RESORT_PHONE_DISPLAY}</a>
               </p>
-              <p className="mt-1 text-sm"><a className="font-medium text-[#1f3d2e]" href={`mailto:${RESORT_EMAIL}`}>{RESORT_EMAIL}</a></p>
+              <p className="mt-1 text-sm"><a className="font-medium text-[#3d6b4f]" href={`mailto:${RESORT_EMAIL}`}>{RESORT_EMAIL}</a></p>
             </div>
           </div>
         </section>
 
         <section className="mt-10 grid gap-8 border-t border-[#e4d7c3] pt-8 md:grid-cols-2">
           <div>
-            <h2 className="font-serif text-2xl text-[#1f3d2e]">Included with every stay</h2>
+            <h2 className="font-serif text-2xl text-[#3d6b4f]">Included with every stay</h2>
             <ul className="mt-3 space-y-1 text-sm leading-6 text-stone-700">
               {STAY_INCLUSIONS.map((item) => <li key={item}>{item}</li>)}
             </ul>
           </div>
           <div>
-            <h2 className="font-serif text-2xl text-[#1f3d2e]">Add-ons</h2>
+            <h2 className="font-serif text-2xl text-[#3d6b4f]">Add-ons</h2>
             <p className="mt-3 text-sm font-medium text-stone-800">{ASK_ON_ARRIVAL_NOTE}</p>
             <ul className="mt-2 space-y-1 text-sm leading-6 text-stone-700">
               {STAY_ADDONS.map((item) => <li key={item}>{item}</li>)}

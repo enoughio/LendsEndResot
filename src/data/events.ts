@@ -35,7 +35,7 @@ export const events: Event[] = [
       "A three-day Ashtanga Yoga retreat through Patanjali's eight limbs. Eight limbs. One forest. Return to yourself.",
     description:
       "Antarvan — अंतर्वन, the forest within — follows Ashtanga in its original sense: Patanjali's eight limbs of yoga. Over three days in Sumiran Forest, you move from how you live, to the body, the breath and the senses, and finally to stillness. Each limb is introduced, then experienced in nature, guided by Alifia, therapeutic yoga instructor and founder of Aadhara Yoga.",
-    images: ["/events/antarvan/event-photo.png"],
+    images: ["/events/antarvan/home.jpeg"],
     startDate: "2026-12-11",
     endDate: "2026-12-13",
     time: "Three days, two nights",

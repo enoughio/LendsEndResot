@@ -28,7 +28,7 @@ const IMG = {
   sunrise: "/events/antarvan/sunrise.jpeg",
 };
 const PHONES = [
-  { display: "+91 89891 10232", tel: "+918989110232", wa: "918989110232" },
+  { display: "+91 8959025152", tel: "+918959025152", wa: "918959025152" },
   { display: "+91 81096 69604", tel: "+918109669604", wa: "918109669604" },
 ];
 

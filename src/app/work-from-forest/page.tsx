@@ -586,10 +586,10 @@ const CTABanner: React.FC = () => (
         drop in for a day.
       </p>
       <div className="wff-cta-buttons">
-        <Link className="wff-btn-primary" href="tel:+918871317382">
+        <Link className="wff-btn-primary" href="tel:+918109669604">
           Book Your Staycation! <ArrowRight />
         </Link >
-        <Link className="wff-btn-secondary" href="https://wa.me/918871317382">
+        <Link className="wff-btn-secondary" href="https://wa.me/918109669604">
           WhatsApp Us
         </Link >
       </div>

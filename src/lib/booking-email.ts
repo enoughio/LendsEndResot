@@ -91,7 +91,7 @@ export async function sendBookingConfirmationEmail(input: BookingConfirmationInp
 
   const baseUrl = getBaseUrl();
   const supportEmail = RESORT_EMAIL;
-  const supportPhone = "+91 8871317382";
+  const supportPhone = "+91 8109669604";
   const logoUrl = `${baseUrl}/landsend.svg`;
   const bookingDetailsUrl = `${baseUrl}/booking/${input.bookingId}/booked`;
   const termsUrl = `${baseUrl}/terms-and-conditions`;

@@ -1,6 +1,6 @@
 export const RESORT_PHONE_DISPLAY = "+91 88713 17382";
-export const RESORT_PHONE_TEL = "+918871317382";
-export const RESORT_WHATSAPP_NUMBER = "918871317382";
+export const RESORT_PHONE_TEL = "+918109669604";
+export const RESORT_WHATSAPP_NUMBER = "918109669604";
 export const RESORT_EMAIL = "landsend.sumiran@gmail.com";
 
 export const ASK_ON_ARRIVAL_NOTE = "Ask us when you arrive. Not added to this booking.";

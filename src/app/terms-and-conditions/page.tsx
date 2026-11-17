@@ -49,7 +49,7 @@ export default function TermsAndConditionsPage() {
           <section>
             <h2 className="text-lg font-semibold text-gray-900">5. Contact</h2>
             <p>
-              For support, contact us at <strong>+91 8871317382</strong> or <strong>landsend.sumiran@gmail.com</strong>.
+              For support, contact us at <strong>+91 8109669604</strong> or <strong>landsend.sumiran@gmail.com</strong>.
             </p>
           </section>
         </div>

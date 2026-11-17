@@ -74,7 +74,7 @@ const Fotter = () => {
                 <ul className="space-y-2">
                   <li><Link href="/contact" className="text-gray-300 hover:text-white transition-colors">Contact</Link></li>
                   <li><Link href="/booking" className="text-gray-300 hover:text-white transition-colors">Bookings</Link></li>
-                  <li><a href="tel:+918871317382" className="text-gray-300 hover:text-white transition-colors">+91 8871317382</a></li>
+                  <li><a href="tel:+918109669604" className="text-gray-300 hover:text-white transition-colors">+91 8109669604</a></li>
                   <li><a href="mailto:landsend.sumiran@gmail.com" className="text-gray-300 hover:text-white transition-colors">landsend.sumiran@gmail.com</a></li>
                 </ul>
               </div>

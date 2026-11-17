@@ -6,7 +6,7 @@ export default function StructuredData() {
     alternateName: 'Sumiran Forest Resort',
     description: 'Eco resort in Sumiran Forest, Bhopal with 300 acres of pristine nature, AQI <10, and sustainable living.',
     url: 'https://landsend.bharatstorytellers.com',
-    telephone: '+91-8871317382',
+    telephone: '+91-8109669604',
     email: 'landsend.sumiran@gmail.com',
     address: {
       '@type': 'PostalAddress',

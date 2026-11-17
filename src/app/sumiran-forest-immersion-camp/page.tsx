@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const REG_LINK = 'https://rzp.io/rzp/fnnrvFkZ';
-const GROUP_PHONE = '8871317382';
+const GROUP_PHONE = '8109669604';
 
 const BATCHES = [
   // { num: 'Batch 1 · Limited', dates: '14 – 17 May 2026', tag: '⚡ 15 Seats ', tag3 : "Booking Closed", hot: true },

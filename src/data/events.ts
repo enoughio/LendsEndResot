@@ -199,7 +199,7 @@ Held at Land's End – The Last Resort, Sumiran Forest, this retreat offers fore
     earlyBirdDeadline: "2026-03-10",
     seats: 16,
     registrationLink: "https://rzp.io/rzp/fDNN9HW",
-    contact: ["+91 6268244196", "+91 8871317382"],
+    contact: ["", "+91 8109669604"],
     includes: [
       "Storytelling and Sufi singing sessions",
       "All meals during the retreat",
@@ -227,7 +227,7 @@ Held at Land's End – The Last Resort, Sumiran Forest, this retreat offers fore
           "Early Bird Offer: ₹14,999 (Valid till 10 March 2026)",
           "Regular: ₹15,999",
           "To register: https://rzp.io/rzp/fDNN9HW",
-          "Contact: +91 6268244196, +91 8871317382",
+          "Contact: +91 8109669604",
         ],
       },
     ],
@@ -253,7 +253,7 @@ The camp blends adventure, hands-on learning, creative expression, and community
     location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
     price: "INR 9,900 per participant",
     registrationLink: "https://rzp.io/rzp/fnnrvFkZ",
-    contact: ["+91 6268244196 ", "landsend.sumiran@gmail.com"],
+    contact: [" ", "landsend.sumiran@gmail.com"],
     includes: [
       "Stay (air-conditioned shared dormitories)",
       "Food",
@@ -376,7 +376,7 @@ Whether you're a beginner or a passionate sky-watcher, this experience offers a 
   location: "Land's End - The Last Resort, Sumiran Forest, Near Bhopal",
   price: "Contact for details",
   registrationLink: "https://rzp.io/rzp/c7GlaAb",
-  contact: ["landsend.sumiran@gmail.com", "+91 6268244196", "+91 8871317382"],
+  contact: ["landsend.sumiran@gmail.com", "", "+91 8109669604"],
   includes: [
     "Guided stargazing with telescopes",
     "Storytelling sessions",

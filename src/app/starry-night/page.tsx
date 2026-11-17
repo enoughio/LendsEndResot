@@ -127,7 +127,7 @@ const venueFacts = [
 
 const paymentLink = "https://rzp.io/rzp/c7GlaAb";
 const contactEmail = "landsend.sumiran@gmail.com";
-const contactPhones = ["+91 6268244196", "+91 8871317382"];
+const contactPhones = ["", "+91 8109669604"];
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function StarryNight() {

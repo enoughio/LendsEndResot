@@ -193,7 +193,7 @@ function BookedContent() {
                 <Phone className="mt-1 h-4 w-4 text-[#1f3d2e]" />
                 <div>
                   <p className="text-stone-600 text-sm">Contact Support</p>
-                  <p className="text-stone-900">+91 6268244196</p>
+                  <p className="text-stone-900"></p>
                   <p className="text-stone-600 text-sm">landsend.sumiran@gmail.com</p>
                 </div>
               </div>

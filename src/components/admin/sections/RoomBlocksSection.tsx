@@ -152,14 +152,36 @@ export function RoomBlocksSection({ rooms, roomTypes }: { rooms: Room[]; roomTyp
     [rooms],
   );
 
+  const blockedRoomIds = useMemo(() => {
+    const blocked = new Set<string>();
+    if (selectedDates.length === 0) return blocked;
+    const selected = new Set(selectedDates);
+    for (const block of blocks) {
+      if (block.dates.some((date) => selected.has(date))) blocked.add(block.roomId);
+    }
+    return blocked;
+  }, [blocks, selectedDates]);
+
+  if (selectedDates.length > 0) {
+    const stillFree = selectedRoomIds.filter((id) => !blockedRoomIds.has(id));
+    if (stillFree.length !== selectedRoomIds.length) setSelectedRoomIds(stillFree);
+  }
+
+  const freeRooms = useMemo(
+    () => (selectedDates.length === 0
+      ? sortedRooms
+      : sortedRooms.filter((room) => !blockedRoomIds.has(room.id))),
+    [blockedRoomIds, selectedDates.length, sortedRooms],
+  );
+
   const filteredRooms = useMemo(() => {
     const query = roomQuery.trim().toLowerCase();
-    if (!query) return sortedRooms;
-    return sortedRooms.filter((room) => {
+    if (!query) return freeRooms;
+    return freeRooms.filter((room) => {
       const label = `${room.roomNumber} ${roomTypeName(room.roomTypeId)} ${room.view}`.toLowerCase();
       return label.includes(query);
     });
-  }, [roomQuery, roomTypeName, sortedRooms]);
+  }, [freeRooms, roomQuery, roomTypeName]);
 
   const selectedDateSet = useMemo(() => new Set(selectedDates), [selectedDates]);
   const blockedDateSet = useMemo(() => {
@@ -229,6 +251,10 @@ export function RoomBlocksSection({ rooms, roomTypes }: { rooms: Room[]; roomTyp
     setSelectedRoomIds((current) => (
       current.includes(roomId) ? current.filter((id) => id !== roomId) : [...current, roomId]
     ));
+  };
+
+  const selectAllFreeRooms = () => {
+    setSelectedRoomIds(freeRooms.map((room) => room.id));
   };
 
   const selectShownRooms = () => {
@@ -415,7 +441,8 @@ export function RoomBlocksSection({ rooms, roomTypes }: { rooms: Room[]; roomTyp
         <div>
           <div className="mb-2 flex items-center justify-between gap-3">
             <p className="text-xs uppercase tracking-wider text-stone-500">Rooms</p>
-            <div className="flex gap-3 text-xs">
+            <div className="flex flex-wrap justify-end gap-x-3 gap-y-1 text-xs">
+              <button type="button" onClick={selectAllFreeRooms} className="text-[#7bc67a] hover:text-white">Select all</button>
               <button type="button" onClick={selectShownRooms} className="text-[#7bc67a] hover:text-white">Select shown</button>
               <button type="button" onClick={() => setSelectedRoomIds([])} className="text-stone-400 hover:text-white">Clear</button>
             </div>
@@ -447,7 +474,13 @@ export function RoomBlocksSection({ rooms, roomTypes }: { rooms: Room[]; roomTyp
                 </label>
               );
             })}
-            {filteredRooms.length === 0 && <p className="px-2 py-4 text-center text-sm text-stone-500">No rooms match.</p>}
+            {filteredRooms.length === 0 && (
+              <p className="px-2 py-4 text-center text-sm text-stone-500">
+                {selectedDates.length > 0 && freeRooms.length === 0
+                  ? 'No rooms are free on these dates.'
+                  : 'No rooms match.'}
+              </p>
+            )}
           </div>
           <p className="mt-2 text-xs text-stone-400">
             {selectedRoomLabels.length === 0

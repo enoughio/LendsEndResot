@@ -100,7 +100,8 @@ export async function POST(request: Request) {
     let updated = 0;
     const groupIds: string[] = [];
 
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(
+      async (tx) => {
       for (const roomId of roomIdsResult.roomIds) {
         const groupId = randomUUID();
         if (!isRoomBlockGroupId(groupId)) {
@@ -137,7 +138,11 @@ export async function POST(request: Request) {
           created += newDates.length;
         }
       }
-    });
+    }, {
+    maxWait: 5000, // Max time (ms) Prisma waits to get a connection (default: 2000)
+    timeout: 9000, // Max time (ms) the transaction can run (default: 5000)
+    }
+  );
 
     return NextResponse.json({ data: { created, updated, groupIds } }, { status: 201 });
   } catch (error) {
